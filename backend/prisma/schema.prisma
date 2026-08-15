@@ -1,0 +1,147 @@
+generator client {
+  provider            = "prisma-client"
+  output              = "../src/generated/prisma"
+  moduleFormat        = "esm"
+  importFileExtension = "ts"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  TEACHER
+  ADMIN
+}
+
+enum LeaveStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+enum DutyStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum EventType {
+  REMINDER
+  MEETING
+  EXAM
+  LEAVE
+  DUTY
+}
+
+enum NotificationType {
+  LEAVE_REQUEST
+  LEAVE_APPROVED
+  LEAVE_REJECTED
+  MESSAGE
+  REMINDER
+  DUTY
+}
+
+model User {
+  id             String          @id @default(cuid())
+  name           String
+  email          String          @unique
+  passwordHash   String
+  role           Role            @default(TEACHER)
+  isActive       Boolean         @default(true)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  leaveRequests  LeaveRequest[]  @relation("TeacherLeaves")
+  reviewedLeaves LeaveRequest[]  @relation("AdminReviews")
+  sentMessages   Message[]       @relation("SentMessages")
+  receivedMessages Message[]     @relation("ReceivedMessages")
+  duties         Duty[]          @relation("AssignedDuties")
+  events         CalendarEvent[] @relation("UserEvents")
+  notifications  Notification[]
+}
+
+model LeaveRequest {
+  id             String      @id @default(cuid())
+  teacherId      String
+  leaveType      String
+  startDate      DateTime
+  endDate        DateTime
+  reason         String
+  status         LeaveStatus @default(PENDING)
+  reviewerNote   String?
+  reviewedById   String?
+  reviewedAt     DateTime?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  teacher        User        @relation("TeacherLeaves", fields: [teacherId], references: [id], onDelete: Cascade)
+  reviewedBy     User?       @relation("AdminReviews", fields: [reviewedById], references: [id])
+
+  @@index([teacherId, status])
+  @@index([reviewedById])
+}
+
+model Message {
+  id           String   @id @default(cuid())
+  senderId     String
+  receiverId   String
+  content      String
+  readAt       DateTime?
+  createdAt    DateTime @default(now())
+
+  sender       User     @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver     User     @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@index([senderId, receiverId, createdAt])
+  @@index([receiverId, readAt])
+}
+
+model CalendarEvent {
+  id          String    @id @default(cuid())
+  userId      String
+  title       String
+  description String?
+  type        EventType @default(REMINDER)
+  startsAt    DateTime
+  endsAt      DateTime?
+  reminderAt  DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user        User      @relation("UserEvents", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, startsAt])
+}
+
+model Duty {
+  id          String     @id @default(cuid())
+  assignedToId String
+  title       String
+  description String?
+  dueAt       DateTime?
+  status      DutyStatus @default(PENDING)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  assignedTo  User       @relation("AssignedDuties", fields: [assignedToId], references: [id], onDelete: Cascade)
+
+  @@index([assignedToId, status])
+  @@index([dueAt])
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType
+  title     String
+  message   String
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead, createdAt])
+}

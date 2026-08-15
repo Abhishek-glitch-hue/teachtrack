@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TeachTrack — Sign in</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --ink:#182630; --mut:#5f6f79; --teal:#0e8f84; --line:#dfe7ea; --bg:#edf2f4; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; display:grid; place-items:center; padding:24px; font-family:"Public Sans",sans-serif; background:linear-gradient(135deg,#e7f4f3,#edf2f8); color:var(--ink); }
+    .card { width:min(420px,100%); padding:34px; border:1px solid var(--line); border-radius:20px; background:#fff; box-shadow:0 24px 60px -35px rgba(24,38,48,.45); }
+    .brand { display:flex; align-items:center; gap:10px; margin-bottom:25px; font-family:Sora,sans-serif; font-size:19px; font-weight:800; }
+    .logo { width:38px; height:38px; display:grid; place-items:center; border-radius:11px; background:linear-gradient(135deg,#14b8a6,#0b6e66); color:#fff; }
+    h1 { margin:0; font:700 23px Sora,sans-serif; } p { margin:7px 0 22px; color:var(--mut); font-size:13px; }
+    label { display:block; margin:13px 0 5px; font-size:12px; font-weight:700; }
+    input { width:100%; padding:11px 12px; border:1px solid var(--line); border-radius:9px; font:inherit; outline:none; }
+    input:focus { border-color:var(--teal); box-shadow:0 0 0 3px rgba(14,143,132,.12); }
+    button { width:100%; margin-top:20px; padding:12px; border:0; border-radius:9px; background:var(--teal); color:#fff; cursor:pointer; font:700 13px "Public Sans",sans-serif; }
+    button:disabled { opacity:.65; cursor:wait; }
+    .switch { margin:17px 0 0; text-align:center; font-size:12px; }
+    .switch button { width:auto; margin:0; padding:0; background:none; color:var(--teal); text-decoration:underline; }
+    .message { display:none; margin:14px 0 0; padding:10px; border-radius:8px; font-size:12px; }
+    .message.error { display:block; background:#fde7e9; color:#a52938; }
+    .message.success { display:block; background:#e2f7ed; color:#087a47; }
+    .name-field { display:none; }
+    body.registering .name-field { display:block; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="brand">
+      <span class="logo">T</span>
+      <span>TeachTrack</span>
+    </div>
+
+    <h1 id="title">Welcome back</h1>
+    <p id="subtitle">Sign in to manage your academic work.</p>
+
+    <form id="authForm">
+      <div class="name-field">
+        <label for="name">Full name</label>
+        <input id="name" autocomplete="name" minlength="2">
+      </div>
+
+      <label for="email">Email address</label>
+      <input id="email" type="email" autocomplete="email" required>
+
+      <label for="password">Password</label>
+      <input id="password" type="password" autocomplete="current-password" minlength="8" required>
+
+      <button id="submitButton" type="submit">Sign in</button>
+      <div id="message" class="message" role="alert"></div>
+    </form>
+
+    <p class="switch">
+      <span id="switchText">New teacher?</span>
+      <button id="modeButton" type="button">Create an account</button>
+    </p>
+  </main>
+
+  <script>
+    const API_URL = "http://localhost:4000/api";
+    let mode = "login";
+
+    if (sessionStorage.getItem("teachtrack_token")) {
+      window.location.replace("main.html");
+    }
+
+    const form = document.getElementById("authForm");
+    const nameInput = document.getElementById("name");
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const submitButton = document.getElementById("submitButton");
+    const modeButton = document.getElementById("modeButton");
+    const message = document.getElementById("message");
+
+    function showMessage(text, type) {
+      message.textContent = text;
+      message.className = `message ${type}`;
+    }
+
+    function setMode(nextMode) {
+      mode = nextMode;
+      const registering = mode === "register";
+      document.body.classList.toggle("registering", registering);
+      document.getElementById("title").textContent = registering ? "Create teacher account" : "Welcome back";
+      document.getElementById("subtitle").textContent = registering
+        ? "Teacher accounts are created here. Administrator accounts are private."
+        : "Sign in to manage your academic work.";
+      submitButton.textContent = registering ? "Create teacher account" : "Sign in";
+      document.getElementById("switchText").textContent = registering ? "Already have an account?" : "New teacher?";
+      modeButton.textContent = registering ? "Sign in" : "Create an account";
+      nameInput.required = registering;
+      passwordInput.autocomplete = registering ? "new-password" : "current-password";
+      message.className = "message";
+    }
+
+    modeButton.addEventListener("click", () => {
+      setMode(mode === "login" ? "register" : "login");
+    });
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      message.className = "message";
+      submitButton.disabled = true;
+
+      try {
+        const payload = {
+          email: emailInput.value.trim(),
+          password: passwordInput.value,
+        };
+
+        if (mode === "register") {
+          payload.name = nameInput.value.trim();
+        }
+
+        const endpoint = mode === "register" ? "/auth/register" : "/auth/login";
+        const response = await fetch(`${API_URL}${endpoint}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Unable to continue.");
+        }
+
+        sessionStorage.setItem("teachtrack_token", data.token);
+        sessionStorage.setItem("teachtrack_user", JSON.stringify(data.user));
+
+        showMessage("Signed in successfully. Opening dashboard...", "success");
+        window.setTimeout(() => window.location.replace("main.html"), 500);
+      } catch (error) {
+        showMessage(error.message || "Network error. Is the backend running?", "error");
+      } finally {
+        submitButton.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

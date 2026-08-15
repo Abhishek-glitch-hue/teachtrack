@@ -1,0 +1,398 @@
+﻿<!DOCTYPE html><html class="h-full" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<script>if (window.self !== window.top) document.documentElement.classList.add('embedded');</script>
+<title>TeachTrack - Messages</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                            "on-primary": "#ffffff",
+                            "surface": "#f8fafb",
+                            "on-error": "#ffffff",
+                            "error": "#ba1a1a",
+                            "primary-container": "#2d7a7f",
+                            "tertiary-fixed": "#ffdbc9",
+                            "on-tertiary": "#ffffff",
+                            "on-surface": "#191c1d",
+                            "surface-variant": "#e1e3e4",
+                            "outline": "#6f797a",
+                            "surface-container-high": "#e6e8e9",
+                            "on-tertiary-fixed-variant": "#6c3918",
+                            "surface-container-low": "#f2f4f5",
+                            "surface-bright": "#f8fafb",
+                            "on-tertiary-container": "#fff2ec",
+                            "tertiary": "#804926",
+                            "on-primary-fixed-variant": "#004f53",
+                            "inverse-primary": "#8ad3d8",
+                            "surface-container-lowest": "#ffffff",
+                            "on-primary-container": "#d2fcff",
+                            "inverse-on-surface": "#eff1f2",
+                            "primary": "#026166",
+                            "on-error-container": "#93000a",
+                            "surface-tint": "#14686d",
+                            "on-secondary-fixed": "#001f28",
+                            "tertiary-fixed-dim": "#ffb68c",
+                            "primary-fixed-dim": "#8ad3d8",
+                            "on-secondary": "#ffffff",
+                            "surface-container-highest": "#e1e3e4",
+                            "on-secondary-fixed-variant": "#1a4d5c",
+                            "background": "#f8fafb",
+                            "secondary-fixed": "#baeafc",
+                            "secondary": "#366574",
+                            "outline-variant": "#bec8c9",
+                            "error-container": "#ffdad6",
+                            "secondary-container": "#baeafc",
+                            "inverse-surface": "#2e3132",
+                            "on-background": "#191c1d",
+                            "on-surface-variant": "#3f4949",
+                            "on-primary-fixed": "#002022",
+                            "surface-container": "#eceeef",
+                            "surface-dim": "#d8dadb",
+                            "on-tertiary-fixed": "#321200",
+                            "secondary-fixed-dim": "#9fcee0",
+                            "on-secondary-container": "#3c6b7a",
+                            "tertiary-container": "#9d613c",
+                            "primary-fixed": "#a6eff4"
+                    },
+                    "borderRadius": {
+                            "DEFAULT": "0.25rem",
+                            "lg": "0.5rem",
+                            "xl": "0.75rem",
+                            "full": "9999px"
+                    },
+                    "spacing": {
+                            "xl": "32px",
+                            "margin-desktop": "40px",
+                            "sm": "8px",
+                            "lg": "24px",
+                            "gutter": "20px",
+                            "base": "4px",
+                            "md": "16px",
+                            "margin-mobile": "16px",
+                            "xs": "4px"
+                    },
+                    "fontFamily": {
+                            "title-md": ["Inter"],
+                            "body-md": ["Inter"],
+                            "body-lg": ["Inter"],
+                            "label-md": ["Inter"],
+                            "headline-lg": ["Inter"],
+                            "display": ["Inter"],
+                            "headline-lg-mobile": ["Inter"],
+                            "headline-md": ["Inter"],
+                            "label-sm": ["Inter"],
+                            "title-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                            "title-md": ["16px", {"lineHeight": "24px", "fontWeight": "600"}],
+                            "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                            "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                            "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                            "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                            "display": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                            "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                            "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                            "label-sm": ["11px", {"lineHeight": "14px", "fontWeight": "600"}],
+                            "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md h-full overflow-hidden flex">
+<!-- SideNavBar -->
+<nav class="h-screen w-64 fixed left-0 top-0 bg-surface-container-lowest dark:bg-surface-dim bg-white dark:bg-surface-dim shadow-[0px_4px_12px_rgba(27,77,92,0.04)] z-50 flex flex-col py-lg px-md hidden md:flex">
+<!-- Header -->
+<div class="mb-xl flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-primary-container" data-icon="school" data-weight="fill">school</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">TeachTrack</h1>
+<p class="font-label-md text-label-md text-on-surface-variant">Educator Portal</p>
+</div>
+</div>
+<!-- Main Navigation -->
+<ul class="flex-1 space-y-sm">
+<li class="">
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant dark:text-outline hover:text-primary hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-colors active:scale-95 duration-150 font-body-md text-body-md" href="main.html#dashboard" target="_top">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                    Dashboard
+                </a>
+</li>
+<li class="">
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant dark:text-outline hover:text-primary hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-colors active:scale-95 duration-150 font-body-md text-body-md" href="timetable.html" target="_top">
+<span class="material-symbols-outlined" data-icon="calendar_view_week">calendar_view_week</span>
+                    Timetable
+                </a>
+</li>
+<li class="">
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant dark:text-outline hover:text-primary hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-colors active:scale-95 duration-150 font-body-md text-body-md" href="duties.html" target="_top">
+<span class="material-symbols-outlined" data-icon="assignment_ind">assignment_ind</span>
+                    Duties
+                </a>
+</li>
+<li class="">
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant dark:text-outline hover:text-primary hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-colors active:scale-95 duration-150 font-body-md text-body-md" href="leaves.html" target="_top">
+<span class="material-symbols-outlined" data-icon="event_busy">event_busy</span>
+                    Leaves
+                </a>
+</li>
+<li class="">
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant dark:text-outline hover:text-primary hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-colors active:scale-95 duration-150 font-body-md text-body-md" href="calendar.html" target="_top">
+<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
+                    Calendar
+                </a>
+</li>
+<li class="">
+<a class="flex items-center gap-md px-md py-sm rounded-lg bg-surface-container-low text-primary dark:text-primary-fixed-dim font-bold border-r-4 border-primary transition-colors active:scale-95 duration-150 font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="chat" data-weight="fill" style="font-variation-settings: 'FILL' 1;">chat</span>
+                    Messages
+                </a>
+</li>
+</ul>
+<!-- Footer Navigation -->
+<ul class="mt-auto space-y-sm pt-md border-t border-surface-variant"><li class="flex items-center gap-md px-md py-sm">
+  <div class="w-10 h-10 rounded-full bg-surface-variant overflow-hidden shrink-0 border border-outline-variant">
+    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5qhEJmM6nh_jKApCCaiCc7EJFbvMZCrL_QFquoAS8BNaTuS7Teowi1YwiPUGfF-srtWHDaZz95sJM4G5Rohh8IlawzpCen6HviDSlinqySLYP02G2qq00eKNJg45u-D7OexRlL5bDrSoG5M3ykh42pw64M-3fftELRone9ipCyGgSIQPrFjKLnY60Vp9kcwJbeNru1kpvPjck59hwKKFyFKvkY8XOsKhanq1HGaaea3ab7rr0UiSJ" alt="Prof. Anderson" class="w-full h-full object-cover">
+  </div>
+  <div class="min-w-0">
+    <p class="font-title-md text-title-md text-on-surface truncate">Prof. Anderson</p>
+    <p class="font-label-sm text-label-sm text-on-surface-variant truncate">Senior Faculty</p>
+  </div>
+</li></ul>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="flex-1 flex flex-col md:ml-64 h-full relative">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center h-16 px-margin-desktop bg-background dark:bg-background bg-background/80 backdrop-blur-md full-width top-0 sticky z-40">
+<div class="flex items-center gap-sm">
+<!-- Mobile Menu Button -->
+<button class="md:hidden p-sm text-on-surface-variant hover:bg-surface-container-high rounded-full transition-all active:opacity-80">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<h2 class="font-title-lg text-title-lg text-primary dark:text-primary-fixed-dim hidden md:block">Messages</h2>
+<h2 class="font-title-lg text-title-lg text-primary dark:text-primary-fixed-dim md:hidden font-headline-md text-headline-md font-bold">TeachTrack</h2>
+</div>
+<div class="flex items-center gap-md">
+<button class="p-sm text-on-surface-variant dark:text-outline hover:bg-surface-container-high dark:hover:bg-surface-container-highest rounded-full transition-all active:opacity-80">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-sm text-on-surface-variant dark:text-outline hover:bg-surface-container-high dark:hover:bg-surface-container-highest rounded-full transition-all active:opacity-80">
+<span class="material-symbols-outlined" data-icon="dark_mode">dark_mode</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-variant overflow-hidden shrink-0 border border-outline-variant">
+<img alt="User Profile Picture" class="w-full h-full object-cover" data-alt="A professional headshot of a teacher smiling warmly in a bright, modern classroom setting with subtle soft teal background accents, shallow depth of field." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5qhEJmM6nh_jKApCCaiCc7EJFbvMZCrL_QFquoAS8BNaTuS7Teowi1YwiPUGfF-srtWHDaZz95sJM4G5Rohh8IlawzpCen6HviDSlinqySLYP02G2qq00eKNJg45u-D7OexRlL5bDrSoG5M3ykh42pw64M-3fftELRone9ipCyGgSIQPrFjKLnY60Vp9kcwJbeNru1kpvPjck59hwKKFyFKvkY8XOsKhanq1HGaaea3ab7rr0UiSJ">
+</div>
+</div>
+</header>
+<!-- Messaging Layout -->
+<main class="flex-1 flex overflow-hidden p-md lg:p-lg gap-lg">
+<!-- Left Panel: Contacts & Connections -->
+<aside class="w-full md:w-[320px] flex-shrink-0 flex flex-col bg-surface-container-lowest rounded-xl shadow-[0px_4px_12px_rgba(27,77,92,0.04)] overflow-hidden border border-surface-container">
+<!-- Search -->
+<div class="p-md border-b border-surface-variant bg-surface-bright">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-outline" data-icon="search">search</span>
+<input class="w-full pl-xl pr-sm py-sm bg-surface rounded-lg border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all font-body-md text-body-md placeholder:text-outline-variant outline-none" placeholder="Search teachers..." type="text">
+</div>
+</div>
+<div class="flex-1 overflow-y-auto custom-scrollbar">
+<!-- Pending Requests -->
+<div class="p-md border-b border-surface-variant">
+<h3 class="font-label-md text-label-md text-outline uppercase tracking-wider mb-sm">Pending Requests</h3>
+<ul class="space-y-sm">
+<li class="flex items-center justify-between p-sm hover:bg-surface-container-low rounded-lg transition-colors">
+<div class="flex items-center gap-sm">
+<div class="w-10 h-10 rounded-full bg-surface-variant overflow-hidden">
+<img alt="Avatar" class="w-full h-full object-cover" data-alt="A professional headshot of a male teacher with glasses in a minimalist academic setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_K0fLYyVe6R1RT5kTK8oPjbzD05ZhZZJUFWb3fIgECFPfxzmXeZHxC4CY-FiIiwV-WrCjxRbu9J6sUCwu9xSIkW16EEVYeB-WLXHGQvaHvpdWlD5mMo72-D1u9lyFfFP4PoXWa_HwLl1c6DOrd5TvjJx1gyONZTezz4AWi2kbqnfAJpnBFRIixf-K_d59aw2_LIBzfbZ-QfwcFdAC-QbpztLb-2-lsbUjOdjd7dhbBkQJ2xSdsDxk">
+</div>
+<div>
+<p class="font-title-md text-title-md text-on-surface">Dr. A. Carter</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Physics Dept.</p>
+</div>
+</div>
+<div class="flex gap-xs">
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors" title="Accept">
+<span class="material-symbols-outlined text-[18px]" data-icon="check">check</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-full bg-error/10 text-error hover:bg-error/20 transition-colors" title="Reject">
+<span class="material-symbols-outlined text-[18px]" data-icon="close">close</span>
+</button>
+</div>
+</li>
+</ul>
+</div>
+<!-- Connections -->
+<div class="p-md">
+<h3 class="font-label-md text-label-md text-outline uppercase tracking-wider mb-sm">Your Connections</h3>
+<ul class="space-y-xs">
+<!-- Active Connection -->
+<li class="flex items-start gap-sm p-sm bg-primary/5 border border-primary/20 rounded-lg cursor-pointer transition-colors relative">
+<div class="relative shrink-0">
+<div class="w-10 h-10 rounded-full bg-surface-variant overflow-hidden">
+<img alt="Avatar" class="w-full h-full object-cover" data-alt="A professional headshot of a female teacher in her 30s, natural lighting, professional academic attire." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvJITpdnoAmY75KADDPE9H3ZGVlScy0owdjYH0YbyjoZbckGwhlFqufVX2j04DWw5uIFx55jErIahM6JAtOOwkHkaXXE-29RAo43RQFQWCR7N9BrL_q2KDh9JIyFYu_yyc2fImqVIu-sbVs3I0cVUgWlR5l8nYdNuztbPAVag6na6kor2r8DWx21JP9-tUFLY6Yik8gXgTkD_WeYgsFA7y9VidYKVB4Eyp0j_fNqYnHdGryo3mqFEI">
+</div>
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-surface-container-lowest rounded-full"></span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-xs">
+<p class="font-title-md text-title-md text-on-surface truncate">Sarah Miller</p>
+<span class="font-label-sm text-label-sm text-primary shrink-0">10:42 AM</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant truncate">Could you send over the syllabus?</p>
+</div>
+</li>
+<!-- Other Connection 1 -->
+<li class="flex items-start gap-sm p-sm hover:bg-surface-container-low rounded-lg cursor-pointer transition-colors group">
+<div class="relative shrink-0">
+<div class="w-10 h-10 rounded-full bg-surface-variant overflow-hidden">
+<img alt="Avatar" class="w-full h-full object-cover" data-alt="A professional headshot of an older male professor in a tweed jacket, soft academic library background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJjp24seD9MMOYDjoNPi-vLjzl2ElyXwfiFhNo-SBeUlMH7_ImWqlUtLS4ZkxzWpN_ofU7Puv0aQhv37V_HJiEx8BDBFQ0eVhJw-SGV7J6M6HBDWo4ShZJDo1krR7Wc_Zsf6A52_ugzxMR7BI4fNwuWnal418hCF60pFTKTN5z_d5zrgyO3b86FpqFCHRBL-Lu97obPpmKypf0e4skxB2qcIDNvfZj4KZSyNTARrAD81NB_btII2fY">
+</div>
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-outline border-2 border-surface-container-lowest rounded-full"></span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-xs">
+<p class="font-title-md text-title-md text-on-surface truncate group-hover:text-primary transition-colors">Prof. James Wilson</p>
+<span class="font-label-sm text-label-sm text-outline shrink-0">Yesterday</span>
+</div>
+<p class="font-body-md text-body-md text-outline truncate">The department meeting is moved to 3.</p>
+</div>
+</li>
+<!-- Other Connection 2 -->
+<li class="flex items-start gap-sm p-sm hover:bg-surface-container-low rounded-lg cursor-pointer transition-colors group">
+<div class="relative shrink-0">
+<div class="w-10 h-10 rounded-full bg-surface-variant overflow-hidden flex items-center justify-center text-primary-container bg-primary/10 font-title-md">
+                                        EL
+                                    </div>
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-surface-container-lowest rounded-full"></span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-xs">
+<p class="font-title-md text-title-md text-on-surface truncate group-hover:text-primary transition-colors">Emma Larson</p>
+<span class="font-label-sm text-label-sm text-outline shrink-0">Mon</span>
+</div>
+<p class="font-body-md text-body-md text-outline truncate">Thanks for covering my duty!</p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</aside>
+<!-- Right Panel: Active Chat -->
+<section class="flex-1 hidden md:flex flex-col bg-surface-container-lowest rounded-xl shadow-[0px_4px_12px_rgba(27,77,92,0.04)] border border-surface-container overflow-hidden">
+<!-- Chat Header -->
+<header class="flex items-center justify-between p-md border-b border-surface-variant bg-surface-bright">
+<div class="flex items-center gap-md">
+<div class="relative">
+<div class="w-12 h-12 rounded-full bg-surface-variant overflow-hidden">
+<img alt="Avatar" class="w-full h-full object-cover" data-alt="A professional headshot of a female teacher in her 30s, natural lighting, professional academic attire." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVm7JmDgtwp31zqWp_AAPxHOmSWjH2-xN6zCe_1E0tzlJsrqvd-97NtkbuTgcY3fEII_Crgzgh18i1ctgpjwQBP3ve9-ERG2w0P7pQixwneaTliJKXkF0mA0WFcjp9RNUCT73Pq-1CPVtl5gHyuAohzIpGdVMAqoVwzaQyGH3KXY95ctTrqoglchDejDHDfH6bZ6ECDyn1lP2SI20pHb66WBD6dcv_ZP0sh1tgeJ2GHVey50QpdGos">
+</div>
+<span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 border-2 border-surface-bright rounded-full"></span>
+</div>
+<div>
+<h2 class="font-title-lg text-title-lg text-on-surface">Sarah Miller</h2>
+<p class="font-label-md text-label-md text-on-surface-variant flex items-center gap-xs">
+                                Online
+                            </p>
+</div>
+</div>
+<div class="flex gap-sm">
+<button class="p-sm text-outline hover:text-primary hover:bg-primary/5 rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+<button class="p-sm text-outline hover:text-primary hover:bg-primary/5 rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</header>
+<!-- Messages Area -->
+<div class="flex-1 overflow-y-auto p-lg bg-surface flex flex-col gap-md custom-scrollbar">
+<div class="text-center my-sm">
+<span class="font-label-sm text-label-sm text-outline bg-surface-container-low px-sm py-xs rounded-full">Today</span>
+</div>
+<!-- Received Message -->
+<div class="flex items-start gap-sm max-w-[80%]">
+<div class="w-8 h-8 rounded-full bg-surface-variant overflow-hidden shrink-0 mt-auto">
+<img alt="Avatar" class="w-full h-full object-cover" data-alt="A professional headshot of a female teacher in her 30s, natural lighting, professional academic attire." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4pbb0iqmbax-pNDRE29If6alvbaHYEmIzu5PMH0wXblYktQWhZhSN43pEL6J45lTuBTPHlU3_6FJK5-AYVNfTf_DTNVsyxP37pLNDuU3DnwOi7uANtPOJuF2WFKlG5zrFcCO-eIa31EoPHxFYI_VrkmbYDc9_ttJdMJ4ySA56NINZyb9cqZQu11XYfpJn2QPoFpLrrl076hTxXeh2F8djNnPVrIwcNpixiEeusWZJfzG3zVX33cGt">
+</div>
+<div class="flex flex-col gap-xs">
+<div class="bg-surface-container-lowest border border-surface-container px-md py-sm rounded-2xl rounded-bl-sm shadow-[0px_2px_4px_rgba(0,0,0,0.02)]">
+<p class="font-body-md text-body-md text-on-surface">Hi! Are you ready for the joint science project planning meeting later?</p>
+</div>
+<span class="font-label-sm text-label-sm text-outline ml-sm">10:30 AM</span>
+</div>
+</div>
+<!-- Sent Message -->
+<div class="flex flex-col gap-xs items-end self-end max-w-[80%]">
+<div class="bg-primary text-on-primary px-md py-sm rounded-2xl rounded-br-sm shadow-[0px_2px_8px_rgba(2,97,102,0.15)]">
+<p class="font-body-md text-body-md text-on-primary">Yes, almost! I'm just reviewing the lab requirements.</p>
+</div>
+<span class="font-label-sm text-label-sm text-outline mr-sm flex items-center gap-xs">
+                            10:35 AM
+                            <span class="material-symbols-outlined text-[14px] text-primary" data-icon="done_all">done_all</span>
+</span>
+</div>
+<!-- Received Message -->
+<div class="flex items-start gap-sm max-w-[80%]">
+<div class="w-8 h-8 rounded-full bg-surface-variant overflow-hidden shrink-0 mt-auto">
+<img alt="Avatar" class="w-full h-full object-cover" data-alt="A professional headshot of a female teacher in her 30s, natural lighting, professional academic attire." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDT9Qe0dWLgv3T9Wyav2X_KgCggfqxo6MJoLy-HnE_wbe_MyxfFK-LpexEPtV8uZ57qq-oAccNN7IvPGKDgLdrt_1e8GZChbvbuxh829-aYr7n_KejvLQTqI8Im7dSVgncoBlhmDpVlfb5_oJcy00OI1zsCkifItiBGJrxOQx7QCH1zN97I-fcPL31ce-mOjB88LI2TUcT3wov8Bh_HOFJpmIX76hF3v46WXrR5eUhgw1pyJ6SL0-hY">
+</div>
+<div class="flex flex-col gap-xs">
+<div class="bg-surface-container-lowest border border-surface-container px-md py-sm rounded-2xl rounded-bl-sm shadow-[0px_2px_4px_rgba(0,0,0,0.02)]">
+<p class="font-body-md text-body-md text-on-surface">Perfect. Could you send over the syllabus when you have a moment so I can align my reading list?</p>
+</div>
+<span class="font-label-sm text-label-sm text-outline ml-sm">10:42 AM</span>
+</div>
+</div>
+</div>
+<!-- Input Area -->
+<div class="p-md border-t border-surface-variant bg-surface-bright">
+<div class="flex items-end gap-sm">
+<button class="p-sm text-outline hover:text-primary transition-colors shrink-0 mb-1">
+<span class="material-symbols-outlined" data-icon="attach_file">attach_file</span>
+</button>
+<div class="flex-1 bg-surface-container-lowest border border-outline-variant focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-xl transition-all relative overflow-hidden">
+<textarea class="w-full bg-transparent border-none focus:ring-0 resize-none font-body-md text-body-md text-on-surface placeholder:text-outline-variant py-sm px-md max-h-32 outline-none" placeholder="Type a message..." rows="1" style="min-height: 44px;"></textarea>
+</div>
+<button class="w-11 h-11 rounded-full bg-primary text-on-primary flex items-center justify-center hover:bg-surface-tint shadow-[0px_4px_12px_rgba(2,97,102,0.2)] transition-all active:scale-95 shrink-0 mb-1">
+<span class="material-symbols-outlined ml-1" data-icon="send">send</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+</div>
+<style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #e1e3e4;
+            border-radius: 20px;
+        }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #3f4949;
+        }
+        /* The dashboard supplies the navigation and header when this page is embedded. */
+        html.embedded body > nav,
+        html.embedded body > div.flex-1 > header { display: none !important; }
+        html.embedded body > div.flex-1 { margin-left: 0 !important; }
+        html.embedded body > div.flex-1 > main { height: 100vh !important; padding: 24px !important; }
+    </style>
+
+
+</body></html>
+
+
