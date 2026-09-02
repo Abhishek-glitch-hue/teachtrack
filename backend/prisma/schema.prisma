@@ -49,8 +49,12 @@ model User {
   name           String
   email          String          @unique
   passwordHash   String
+  department     String?
+  phone          String?
+  campus         String?
   role           Role            @default(TEACHER)
   isActive       Boolean         @default(true)
+  lastLoginAt    DateTime?
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
 
@@ -61,6 +65,7 @@ model User {
   duties         Duty[]          @relation("AssignedDuties")
   events         CalendarEvent[] @relation("UserEvents")
   notifications  Notification[]
+  timetableLectures TimetableLecture[]
 }
 
 model LeaveRequest {
@@ -144,4 +149,22 @@ model Notification {
   user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, isRead, createdAt])
+}
+
+model TimetableLecture {
+  id        String   @id @default(cuid())
+  userId    String
+  subject   String
+  className String
+  room      String
+  day       String
+  time      String
+  type      String   @default("teal")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, day, time])
+  @@index([userId, day, time])
 }

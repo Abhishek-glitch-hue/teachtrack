@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TeachTrack â€” Dashboard</title>
+<title>TeachTrack Calendar</title>
 
 <!-- JS flag added BEFORE first paint: only JS users ever see hidden/reveal states -->
 <script>document.documentElement.classList.add('js');</script>
@@ -230,5 +230,30 @@
         </div>
       </article>
 
-    </main></div></div><script src="assets/app.js"></script></body></html>
+    </main></div></div>
+
+<section class="tt-modal" id="calendarEventModal" hidden role="dialog" aria-modal="true" aria-labelledby="calendarEventTitle">
+  <div class="tt-modal-card">
+    <div class="tt-modal-head">
+      <div><span class="kick">Calendar</span><h2 id="calendarEventTitle">Add task or reminder</h2></div>
+      <button class="tt-modal-close" id="calendarEventClose" type="button" aria-label="Close">&times;</button>
+    </div>
+    <form id="calendarEventForm">
+      <div class="tt-form-grid">
+        <label>Title<input id="calendarEventName" required maxlength="120" placeholder="e.g. Submit lesson plan"></label>
+        <label>Type<select id="calendarEventType"><option value="REMINDER">Reminder</option><option value="MEETING">Meeting</option><option value="EXAM">Exam</option><option value="DUTY">Duty</option></select></label>
+        <label>Date<input id="calendarEventDate" type="date" required></label>
+        <label>Time<input id="calendarEventTime" type="time" value="09:00" required></label>
+        <label>Reminder notification<input id="calendarEventReminder" type="datetime-local"></label>
+        <label>Description<input id="calendarEventDescription" maxlength="1000" placeholder="Optional details"></label>
+      </div>
+      <p class="tt-form-error" id="calendarEventError" role="alert"></p>
+      <div class="tt-modal-actions">
+        <button class="tt-delete" id="calendarEventDelete" type="button">Remove</button>
+        <span></span><button class="tt-cancel" id="calendarEventCancel" type="button">Cancel</button><button class="tt-save" type="submit">Save</button>
+      </div>
+    </form>
+  </div>
+</section>
+<script src="assets/app.js"></script></body></html>
 

@@ -7,8 +7,13 @@ declare global {
         id: string;
         name: string;
         email: string;
+        department: string | null;
+        phone: string | null;
+        campus: string | null;
         role: Role;
         isActive: boolean;
+        createdAt: Date;
+        lastLoginAt: Date | null;
       };
     }
   }

@@ -8,6 +8,18 @@
     return;
   }
 
+  try {
+    var signedInUser = JSON.parse(sessionStorage.getItem('teachtrack_user') || '{}');
+    if (signedInUser.name) {
+      document.querySelectorAll('.sf-label').forEach(function (label) { label.textContent = signedInUser.name; });
+      document.querySelectorAll('.sf-av').forEach(function (avatar) {
+        avatar.textContent = signedInUser.name.split(/\s+/).filter(Boolean).slice(0, 2).map(function (part) { return part[0]; }).join('').toUpperCase();
+      });
+    }
+  } catch (_) {
+    /* The profile API will refresh this data on the profile page. */
+  }
+
   document.addEventListener('click', function (event) {
     const logoutButton = event.target.closest('#logoutBtn');
 
@@ -248,24 +260,113 @@
     openPageFromHash();
     }
 
-    /* Duties interactions: filter, add-duty button feedback, and pagination polish. */
+    /* Dashboard: render the authenticated user's live aggregate data. */
+    (function () {
+      var dashboard = document.getElementById('dashboardPage');
+      if (!dashboard) return;
+      var api = 'http://localhost:4000/api/dashboard';
+      function when(value) { return value ? new Date(value).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : 'No due date'; }
+      function loadDashboard() {
+        fetch(api, { headers: { Authorization: 'Bearer ' + authToken } }).then(function (response) { if (!response.ok) throw new Error(); return response.json(); }).then(function (data) {
+          var stats = data.stats;
+          var pending = stats.pendingDuties || 0;
+          var total = stats.duties || 0;
+          var status = document.getElementById('dashboardDutyStatus');
+          if (status) status.innerHTML = pending ? (pending > 5 ? 'High' : 'Active') : 'Clear';
+          var meter = document.getElementById('dashboardDutyMeter'); if (meter) meter.style.setProperty('--w', (total ? Math.min(100, Math.round(pending / total * 100)) : 0) + '%');
+          var dutyFoot = document.getElementById('dashboardDutyFoot'); if (dutyFoot) dutyFoot.textContent = pending + ' pending of ' + total + ' assigned duties';
+          var lessons = document.getElementById('dashboardLessonCount'); if (lessons) lessons.innerHTML = stats.scheduledLessons + '<small>lessons</small>';
+          var lessonFoot = document.getElementById('dashboardLessonFoot'); if (lessonFoot) lessonFoot.textContent = stats.upcomingThisWeek + ' items this week';
+          var leave = document.getElementById('dashboardLeaveBalance'); if (leave) leave.innerHTML = stats.approvedLeaveDays + '<small>days</small>';
+          var leaveFoot = document.getElementById('dashboardLeaveFoot'); if (leaveFoot) leaveFoot.textContent = 'Approved leave days';
+          var next = data.upcoming && data.upcoming[0];
+          var nextItem = document.getElementById('dashboardNextItem'); if (nextItem) nextItem.textContent = next ? next.title : 'None';
+          var nextFoot = document.getElementById('dashboardNextItemFoot'); if (nextFoot) nextFoot.textContent = next ? when(next.date) + ' · ' + next.kind : 'No upcoming events';
+          var notice = document.getElementById('dashboardNotice'); if (notice) notice.innerHTML = '<b>' + pending + ' duties need attention</b> · ' + (stats.upcomingThisWeek || 0) + ' calendar items this week.';
+          var count = document.getElementById('dashboardUpcomingCount'); if (count) count.textContent = (data.upcoming || []).length + ' items';
+          var list = document.getElementById('dashboardUpcomingList');
+          if (list) { list.innerHTML = ''; (data.upcoming || []).forEach(function (item) { var li = document.createElement('li'); li.className = 'uitem ' + (item.kind === 'duty' ? 'high' : 'norm'); var wrapper = document.createElement('div'); var title = document.createElement('b'); title.textContent = item.title; var date = document.createElement('span'); date.className = 'uwhen'; date.textContent = when(item.date); wrapper.appendChild(title); wrapper.appendChild(date); var tag = document.createElement('span'); tag.className = 'tag ' + (item.kind === 'duty' ? 'high' : 'norm'); tag.textContent = item.kind === 'duty' ? 'Duty' : 'Calendar'; li.appendChild(wrapper); li.appendChild(tag); list.appendChild(li); }); }
+          var messages = document.getElementById('dashboardMessagesList');
+          if (messages) { messages.innerHTML = ''; (data.messages || []).slice(0, 3).forEach(function (message, index) { var other = message.senderId === data.user.id ? message.receiver : message.sender; var link = document.createElement('a'); link.className = 'msg'; link.href = 'messages.html'; var avatar = document.createElement('span'); avatar.className = 'avatar a' + (index + 1); avatar.textContent = (other.name || '?').charAt(0).toUpperCase(); var body = document.createElement('span'); body.className = 'msg-body'; var name = document.createElement('b'); name.textContent = other.name; var preview = document.createElement('span'); preview.className = 'msg-prev'; preview.textContent = message.content; body.appendChild(name); body.appendChild(preview); var meta = document.createElement('span'); meta.className = 'msg-meta'; var time = document.createElement('time'); time.textContent = when(message.createdAt); meta.appendChild(time); link.appendChild(avatar); link.appendChild(body); link.appendChild(meta); messages.appendChild(link); }); }
+          var bars = document.querySelectorAll('.tcol');
+          var maxHours = Math.max(1, Math.max.apply(null, (data.weeks || []).map(function (w) { return w.hours; })));
+          var avgHours = (data.weeks || []).reduce(function (sum, w) { return sum + w.hours; }, 0) / (data.weeks || []).length || 0;
+          bars.forEach(function (bar, index) { var week = (data.weeks || [])[index]; if (week) { var height = (week.hours / maxHours * 100); bar.style.setProperty('--h', height + '%'); bar.setAttribute('aria-label', week.week + ': ' + week.hours + ' hours'); bar.querySelector('.tip').textContent = week.week + ' · ' + week.hours + ' hrs'; } });
+          var avgElem = document.querySelector('.avg'); if (avgElem && avgHours > 0) avgElem.style.setProperty('--p', (avgHours / maxHours * 100) + '%'); if (avgElem) avgElem.querySelector('em').textContent = 'avg ' + Math.round(avgHours) + 'h';
+          var breakdownRows = document.querySelectorAll('.drow');
+          var breakdownData = data.breakdown || [];
+          breakdownRows.forEach(function (row, index) { if (index < breakdownData.length) { row.style.display = ''; var item = breakdownData[index]; var dhead = row.querySelector('.dhead'); if (dhead) { var b = dhead.querySelector('b'); if (b) b.textContent = item.percentage + '%'; var label = dhead.textContent.split(/\d+%/)[0].trim(); dhead.textContent = ''; var dsw = document.createElement('span'); dsw.className = 'dsw c' + (index + 1); dhead.appendChild(dsw); dhead.appendChild(document.createTextNode(item.type + ' ')); var bb = document.createElement('b'); bb.textContent = item.percentage + '%'; dhead.appendChild(bb); } var dfill = row.querySelector('.dfill'); if (dfill) { dfill.style.setProperty('--w', item.percentage + '%'); dfill.style.setProperty('--d', (index * 120 + 100) + 'ms'); } } else { row.style.display = 'none'; } });
+          var refreshed = document.getElementById('dashboardRefreshText'); if (refreshed) refreshed.textContent = 'TeachTrack · dashboard updated ' + new Date().toLocaleTimeString();
+        }).catch(function () { var notice = document.getElementById('dashboardNotice'); if (notice) notice.textContent = 'Dashboard data is unavailable while the server is offline.'; });
+      }
+      var review = document.getElementById('dashboardReviewDuties'); if (review) review.addEventListener('click', function () { window.location.href = 'duties.html'; });
+      document.addEventListener('teachtrack:dashboard-refresh', loadDashboard);
+      loadDashboard();
+      window.setInterval(function () { if (!document.hidden) loadDashboard(); }, 30000);
+      document.addEventListener('visibilitychange', function () { if (!document.hidden) loadDashboard(); });
+    })();
+
+    /* Duties: admins assign work; teachers update their own status. */
     (function () {
       var filterBtn = document.getElementById('dutyFilterBtn');
       var filterMenu = document.getElementById('dutyFilterMenu');
       var statusFilter = document.getElementById('dutyStatusFilter');
-      var rows = Array.prototype.slice.call(document.querySelectorAll('.duty-row'));
+      var body = document.getElementById('dutyBody');
+      if (!body) return;
       var count = document.getElementById('dutyCount');
       var addDuty = document.getElementById('addDutyBtn');
+      var duties = [];
+      var dutyApi = 'http://localhost:4000/api/duties';
+      var isAdmin = false;
+      try { isAdmin = JSON.parse(sessionStorage.getItem('teachtrack_user') || '{}').role === 'ADMIN'; } catch (_) {}
+
+      if (addDuty && !isAdmin) addDuty.style.display = 'none';
+      function labelStatus(status) { return status === 'IN_PROGRESS' ? 'In progress' : status.charAt(0) + status.slice(1).toLowerCase(); }
+      function renderDuties() {
+        if (!body) return;
+        var filter = statusFilter ? statusFilter.value : 'all';
+        var visible = duties.filter(function (duty) { return filter === 'all' || duty.status.toLowerCase() === filter; });
+        body.innerHTML = '';
+        visible.forEach(function (duty) {
+          var row = document.createElement('tr'); row.className = 'duty-row'; row.dataset.status = duty.status.toLowerCase();
+          var title = document.createElement('td'); title.textContent = duty.title;
+          var teacher = document.createElement('td'); teacher.textContent = duty.assignedTo ? duty.assignedTo.name : '—';
+          var date = document.createElement('td'); date.textContent = duty.dueAt ? new Date(duty.dueAt).toLocaleDateString() : 'No due date';
+          var statusCell = document.createElement('td');
+          var status = document.createElement('select'); status.className = 'duty-status-select';
+          ['PENDING', 'IN_PROGRESS', 'COMPLETED'].forEach(function (value) { var option = new Option(labelStatus(value), value); option.selected = value === duty.status; status.appendChild(option); });
+          status.disabled = isAdmin;
+          status.addEventListener('change', async function () {
+            var response = await fetch(dutyApi + '/' + duty.id + '/status', { method: 'PATCH', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + authToken }, body: JSON.stringify({ status: status.value }) });
+            if (response.ok) { duty.status = status.value; renderDuties(); renderDutyStats(); }
+          });
+          statusCell.appendChild(status);
+          row.appendChild(title); row.appendChild(teacher); row.appendChild(date); row.appendChild(statusCell);
+          if (isAdmin) {
+            var actionCell = document.createElement('td');
+            var remove = document.createElement('button'); remove.type = 'button'; remove.className = 'duty-remove'; remove.textContent = 'Remove';
+            remove.addEventListener('click', async function () {
+              if (!window.confirm('Remove this assigned duty?')) return;
+              var response = await fetch(dutyApi + '/' + duty.id, { method: 'DELETE', headers: { Authorization: 'Bearer ' + authToken } });
+              if (response.ok) { duties = duties.filter(function (item) { return item.id !== duty.id; }); renderDuties(); renderDutyStats(); }
+            });
+            actionCell.appendChild(remove); row.appendChild(actionCell);
+          }
+          body.appendChild(row);
+        });
+        if (count) count.textContent = visible.length ? 'Showing 1 to ' + visible.length + ' of ' + duties.length + ' entries' : 'No duties match this filter';
+      }
+      function renderDutyStats() {
+        var upcoming = duties.filter(function (duty) { return duty.status !== 'COMPLETED' && duty.dueAt && new Date(duty.dueAt) >= new Date(); }).length;
+        var upcomingEl = document.getElementById('dutyUpcomingCount'); if (upcomingEl) upcomingEl.innerHTML = upcoming + ' <small>upcoming</small>';
+        var totalEl = document.getElementById('dutyTotalCount'); if (totalEl) totalEl.innerHTML = duties.length + ' <small>assigned</small>';
+      }
+      async function loadDuties() {
+        try { var response = await fetch(dutyApi, { headers: { Authorization: 'Bearer ' + authToken } }); if (!response.ok) return; duties = (await response.json()).duties || []; renderDuties(); renderDutyStats(); } catch (_) {}
+      }
 
       function applyDutyFilter() {
-        var value = statusFilter ? statusFilter.value : 'all';
-        var visible = 0;
-        rows.forEach(function (row) {
-          var show = value === 'all' || row.getAttribute('data-status') === value;
-          row.style.display = show ? '' : 'none';
-          if (show) visible++;
-        });
-        if (count) count.textContent = visible ? 'Showing 1 to ' + visible + ' of ' + visible + ' entries' : 'No duties match this filter';
+        renderDuties();
       }
 
       if (filterBtn && filterMenu) {
@@ -284,27 +385,117 @@
 
       if (addDuty) {
         addDuty.addEventListener('click', function () {
-          addDuty.animate([
-            { transform:'translateY(-2px) scale(1)' },
-            { transform:'translateY(-2px) scale(.97)' },
-            { transform:'translateY(-2px) scale(1)' }
-          ], {duration:260, easing:'ease-out'});
-          addDuty.setAttribute('aria-label', 'Add duty â€” ready');
-          setTimeout(function () { addDuty.setAttribute('aria-label', 'Add duty'); }, 700);
+          var modal = document.getElementById('dutyModal'); if (modal) { modal.hidden = false; document.body.classList.add('tt-modal-open'); }
         });
       }
+      var dutyModal = document.getElementById('dutyModal');
+      var dutyForm = document.getElementById('dutyForm');
+      async function loadTeachers() { var response = await fetch(dutyApi + '/teachers', { headers: { Authorization: 'Bearer ' + authToken } }); if (!response.ok) return; var select = document.getElementById('dutyTeacher'); select.innerHTML = ''; (await response.json()).teachers.forEach(function (teacher) { select.appendChild(new Option(teacher.name + ' (' + teacher.email + ')', teacher.id)); }); }
+      function closeDutyModal() { if (dutyModal) dutyModal.hidden = true; document.body.classList.remove('tt-modal-open'); }
+      if (dutyModal) { document.getElementById('dutyModalClose').addEventListener('click', closeDutyModal); document.getElementById('dutyModalCancel').addEventListener('click', closeDutyModal); dutyModal.addEventListener('click', function (event) { if (event.target === dutyModal) closeDutyModal(); }); }
+      if (dutyForm) dutyForm.addEventListener('submit', async function (event) {
+        event.preventDefault();
+        var date = document.getElementById('dutyDueDate').value, time = document.getElementById('dutyDueTime').value;
+        var payload = { assignedToId: document.getElementById('dutyTeacher').value, title: document.getElementById('dutyTitle').value, description: document.getElementById('dutyDescription').value };
+        if (date) payload.dueAt = new Date(date + 'T' + (time || '09:00')).toISOString();
+        var response = await fetch(dutyApi, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + authToken }, body: JSON.stringify(payload) });
+        if (!response.ok) { document.getElementById('dutyFormError').textContent = 'Could not assign this duty.'; return; }
+        duties.unshift((await response.json()).duty); closeDutyModal(); dutyForm.reset(); renderDuties(); renderDutyStats();
+      });
+      if (isAdmin) loadTeachers();
+      document.addEventListener('teachtrack:duty-updated', loadDuties);
+      document.addEventListener('teachtrack:duty-deleted', loadDuties);
+      loadDuties();
     })();
 
-    /* Timetable search + filters only affect timetable lecture cards. */
+    /* Timetable: each signed-in user's lectures are stored through the API. */
     var search = document.getElementById('ttSearch');
     var dayFilter = document.getElementById('ttDayFilter');
     var classFilter = document.getElementById('ttClassFilter');
     var timetableSlots = Array.prototype.slice.call(document.querySelectorAll('.tt-slot'));
+    var timetableModal = document.getElementById('ttModal');
+    var timetableForm = document.getElementById('ttForm');
+    var timetableEditingIndex = null;
+
+    function slotInfo(index) {
+      var days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+      return { day: days[index % 7], time: ['09:00', '10:00', '11:00'][Math.floor(index / 7)] };
+    }
+
+    var timetableEntries = timetableSlots.length ? Array(timetableSlots.length).fill(null) : [];
+
+    function classCode(label) {
+      var known = { 'FY-CS-A': 'fy', 'SY-IT-B': 'sy', 'TY-CS-A': 'ty' };
+      return known[label.toUpperCase()] || label.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    }
+    function timetableApi(path, options) {
+      options = options || {};
+      options.headers = Object.assign({ Authorization: 'Bearer ' + authToken }, options.headers || {});
+      return fetch('http://localhost:4000/api/timetable' + path, options);
+    }
+    function renderSlot(slot, entry, index) {
+      var info = slotInfo(index);
+      slot.className = 'tt-slot tt-reveal';
+      slot.setAttribute('data-day', info.day);
+      slot.setAttribute('data-time', info.time);
+      if (!entry) {
+        slot.classList.add('empty');
+        slot.removeAttribute('data-class');
+        slot.removeAttribute('data-subject');
+        slot.innerHTML = '<span class="tt-plus">+</span><span class="tt-empty-label">Add lecture</span>';
+        slot.setAttribute('aria-label', 'Add lecture on ' + info.day + ' at ' + info.time);
+        return;
+      }
+      slot.classList.add('lecture', entry.type || 'teal');
+      slot.setAttribute('data-class', classCode(entry.classLabel || entry.className));
+      slot.setAttribute('data-subject', entry.subject);
+      slot.innerHTML = '<span class="tt-dot"></span><b></b><small></small>';
+      slot.querySelector('b').textContent = entry.subject;
+      slot.querySelector('small').textContent = (entry.classLabel || entry.className) + ' · ' + entry.room;
+      slot.setAttribute('aria-label', 'Edit ' + entry.subject + ' on ' + info.day + ' at ' + info.time);
+    }
+    function renderTimetable() {
+      timetableSlots.forEach(function (slot, index) { renderSlot(slot, timetableEntries[index], index); });
+      filterTimetable();
+    }
+    async function loadTimetable() {
+      try {
+        var response = await timetableApi('/');
+        if (!response.ok) throw new Error('Unable to load timetable.');
+        var data = await response.json();
+        timetableEntries = Array(timetableSlots.length).fill(null);
+        (data.lectures || []).forEach(function (lecture) {
+          var index = indexFor(lecture.day, lecture.time);
+          if (index >= 0) timetableEntries[index] = lecture;
+        });
+        renderTimetable();
+      } catch (error) {
+        console.error(error);
+        var note = document.getElementById('ttFormError');
+        if (note) note.textContent = 'Unable to load your timetable. Check that the backend is running.';
+      }
+    }
 
     function filterTimetable() {
       var q = search ? search.value.trim().toLowerCase() : '';
       var day = dayFilter ? dayFilter.value : 'all';
       var cls = classFilter ? classFilter.value : 'all';
+      var timetableGrid = document.querySelector('.tt-grid');
+      var dayHeaders = Array.prototype.slice.call(document.querySelectorAll('.tt-day'));
+
+      if (timetableGrid) {
+        if (day === 'all') {
+          timetableGrid.style.gridTemplateColumns = '';
+          timetableGrid.style.minWidth = '';
+        } else {
+          timetableGrid.style.gridTemplateColumns = '70px minmax(220px, 1fr)';
+          timetableGrid.style.minWidth = '320px';
+        }
+      }
+
+      dayHeaders.forEach(function (header) {
+        header.style.display = day === 'all' || header.getAttribute('data-day') === day ? '' : 'none';
+      });
 
       timetableSlots.forEach(function (slot) {
         var text = slot.textContent.toLowerCase();
@@ -312,13 +503,203 @@
         var matchesDay = day === 'all' || slot.getAttribute('data-day') === day;
         var matchesClass = cls === 'all' || !slot.getAttribute('data-class') ||
           slot.getAttribute('data-class') === cls;
-        slot.style.display = (matchesSearch && matchesDay && matchesClass) ? '' : 'none';
+        slot.style.display = matchesDay ? '' : 'none';
+        slot.style.visibility = (matchesSearch && matchesClass) ? '' : 'hidden';
       });
     }
 
     if (search) search.addEventListener('input', filterTimetable);
     if (dayFilter) dayFilter.addEventListener('change', filterTimetable);
     if (classFilter) classFilter.addEventListener('change', filterTimetable);
+
+    function openTimetableModal(index) {
+      if (!timetableModal || !timetableForm) return;
+      timetableEditingIndex = index;
+      var entry = timetableEntries[index];
+      var info = slotInfo(index);
+      timetableForm.reset();
+      document.getElementById('ttModalTitle').textContent = entry ? 'Edit lecture' : 'Add lecture';
+      document.getElementById('ttSubject').value = entry ? entry.subject : '';
+      document.getElementById('ttClass').value = entry ? (entry.classLabel || entry.className) : '';
+      document.getElementById('ttRoom').value = entry ? entry.room : '';
+      document.getElementById('ttType').value = entry ? entry.type : 'teal';
+      document.getElementById('ttDay').value = info.day;
+      document.getElementById('ttTime').value = info.time;
+      document.getElementById('ttDeleteLecture').hidden = !entry;
+      document.getElementById('ttFormError').textContent = '';
+      timetableModal.hidden = false;
+      document.body.classList.add('tt-modal-open');
+      document.getElementById('ttSubject').focus();
+    }
+    function closeTimetableModal() {
+      if (!timetableModal) return;
+      timetableModal.hidden = true;
+      document.body.classList.remove('tt-modal-open');
+      timetableEditingIndex = null;
+    }
+    function indexFor(day, time) {
+      var days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+      return ['09:00', '10:00', '11:00'].indexOf(time) * 7 + days.indexOf(day);
+    }
+    if (timetableSlots.length) {
+      renderTimetable();
+      timetableSlots.forEach(function (slot, index) { slot.addEventListener('click', function () { openTimetableModal(index); }); });
+      var addLecture = document.getElementById('ttAddLecture');
+      if (addLecture) addLecture.addEventListener('click', function () {
+        var firstEmpty = timetableEntries.findIndex(function (entry) { return !entry; });
+        if (firstEmpty === -1) { window.alert('Every available timetable slot already has a lecture. Edit a slot to make space.'); return; }
+        openTimetableModal(firstEmpty);
+      });
+      document.getElementById('ttModalClose').addEventListener('click', closeTimetableModal);
+      document.getElementById('ttModalCancel').addEventListener('click', closeTimetableModal);
+      timetableModal.addEventListener('click', function (event) { if (event.target === timetableModal) closeTimetableModal(); });
+      document.getElementById('ttDeleteLecture').addEventListener('click', async function () {
+        if (timetableEditingIndex === null) return;
+        var entry = timetableEntries[timetableEditingIndex];
+        try {
+          var response = await timetableApi('/' + entry.id, { method: 'DELETE' });
+          if (!response.ok) throw new Error('Unable to delete this lecture.');
+          timetableEntries[timetableEditingIndex] = null;
+          renderTimetable(); closeTimetableModal();
+        } catch (error) {
+          document.getElementById('ttFormError').textContent = error.message || 'Unable to delete this lecture.';
+        }
+      });
+      timetableForm.addEventListener('submit', async function (event) {
+        event.preventDefault();
+        var targetIndex = indexFor(document.getElementById('ttDay').value, document.getElementById('ttTime').value);
+        var formError = document.getElementById('ttFormError');
+        if (targetIndex !== timetableEditingIndex && timetableEntries[targetIndex]) {
+          formError.textContent = 'That time slot already has a lecture. Choose another time or edit that lecture.';
+          return;
+        }
+        var payload = {
+          subject: document.getElementById('ttSubject').value.trim(),
+          className: document.getElementById('ttClass').value.trim(),
+          room: document.getElementById('ttRoom').value.trim(),
+          type: document.getElementById('ttType').value,
+          day: document.getElementById('ttDay').value,
+          time: document.getElementById('ttTime').value
+        };
+        try {
+          var existing = timetableEntries[timetableEditingIndex];
+          var response = await timetableApi(existing ? '/' + existing.id : '/', {
+            method: existing ? 'PATCH' : 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          var data = await response.json();
+          if (!response.ok) throw new Error(data.message || 'Unable to save this lecture.');
+          timetableEntries[timetableEditingIndex] = null;
+          timetableEntries[targetIndex] = data.lecture;
+          renderTimetable(); closeTimetableModal();
+        } catch (error) {
+          formError.textContent = error.message || 'Unable to save this lecture.';
+        }
+      });
+      document.addEventListener('keydown', function (event) { if (event.key === 'Escape' && !timetableModal.hidden) closeTimetableModal(); });
+      renderTimetable();
+      loadTimetable();
+    }
+
+    /* Profile: load and edit the authenticated account. */
+    (function () {
+      var profileName = document.getElementById('profileName');
+      if (!profileName) return;
+      var modal = document.getElementById('profileModal');
+      var form = document.getElementById('profileForm');
+      var currentUser = null;
+
+      function profileApi(path, options) {
+        options = options || {};
+        options.headers = Object.assign({ Authorization: 'Bearer ' + authToken }, options.headers || {});
+        return fetch('http://localhost:4000/api/auth' + path, options);
+      }
+      function initials(name) {
+        return name.split(/\s+/).filter(Boolean).slice(0, 2).map(function (part) { return part[0]; }).join('').toUpperCase() || '?';
+      }
+      function dateLabel(value) {
+        if (!value) return 'Not available';
+        return new Date(value).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+      }
+      function setText(id, value) { var el = document.getElementById(id); if (el) el.textContent = value; }
+      function renderProfile(user) {
+        currentUser = user;
+        var role = user.role === 'ADMIN' ? 'Administrator' : 'Teacher';
+        setText('profileName', user.name);
+        setText('profileRole', role + (user.department ? ' · ' + user.department : ''));
+        setText('profileFullName', user.name);
+        setText('profileEmail', user.email);
+        setText('profileDepartment', user.department || 'Not set');
+        setText('profileRoleValue', role);
+        setText('profilePhone', user.phone || 'Not set');
+        setText('profileAccountId', user.id ? user.id.slice(-8).toUpperCase() : '—');
+        setText('profileJoined', dateLabel(user.createdAt));
+        setText('profileLastLogin', dateLabel(user.lastLoginAt));
+        var avatar = document.getElementById('profileAvatar');
+        if (avatar) avatar.textContent = initials(user.name);
+        Array.prototype.slice.call(document.querySelectorAll('.sf-av')).forEach(function (el) { el.textContent = initials(user.name); });
+        Array.prototype.slice.call(document.querySelectorAll('.sf-label')).forEach(function (el) { el.textContent = user.name; });
+      }
+      function openProfileModal() {
+        if (!currentUser) return;
+        document.getElementById('profileInputName').value = currentUser.name || '';
+        document.getElementById('profileInputEmail').value = currentUser.email || '';
+        document.getElementById('profileInputDepartment').value = currentUser.department || '';
+        document.getElementById('profileInputPhone').value = currentUser.phone || '';
+        document.getElementById('profileInputCurrentPassword').value = '';
+        document.getElementById('profileInputNewPassword').value = '';
+        document.getElementById('profileFormMessage').textContent = '';
+        modal.hidden = false;
+        document.body.classList.add('profile-modal-open');
+        document.getElementById('profileInputName').focus();
+      }
+      function closeProfileModal() { modal.hidden = true; document.body.classList.remove('profile-modal-open'); }
+      async function loadProfile() {
+        try {
+          var response = await profileApi('/me');
+          if (!response.ok) throw new Error('Unable to load your profile.');
+          var data = await response.json();
+          sessionStorage.setItem('teachtrack_user', JSON.stringify(data.user));
+          renderProfile(data.user);
+        } catch (error) {
+          setText('profileName', 'Unable to load profile');
+          setText('profileRole', 'Check that the backend is running, then refresh this page.');
+        }
+      }
+      document.getElementById('profileEditButton').addEventListener('click', openProfileModal);
+      document.getElementById('profileModalClose').addEventListener('click', closeProfileModal);
+      document.getElementById('profileModalCancel').addEventListener('click', closeProfileModal);
+      modal.addEventListener('click', function (event) { if (event.target === modal) closeProfileModal(); });
+      form.addEventListener('submit', async function (event) {
+        event.preventDefault();
+        var message = document.getElementById('profileFormMessage');
+        var saveButton = document.getElementById('profileSaveButton');
+        var payload = {
+          name: document.getElementById('profileInputName').value.trim(),
+          email: document.getElementById('profileInputEmail').value.trim(),
+          department: document.getElementById('profileInputDepartment').value.trim(),
+          phone: document.getElementById('profileInputPhone').value.trim(),
+          currentPassword: document.getElementById('profileInputCurrentPassword').value,
+          newPassword: document.getElementById('profileInputNewPassword').value
+        };
+        if (payload.newPassword && !payload.currentPassword) { message.textContent = 'Enter your current password to set a new password.'; return; }
+        saveButton.disabled = true;
+        message.textContent = 'Saving…';
+        try {
+          var response = await profileApi('/me', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+          var data = await response.json();
+          if (!response.ok) throw new Error(data.message || 'Unable to save your profile.');
+          sessionStorage.setItem('teachtrack_user', JSON.stringify(data.user));
+          renderProfile(data.user);
+          closeProfileModal();
+        } catch (error) {
+          message.textContent = error.message || 'Unable to save your profile.';
+        } finally { saveButton.disabled = false; }
+      });
+      document.addEventListener('keydown', function (event) { if (event.key === 'Escape' && !modal.hidden) closeProfileModal(); });
+      loadProfile();
+    })();
 
     /* Leaves interactions: application modal with validation + success feedback. */
     var applyLeaveBtn = document.getElementById('applyLeaveBtn');
@@ -366,6 +747,8 @@
       { date: '2026-08-18', name: 'Science Fair Duty',         time: '09:00 AM â€“ 04:00 PM', location: 'North Wing',        category: 'duty',    status: 'upcoming' },
       { date: '2026-08-20', name: 'Casual Leave',              time: 'All day',             location: 'â€”',                category: 'leave',   status: 'pending' }
     ];
+    var calendarApi = 'http://localhost:4000/api/calendar';
+    var editingEvent = null;
 
     var current = new Date(TODAY.getFullYear(), TODAY.getMonth(), 1);
     var selectedDate = fmt(TODAY);
@@ -377,6 +760,26 @@
       return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
     }
     function eventsOn(dateStr) { return events.filter(function (e) { return e.date === dateStr; }); }
+    function eventFromApi(event) {
+      var start = new Date(event.startsAt);
+      var category = event.type.toLowerCase();
+      return {
+        id: event.id, date: fmt(start), name: event.title,
+        time: event.endsAt ? start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' - ' + new Date(event.endsAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'All day',
+        location: event.description || '—', category: CATEGORY[category] ? category : 'meeting',
+        status: start < TODAY ? 'completed' : 'upcoming', description: event.description || '',
+        startsAt: event.startsAt, endsAt: event.endsAt, reminderAt: event.reminderAt,
+      };
+    }
+    async function loadCalendarEvents() {
+      try {
+        var response = await fetch(calendarApi, { headers: { Authorization: 'Bearer ' + authToken } });
+        if (!response.ok) return;
+        var data = await response.json();
+        events = (data.events || []).map(eventFromApi);
+        renderAll();
+      } catch (_) { /* Keep the calendar usable if the API is unavailable. */ }
+    }
     function startOfWeek(d) { var x = new Date(d); x.setDate(x.getDate() - x.getDay()); x.setHours(0,0,0,0); return x; }
     function endOfWeek(d) { var x = startOfWeek(d); x.setDate(x.getDate() + 6); x.setHours(23,59,59,999); return x; }
 
@@ -388,8 +791,8 @@
     }
 
     function renderGrid() {
-      // remove existing day cells (keep the 7 .cal-dow headers)
       Array.prototype.slice.call(grid.querySelectorAll('.cal-day')).forEach(function (el) { el.remove(); });
+      grid.classList.remove('week-view', 'day-view');
 
       var year = current.getFullYear(), month = current.getMonth();
       var firstDay = new Date(year, month, 1);
@@ -397,23 +800,40 @@
       var daysInMonth = new Date(year, month + 1, 0).getDate();
       var daysInPrevMonth = new Date(year, month, 0).getDate();
       var totalCells = Math.ceil((startOffset + daysInMonth) / 7) * 7;
+      var dates = [];
+      if (currentView === 'day') {
+        dates = [new Date(selectedDate + 'T00:00:00')];
+        grid.classList.add('day-view');
+      } else if (currentView === 'week') {
+        var weekStart = startOfWeek(new Date(selectedDate + 'T00:00:00'));
+        for (var weekDay = 0; weekDay < 7; weekDay++) {
+          var weekDate = new Date(weekStart);
+          weekDate.setDate(weekStart.getDate() + weekDay);
+          dates.push(weekDate);
+        }
+        grid.classList.add('week-view');
+      } else {
+        for (var monthCell = 0; monthCell < totalCells; monthCell++) {
+          if (monthCell < startOffset) dates.push(new Date(year, month - 1, daysInPrevMonth - startOffset + monthCell + 1));
+          else if (monthCell >= startOffset + daysInMonth) dates.push(new Date(year, month + 1, monthCell - startOffset - daysInMonth + 1));
+          else dates.push(new Date(year, month, monthCell - startOffset + 1));
+        }
+      }
+      var headers = Array.prototype.slice.call(grid.querySelectorAll('.cal-dow'));
+      var headerNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      headers.forEach(function (header, index) {
+        header.style.display = currentView === 'day' && index > 0 ? 'none' : '';
+        if (currentView === 'month') header.textContent = headerNames[index];
+        else if (currentView === 'week') header.textContent = headerNames[index] + ' ' + dates[index].getDate();
+        else if (index === 0) header.textContent = headerNames[dates[0].getDay()] + ' ' + dates[0].getDate();
+      });
 
       var frag = document.createDocumentFragment();
 
-      for (var i = 0; i < totalCells; i++) {
-        var dayNum, cellDate, isOther = false;
-        if (i < startOffset) {
-          dayNum = daysInPrevMonth - startOffset + i + 1;
-          cellDate = new Date(year, month - 1, dayNum);
-          isOther = true;
-        } else if (i >= startOffset + daysInMonth) {
-          dayNum = i - startOffset - daysInMonth + 1;
-          cellDate = new Date(year, month + 1, dayNum);
-          isOther = true;
-        } else {
-          dayNum = i - startOffset + 1;
-          cellDate = new Date(year, month, dayNum);
-        }
+      for (var i = 0; i < dates.length; i++) {
+        var cellDate = dates[i];
+        var dayNum = cellDate.getDate();
+        var isOther = currentView === 'month' && cellDate.getMonth() !== month;
 
         var dStr = fmt(cellDate);
         var isToday = dStr === fmt(TODAY);
@@ -440,6 +860,7 @@
             var pill = document.createElement('span');
             pill.className = 'cal-pill ' + CATEGORY[ev.category].cls;
             pill.innerHTML = '<i></i><span>' + ev.name + '</span>';
+            if (ev.id) pill.addEventListener('click', function (event) { event.stopPropagation(); openEventModal(ev); });
             evtsWrap.appendChild(pill);
           });
           if (dayEvents.length > 2) {
@@ -581,8 +1002,9 @@
         viewBtns.forEach(function (b) { b.classList.remove('active'); });
         btn.classList.add('active');
         currentView = btn.getAttribute('data-view');
-        // Month view is fully implemented; Week/Day reuse the same grid,
-        // scoped visually by highlighting only the relevant cells.
+        var viewDate = new Date(selectedDate + 'T00:00:00');
+        current = new Date(viewDate.getFullYear(), viewDate.getMonth(), 1);
+        renderMonthLabel();
         renderGrid();
       });
     });
@@ -590,19 +1012,65 @@
     var addBtn = document.getElementById('calAddEventBtn');
     if (addBtn) {
       addBtn.addEventListener('click', function () {
-        var name = window.prompt('Event name:');
-        if (!name) return;
-        var d = selectedDate || fmt(TODAY);
-        events.push({
-          date: d, name: name, time: 'All day', location: 'â€”',
-          category: 'meeting', status: 'pending'
-        });
-        currentPage = 1;
-        renderAll();
+        openEventModal(null);
       });
     }
 
+    var eventModal = document.getElementById('calendarEventModal');
+    var eventForm = document.getElementById('calendarEventForm');
+    function localDateTime(value) {
+      if (!value) return '';
+      var d = new Date(value);
+      return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0') + 'T' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+    }
+    function openEventModal(event) {
+      editingEvent = event;
+      document.getElementById('calendarEventTitle').textContent = event ? 'Edit task or reminder' : 'Add task or reminder';
+      document.getElementById('calendarEventName').value = event ? event.name : '';
+      document.getElementById('calendarEventType').value = event ? event.category.toUpperCase() : 'REMINDER';
+      document.getElementById('calendarEventDate').value = event ? event.date : (selectedDate || fmt(TODAY));
+      document.getElementById('calendarEventTime').value = event && event.startsAt ? localDateTime(event.startsAt).slice(11) : '09:00';
+      document.getElementById('calendarEventReminder').value = event ? localDateTime(event.reminderAt) : '';
+      document.getElementById('calendarEventDescription').value = event ? event.description : '';
+      document.getElementById('calendarEventDelete').style.display = event ? '' : 'none';
+      document.getElementById('calendarEventError').textContent = '';
+      eventModal.hidden = false;
+      document.body.classList.add('tt-modal-open');
+      document.getElementById('calendarEventName').focus();
+    }
+    function closeEventModal() { eventModal.hidden = true; document.body.classList.remove('tt-modal-open'); }
+    document.getElementById('calendarEventClose').addEventListener('click', closeEventModal);
+    document.getElementById('calendarEventCancel').addEventListener('click', closeEventModal);
+    eventModal.addEventListener('click', function (event) { if (event.target === eventModal) closeEventModal(); });
+    document.getElementById('calendarEventDelete').addEventListener('click', async function () {
+      if (!editingEvent || !window.confirm('Remove this calendar item?')) return;
+      var response = await fetch(calendarApi + '/' + editingEvent.id, { method: 'DELETE', headers: { Authorization: 'Bearer ' + authToken } });
+      if (response.ok) { events = events.filter(function (item) { return item.id !== editingEvent.id; }); closeEventModal(); renderAll(); }
+    });
+    eventForm.addEventListener('submit', async function (event) {
+      event.preventDefault();
+      var date = document.getElementById('calendarEventDate').value;
+      var time = document.getElementById('calendarEventTime').value;
+      var payload = {
+        title: document.getElementById('calendarEventName').value,
+        description: document.getElementById('calendarEventDescription').value,
+        type: document.getElementById('calendarEventType').value,
+        startsAt: new Date(date + 'T' + time).toISOString(),
+        reminderAt: document.getElementById('calendarEventReminder').value ? new Date(document.getElementById('calendarEventReminder').value).toISOString() : undefined,
+      };
+      var response = await fetch(editingEvent ? calendarApi + '/' + editingEvent.id : calendarApi, {
+        method: editingEvent ? 'PATCH' : 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + authToken },
+        body: JSON.stringify(payload),
+      });
+      if (!response.ok) { document.getElementById('calendarEventError').textContent = 'Could not save this calendar item.'; return; }
+      var saved = eventFromApi((await response.json()).event);
+      if (editingEvent) events = events.map(function (item) { return item.id === saved.id ? saved : item; }); else events.push(saved);
+      selectedDate = saved.date; currentPage = 1; closeEventModal(); renderAll();
+    });
+
     renderAll();
+    loadCalendarEvents();
   })();
 
   /* ---------- API-backed leaves page ---------- */
@@ -814,6 +1282,26 @@
     var notifications = [];
     var apiBase = 'http://localhost:4000/api';
 
+    function renderMessageBadge(count) {
+      Array.prototype.slice.call(document.querySelectorAll('.nbadge')).forEach(function (badge) {
+        badge.textContent = count > 99 ? '99+' : String(count);
+        badge.style.display = count ? '' : 'none';
+      });
+    }
+
+    async function loadUnreadMessageCount() {
+      try {
+        var response = await fetch(apiBase + '/messages/unread-count', {
+          headers: { Authorization: 'Bearer ' + authToken },
+        });
+        if (!response.ok) return;
+        var data = await response.json();
+        renderMessageBadge(data.count || 0);
+      } catch {
+        /* The message service may be temporarily unavailable. */
+      }
+    }
+
     function iconFor(type) {
       var icon = document.createElement('span');
       icon.className = 'notification-icon';
@@ -949,12 +1437,38 @@
           ...notification,
         });
         renderNotifications();
+        document.dispatchEvent(new CustomEvent('teachtrack:dashboard-refresh'));
       });
 
       socket.on('leave:updated', function (payload) {
         document.dispatchEvent(new CustomEvent('teachtrack:leave-updated', {
           detail: payload
         }));
+        document.dispatchEvent(new CustomEvent('teachtrack:dashboard-refresh'));
+      });
+
+      socket.on('message:new', function () {
+        loadUnreadMessageCount();
+        document.dispatchEvent(new CustomEvent('teachtrack:dashboard-refresh'));
+      });
+
+      socket.on('message:read', function () {
+        loadUnreadMessageCount();
+        document.dispatchEvent(new CustomEvent('teachtrack:dashboard-refresh'));
+      });
+
+      socket.on('duty:updated', function () {
+        document.dispatchEvent(new CustomEvent('teachtrack:duty-updated'));
+        document.dispatchEvent(new CustomEvent('teachtrack:dashboard-refresh'));
+      });
+
+      socket.on('duty:deleted', function () {
+        document.dispatchEvent(new CustomEvent('teachtrack:duty-deleted'));
+        document.dispatchEvent(new CustomEvent('teachtrack:dashboard-refresh'));
+      });
+
+      socket.on('dashboard:updated', function () {
+        document.dispatchEvent(new CustomEvent('teachtrack:dashboard-refresh'));
       });
     }
 
@@ -967,6 +1481,13 @@
     });
 
     loadNotifications();
+    loadUnreadMessageCount();
+    window.setInterval(loadUnreadMessageCount, 15000);
+    window.addEventListener('message', function (event) {
+      if (event.origin === window.location.origin && event.data && event.data.type === 'teachtrack:messages-read') {
+        loadUnreadMessageCount();
+      }
+    });
     connectSocket();
   })();
 

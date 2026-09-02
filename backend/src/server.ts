@@ -9,6 +9,12 @@ import leaveRouter from "./routes/leaves.ts";
 import { prisma } from "./lib/prisma.ts";
 import { configureSocketServer } from "./lib/socket.ts";
 import notificationRouter from "./routes/notifications.ts";
+import timetableRouter from "./routes/timetable.ts";
+import messageRouter from "./routes/messages.ts";
+import aiRouter from "./routes/ai.ts";
+import calendarRouter from "./routes/calendar.ts";
+import dutyRouter from "./routes/duties.ts";
+import dashboardRouter from "./routes/dashboard.ts";
 
 const app = express();
 const server = http.createServer(app);
@@ -30,6 +36,12 @@ app.use(express.json({ limit: "1mb" }));
 app.use("/api/auth", authRouter);
 app.use("/api/leaves", leaveRouter);
 app.use("/api/notifications", notificationRouter);
+app.use("/api/timetable", timetableRouter);
+app.use("/api/messages", messageRouter);
+app.use("/api/ai", aiRouter);
+app.use("/api/calendar", calendarRouter);
+app.use("/api/duties", dutyRouter);
+app.use("/api/dashboard", dashboardRouter);
 
 app.get("/api/health", async (_request, response) => {
   try {
@@ -102,6 +114,14 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log(`Live connection closed: ${socket.data.userId}`);
   });
+});
+
+server.on("error", (error: NodeJS.ErrnoException) => {
+  if (error.code === "EADDRINUSE") {
+    console.error(`TeachTrack API is already running on port ${port}. Stop the existing process before starting another one.`);
+    process.exit(1);
+  }
+  throw error;
 });
 
 server.listen(port, () => {

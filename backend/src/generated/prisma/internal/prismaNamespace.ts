@@ -402,7 +402,8 @@ export const ModelName = {
   Message: 'Message',
   CalendarEvent: 'CalendarEvent',
   Duty: 'Duty',
-  Notification: 'Notification'
+  Notification: 'Notification',
+  TimetableLecture: 'TimetableLecture'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -418,7 +419,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "leaveRequest" | "message" | "calendarEvent" | "duty" | "notification"
+    modelProps: "user" | "leaveRequest" | "message" | "calendarEvent" | "duty" | "notification" | "timetableLecture"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -866,6 +867,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    TimetableLecture: {
+      payload: Prisma.$TimetableLecturePayload<ExtArgs>
+      fields: Prisma.TimetableLectureFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TimetableLectureFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TimetableLecturePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TimetableLectureFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TimetableLecturePayload>
+        }
+        findFirst: {
+          args: Prisma.TimetableLectureFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TimetableLecturePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TimetableLectureFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TimetableLecturePayload>
+        }
+        findMany: {
+          args: Prisma.TimetableLectureFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TimetableLecturePayload>[]
+        }
+        create: {
+          args: Prisma.TimetableLectureCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TimetableLecturePayload>
+        }
+        createMany: {
+          args: Prisma.TimetableLectureCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TimetableLectureCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TimetableLecturePayload>[]
+        }
+        delete: {
+          args: Prisma.TimetableLectureDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TimetableLecturePayload>
+        }
+        update: {
+          args: Prisma.TimetableLectureUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TimetableLecturePayload>
+        }
+        deleteMany: {
+          args: Prisma.TimetableLectureDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TimetableLectureUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TimetableLectureUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TimetableLecturePayload>[]
+        }
+        upsert: {
+          args: Prisma.TimetableLectureUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TimetableLecturePayload>
+        }
+        aggregate: {
+          args: Prisma.TimetableLectureAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTimetableLecture>
+        }
+        groupBy: {
+          args: Prisma.TimetableLectureGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TimetableLectureGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TimetableLectureCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TimetableLectureCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -910,8 +985,12 @@ export const UserScalarFieldEnum = {
   name: 'name',
   email: 'email',
   passwordHash: 'passwordHash',
+  department: 'department',
+  phone: 'phone',
+  campus: 'campus',
   role: 'role',
   isActive: 'isActive',
+  lastLoginAt: 'lastLoginAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -990,6 +1069,22 @@ export const NotificationScalarFieldEnum = {
 } as const
 
 export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
+
+
+export const TimetableLectureScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  subject: 'subject',
+  className: 'className',
+  room: 'room',
+  day: 'day',
+  time: 'time',
+  type: 'type',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TimetableLectureScalarFieldEnum = (typeof TimetableLectureScalarFieldEnum)[keyof typeof TimetableLectureScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1297,6 +1392,7 @@ export type GlobalOmitConfig = {
   calendarEvent?: Prisma.CalendarEventOmit
   duty?: Prisma.DutyOmit
   notification?: Prisma.NotificationOmit
+  timetableLecture?: Prisma.TimetableLectureOmit
 }
 
 /* Types for Logging */

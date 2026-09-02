@@ -47,3 +47,8 @@ export type Duty = Prisma.DutyModel
  * 
  */
 export type Notification = Prisma.NotificationModel
+/**
+ * Model TimetableLecture
+ * 
+ */
+export type TimetableLecture = Prisma.TimetableLectureModel

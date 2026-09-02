@@ -29,8 +29,12 @@ export type UserMinAggregateOutputType = {
   name: string | null
   email: string | null
   passwordHash: string | null
+  department: string | null
+  phone: string | null
+  campus: string | null
   role: $Enums.Role | null
   isActive: boolean | null
+  lastLoginAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -40,8 +44,12 @@ export type UserMaxAggregateOutputType = {
   name: string | null
   email: string | null
   passwordHash: string | null
+  department: string | null
+  phone: string | null
+  campus: string | null
   role: $Enums.Role | null
   isActive: boolean | null
+  lastLoginAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -51,8 +59,12 @@ export type UserCountAggregateOutputType = {
   name: number
   email: number
   passwordHash: number
+  department: number
+  phone: number
+  campus: number
   role: number
   isActive: number
+  lastLoginAt: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -64,8 +76,12 @@ export type UserMinAggregateInputType = {
   name?: true
   email?: true
   passwordHash?: true
+  department?: true
+  phone?: true
+  campus?: true
   role?: true
   isActive?: true
+  lastLoginAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -75,8 +91,12 @@ export type UserMaxAggregateInputType = {
   name?: true
   email?: true
   passwordHash?: true
+  department?: true
+  phone?: true
+  campus?: true
   role?: true
   isActive?: true
+  lastLoginAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -86,8 +106,12 @@ export type UserCountAggregateInputType = {
   name?: true
   email?: true
   passwordHash?: true
+  department?: true
+  phone?: true
+  campus?: true
   role?: true
   isActive?: true
+  lastLoginAt?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -170,8 +194,12 @@ export type UserGroupByOutputType = {
   name: string
   email: string
   passwordHash: string
+  department: string | null
+  phone: string | null
+  campus: string | null
   role: $Enums.Role
   isActive: boolean
+  lastLoginAt: Date | null
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -202,8 +230,12 @@ export type UserWhereInput = {
   name?: Prisma.StringFilter<"User"> | string
   email?: Prisma.StringFilter<"User"> | string
   passwordHash?: Prisma.StringFilter<"User"> | string
+  department?: Prisma.StringNullableFilter<"User"> | string | null
+  phone?: Prisma.StringNullableFilter<"User"> | string | null
+  campus?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   isActive?: Prisma.BoolFilter<"User"> | boolean
+  lastLoginAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   leaveRequests?: Prisma.LeaveRequestListRelationFilter
@@ -213,6 +245,7 @@ export type UserWhereInput = {
   duties?: Prisma.DutyListRelationFilter
   events?: Prisma.CalendarEventListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
+  timetableLectures?: Prisma.TimetableLectureListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -220,8 +253,12 @@ export type UserOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
+  department?: Prisma.SortOrderInput | Prisma.SortOrder
+  phone?: Prisma.SortOrderInput | Prisma.SortOrder
+  campus?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  lastLoginAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   leaveRequests?: Prisma.LeaveRequestOrderByRelationAggregateInput
@@ -231,6 +268,7 @@ export type UserOrderByWithRelationInput = {
   duties?: Prisma.DutyOrderByRelationAggregateInput
   events?: Prisma.CalendarEventOrderByRelationAggregateInput
   notifications?: Prisma.NotificationOrderByRelationAggregateInput
+  timetableLectures?: Prisma.TimetableLectureOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -241,8 +279,12 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   name?: Prisma.StringFilter<"User"> | string
   passwordHash?: Prisma.StringFilter<"User"> | string
+  department?: Prisma.StringNullableFilter<"User"> | string | null
+  phone?: Prisma.StringNullableFilter<"User"> | string | null
+  campus?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   isActive?: Prisma.BoolFilter<"User"> | boolean
+  lastLoginAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   leaveRequests?: Prisma.LeaveRequestListRelationFilter
@@ -252,6 +294,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   duties?: Prisma.DutyListRelationFilter
   events?: Prisma.CalendarEventListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
+  timetableLectures?: Prisma.TimetableLectureListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -259,8 +302,12 @@ export type UserOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
+  department?: Prisma.SortOrderInput | Prisma.SortOrder
+  phone?: Prisma.SortOrderInput | Prisma.SortOrder
+  campus?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  lastLoginAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -276,8 +323,12 @@ export type UserScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"User"> | string
   email?: Prisma.StringWithAggregatesFilter<"User"> | string
   passwordHash?: Prisma.StringWithAggregatesFilter<"User"> | string
+  department?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  phone?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  campus?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   role?: Prisma.EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
   isActive?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
+  lastLoginAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -287,8 +338,12 @@ export type UserCreateInput = {
   name: string
   email: string
   passwordHash: string
+  department?: string | null
+  phone?: string | null
+  campus?: string | null
   role?: $Enums.Role
   isActive?: boolean
+  lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutTeacherInput
@@ -298,6 +353,7 @@ export type UserCreateInput = {
   duties?: Prisma.DutyCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  timetableLectures?: Prisma.TimetableLectureCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -305,8 +361,12 @@ export type UserUncheckedCreateInput = {
   name: string
   email: string
   passwordHash: string
+  department?: string | null
+  phone?: string | null
+  campus?: string | null
   role?: $Enums.Role
   isActive?: boolean
+  lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTeacherInput
@@ -316,6 +376,7 @@ export type UserUncheckedCreateInput = {
   duties?: Prisma.DutyUncheckedCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  timetableLectures?: Prisma.TimetableLectureUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -323,8 +384,12 @@ export type UserUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutTeacherNestedInput
@@ -334,6 +399,7 @@ export type UserUpdateInput = {
   duties?: Prisma.DutyUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  timetableLectures?: Prisma.TimetableLectureUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -341,8 +407,12 @@ export type UserUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTeacherNestedInput
@@ -352,6 +422,7 @@ export type UserUncheckedUpdateInput = {
   duties?: Prisma.DutyUncheckedUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  timetableLectures?: Prisma.TimetableLectureUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -359,8 +430,12 @@ export type UserCreateManyInput = {
   name: string
   email: string
   passwordHash: string
+  department?: string | null
+  phone?: string | null
+  campus?: string | null
   role?: $Enums.Role
   isActive?: boolean
+  lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -370,8 +445,12 @@ export type UserUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -381,8 +460,12 @@ export type UserUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -392,8 +475,12 @@ export type UserCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
+  department?: Prisma.SortOrder
+  phone?: Prisma.SortOrder
+  campus?: Prisma.SortOrder
   role?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  lastLoginAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -403,8 +490,12 @@ export type UserMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
+  department?: Prisma.SortOrder
+  phone?: Prisma.SortOrder
+  campus?: Prisma.SortOrder
   role?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  lastLoginAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -414,8 +505,12 @@ export type UserMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
+  department?: Prisma.SortOrder
+  phone?: Prisma.SortOrder
+  campus?: Prisma.SortOrder
   role?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  lastLoginAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -434,12 +529,20 @@ export type StringFieldUpdateOperationsInput = {
   set?: string
 }
 
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
+}
+
 export type EnumRoleFieldUpdateOperationsInput = {
   set?: $Enums.Role
 }
 
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
 }
 
 export type DateTimeFieldUpdateOperationsInput = {
@@ -546,13 +649,31 @@ export type UserUpdateOneRequiredWithoutNotificationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutNotificationsInput, Prisma.UserUpdateWithoutNotificationsInput>, Prisma.UserUncheckedUpdateWithoutNotificationsInput>
 }
 
+export type UserCreateNestedOneWithoutTimetableLecturesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutTimetableLecturesInput, Prisma.UserUncheckedCreateWithoutTimetableLecturesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTimetableLecturesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutTimetableLecturesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutTimetableLecturesInput, Prisma.UserUncheckedCreateWithoutTimetableLecturesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTimetableLecturesInput
+  upsert?: Prisma.UserUpsertWithoutTimetableLecturesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTimetableLecturesInput, Prisma.UserUpdateWithoutTimetableLecturesInput>, Prisma.UserUncheckedUpdateWithoutTimetableLecturesInput>
+}
+
 export type UserCreateWithoutLeaveRequestsInput = {
   id?: string
   name: string
   email: string
   passwordHash: string
+  department?: string | null
+  phone?: string | null
+  campus?: string | null
   role?: $Enums.Role
   isActive?: boolean
+  lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   reviewedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutReviewedByInput
@@ -561,6 +682,7 @@ export type UserCreateWithoutLeaveRequestsInput = {
   duties?: Prisma.DutyCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  timetableLectures?: Prisma.TimetableLectureCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLeaveRequestsInput = {
@@ -568,8 +690,12 @@ export type UserUncheckedCreateWithoutLeaveRequestsInput = {
   name: string
   email: string
   passwordHash: string
+  department?: string | null
+  phone?: string | null
+  campus?: string | null
   role?: $Enums.Role
   isActive?: boolean
+  lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   reviewedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
@@ -578,6 +704,7 @@ export type UserUncheckedCreateWithoutLeaveRequestsInput = {
   duties?: Prisma.DutyUncheckedCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  timetableLectures?: Prisma.TimetableLectureUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLeaveRequestsInput = {
@@ -590,8 +717,12 @@ export type UserCreateWithoutReviewedLeavesInput = {
   name: string
   email: string
   passwordHash: string
+  department?: string | null
+  phone?: string | null
+  campus?: string | null
   role?: $Enums.Role
   isActive?: boolean
+  lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutTeacherInput
@@ -600,6 +731,7 @@ export type UserCreateWithoutReviewedLeavesInput = {
   duties?: Prisma.DutyCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  timetableLectures?: Prisma.TimetableLectureCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReviewedLeavesInput = {
@@ -607,8 +739,12 @@ export type UserUncheckedCreateWithoutReviewedLeavesInput = {
   name: string
   email: string
   passwordHash: string
+  department?: string | null
+  phone?: string | null
+  campus?: string | null
   role?: $Enums.Role
   isActive?: boolean
+  lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTeacherInput
@@ -617,6 +753,7 @@ export type UserUncheckedCreateWithoutReviewedLeavesInput = {
   duties?: Prisma.DutyUncheckedCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  timetableLectures?: Prisma.TimetableLectureUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReviewedLeavesInput = {
@@ -640,8 +777,12 @@ export type UserUpdateWithoutLeaveRequestsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reviewedLeaves?: Prisma.LeaveRequestUpdateManyWithoutReviewedByNestedInput
@@ -650,6 +791,7 @@ export type UserUpdateWithoutLeaveRequestsInput = {
   duties?: Prisma.DutyUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  timetableLectures?: Prisma.TimetableLectureUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLeaveRequestsInput = {
@@ -657,8 +799,12 @@ export type UserUncheckedUpdateWithoutLeaveRequestsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reviewedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
@@ -667,6 +813,7 @@ export type UserUncheckedUpdateWithoutLeaveRequestsInput = {
   duties?: Prisma.DutyUncheckedUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  timetableLectures?: Prisma.TimetableLectureUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutReviewedLeavesInput = {
@@ -685,8 +832,12 @@ export type UserUpdateWithoutReviewedLeavesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutTeacherNestedInput
@@ -695,6 +846,7 @@ export type UserUpdateWithoutReviewedLeavesInput = {
   duties?: Prisma.DutyUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  timetableLectures?: Prisma.TimetableLectureUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviewedLeavesInput = {
@@ -702,8 +854,12 @@ export type UserUncheckedUpdateWithoutReviewedLeavesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTeacherNestedInput
@@ -712,6 +868,7 @@ export type UserUncheckedUpdateWithoutReviewedLeavesInput = {
   duties?: Prisma.DutyUncheckedUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  timetableLectures?: Prisma.TimetableLectureUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSentMessagesInput = {
@@ -719,8 +876,12 @@ export type UserCreateWithoutSentMessagesInput = {
   name: string
   email: string
   passwordHash: string
+  department?: string | null
+  phone?: string | null
+  campus?: string | null
   role?: $Enums.Role
   isActive?: boolean
+  lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutTeacherInput
@@ -729,6 +890,7 @@ export type UserCreateWithoutSentMessagesInput = {
   duties?: Prisma.DutyCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  timetableLectures?: Prisma.TimetableLectureCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSentMessagesInput = {
@@ -736,8 +898,12 @@ export type UserUncheckedCreateWithoutSentMessagesInput = {
   name: string
   email: string
   passwordHash: string
+  department?: string | null
+  phone?: string | null
+  campus?: string | null
   role?: $Enums.Role
   isActive?: boolean
+  lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTeacherInput
@@ -746,6 +912,7 @@ export type UserUncheckedCreateWithoutSentMessagesInput = {
   duties?: Prisma.DutyUncheckedCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  timetableLectures?: Prisma.TimetableLectureUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSentMessagesInput = {
@@ -758,8 +925,12 @@ export type UserCreateWithoutReceivedMessagesInput = {
   name: string
   email: string
   passwordHash: string
+  department?: string | null
+  phone?: string | null
+  campus?: string | null
   role?: $Enums.Role
   isActive?: boolean
+  lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutTeacherInput
@@ -768,6 +939,7 @@ export type UserCreateWithoutReceivedMessagesInput = {
   duties?: Prisma.DutyCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  timetableLectures?: Prisma.TimetableLectureCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReceivedMessagesInput = {
@@ -775,8 +947,12 @@ export type UserUncheckedCreateWithoutReceivedMessagesInput = {
   name: string
   email: string
   passwordHash: string
+  department?: string | null
+  phone?: string | null
+  campus?: string | null
   role?: $Enums.Role
   isActive?: boolean
+  lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTeacherInput
@@ -785,6 +961,7 @@ export type UserUncheckedCreateWithoutReceivedMessagesInput = {
   duties?: Prisma.DutyUncheckedCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  timetableLectures?: Prisma.TimetableLectureUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReceivedMessagesInput = {
@@ -808,8 +985,12 @@ export type UserUpdateWithoutSentMessagesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutTeacherNestedInput
@@ -818,6 +999,7 @@ export type UserUpdateWithoutSentMessagesInput = {
   duties?: Prisma.DutyUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  timetableLectures?: Prisma.TimetableLectureUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSentMessagesInput = {
@@ -825,8 +1007,12 @@ export type UserUncheckedUpdateWithoutSentMessagesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTeacherNestedInput
@@ -835,6 +1021,7 @@ export type UserUncheckedUpdateWithoutSentMessagesInput = {
   duties?: Prisma.DutyUncheckedUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  timetableLectures?: Prisma.TimetableLectureUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutReceivedMessagesInput = {
@@ -853,8 +1040,12 @@ export type UserUpdateWithoutReceivedMessagesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutTeacherNestedInput
@@ -863,6 +1054,7 @@ export type UserUpdateWithoutReceivedMessagesInput = {
   duties?: Prisma.DutyUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  timetableLectures?: Prisma.TimetableLectureUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReceivedMessagesInput = {
@@ -870,8 +1062,12 @@ export type UserUncheckedUpdateWithoutReceivedMessagesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTeacherNestedInput
@@ -880,6 +1076,7 @@ export type UserUncheckedUpdateWithoutReceivedMessagesInput = {
   duties?: Prisma.DutyUncheckedUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  timetableLectures?: Prisma.TimetableLectureUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutEventsInput = {
@@ -887,8 +1084,12 @@ export type UserCreateWithoutEventsInput = {
   name: string
   email: string
   passwordHash: string
+  department?: string | null
+  phone?: string | null
+  campus?: string | null
   role?: $Enums.Role
   isActive?: boolean
+  lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutTeacherInput
@@ -897,6 +1098,7 @@ export type UserCreateWithoutEventsInput = {
   receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
   duties?: Prisma.DutyCreateNestedManyWithoutAssignedToInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  timetableLectures?: Prisma.TimetableLectureCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutEventsInput = {
@@ -904,8 +1106,12 @@ export type UserUncheckedCreateWithoutEventsInput = {
   name: string
   email: string
   passwordHash: string
+  department?: string | null
+  phone?: string | null
+  campus?: string | null
   role?: $Enums.Role
   isActive?: boolean
+  lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTeacherInput
@@ -914,6 +1120,7 @@ export type UserUncheckedCreateWithoutEventsInput = {
   receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
   duties?: Prisma.DutyUncheckedCreateNestedManyWithoutAssignedToInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  timetableLectures?: Prisma.TimetableLectureUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutEventsInput = {
@@ -937,8 +1144,12 @@ export type UserUpdateWithoutEventsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutTeacherNestedInput
@@ -947,6 +1158,7 @@ export type UserUpdateWithoutEventsInput = {
   receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
   duties?: Prisma.DutyUpdateManyWithoutAssignedToNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  timetableLectures?: Prisma.TimetableLectureUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutEventsInput = {
@@ -954,8 +1166,12 @@ export type UserUncheckedUpdateWithoutEventsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTeacherNestedInput
@@ -964,6 +1180,7 @@ export type UserUncheckedUpdateWithoutEventsInput = {
   receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
   duties?: Prisma.DutyUncheckedUpdateManyWithoutAssignedToNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  timetableLectures?: Prisma.TimetableLectureUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDutiesInput = {
@@ -971,8 +1188,12 @@ export type UserCreateWithoutDutiesInput = {
   name: string
   email: string
   passwordHash: string
+  department?: string | null
+  phone?: string | null
+  campus?: string | null
   role?: $Enums.Role
   isActive?: boolean
+  lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutTeacherInput
@@ -981,6 +1202,7 @@ export type UserCreateWithoutDutiesInput = {
   receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
   events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  timetableLectures?: Prisma.TimetableLectureCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDutiesInput = {
@@ -988,8 +1210,12 @@ export type UserUncheckedCreateWithoutDutiesInput = {
   name: string
   email: string
   passwordHash: string
+  department?: string | null
+  phone?: string | null
+  campus?: string | null
   role?: $Enums.Role
   isActive?: boolean
+  lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTeacherInput
@@ -998,6 +1224,7 @@ export type UserUncheckedCreateWithoutDutiesInput = {
   receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
   events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  timetableLectures?: Prisma.TimetableLectureUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDutiesInput = {
@@ -1021,8 +1248,12 @@ export type UserUpdateWithoutDutiesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutTeacherNestedInput
@@ -1031,6 +1262,7 @@ export type UserUpdateWithoutDutiesInput = {
   receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
   events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  timetableLectures?: Prisma.TimetableLectureUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDutiesInput = {
@@ -1038,8 +1270,12 @@ export type UserUncheckedUpdateWithoutDutiesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTeacherNestedInput
@@ -1048,6 +1284,7 @@ export type UserUncheckedUpdateWithoutDutiesInput = {
   receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
   events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  timetableLectures?: Prisma.TimetableLectureUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNotificationsInput = {
@@ -1055,8 +1292,12 @@ export type UserCreateWithoutNotificationsInput = {
   name: string
   email: string
   passwordHash: string
+  department?: string | null
+  phone?: string | null
+  campus?: string | null
   role?: $Enums.Role
   isActive?: boolean
+  lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutTeacherInput
@@ -1065,6 +1306,7 @@ export type UserCreateWithoutNotificationsInput = {
   receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
   duties?: Prisma.DutyCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
+  timetableLectures?: Prisma.TimetableLectureCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -1072,8 +1314,12 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   name: string
   email: string
   passwordHash: string
+  department?: string | null
+  phone?: string | null
+  campus?: string | null
   role?: $Enums.Role
   isActive?: boolean
+  lastLoginAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTeacherInput
@@ -1082,6 +1328,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
   duties?: Prisma.DutyUncheckedCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
+  timetableLectures?: Prisma.TimetableLectureUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -1105,8 +1352,12 @@ export type UserUpdateWithoutNotificationsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutTeacherNestedInput
@@ -1115,6 +1366,7 @@ export type UserUpdateWithoutNotificationsInput = {
   receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
   duties?: Prisma.DutyUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
+  timetableLectures?: Prisma.TimetableLectureUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -1122,8 +1374,12 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTeacherNestedInput
@@ -1132,6 +1388,111 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
   duties?: Prisma.DutyUncheckedUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
+  timetableLectures?: Prisma.TimetableLectureUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutTimetableLecturesInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  department?: string | null
+  phone?: string | null
+  campus?: string | null
+  role?: $Enums.Role
+  isActive?: boolean
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutTeacherInput
+  reviewedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutReviewedByInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
+  duties?: Prisma.DutyCreateNestedManyWithoutAssignedToInput
+  events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutTimetableLecturesInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  department?: string | null
+  phone?: string | null
+  campus?: string | null
+  role?: $Enums.Role
+  isActive?: boolean
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTeacherInput
+  reviewedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
+  duties?: Prisma.DutyUncheckedCreateNestedManyWithoutAssignedToInput
+  events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutTimetableLecturesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutTimetableLecturesInput, Prisma.UserUncheckedCreateWithoutTimetableLecturesInput>
+}
+
+export type UserUpsertWithoutTimetableLecturesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutTimetableLecturesInput, Prisma.UserUncheckedUpdateWithoutTimetableLecturesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutTimetableLecturesInput, Prisma.UserUncheckedCreateWithoutTimetableLecturesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutTimetableLecturesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutTimetableLecturesInput, Prisma.UserUncheckedUpdateWithoutTimetableLecturesInput>
+}
+
+export type UserUpdateWithoutTimetableLecturesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutTeacherNestedInput
+  reviewedLeaves?: Prisma.LeaveRequestUpdateManyWithoutReviewedByNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
+  duties?: Prisma.DutyUpdateManyWithoutAssignedToNestedInput
+  events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutTimetableLecturesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTeacherNestedInput
+  reviewedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
+  duties?: Prisma.DutyUncheckedUpdateManyWithoutAssignedToNestedInput
+  events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -1147,6 +1508,7 @@ export type UserCountOutputType = {
   duties: number
   events: number
   notifications: number
+  timetableLectures: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1157,6 +1519,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   duties?: boolean | UserCountOutputTypeCountDutiesArgs
   events?: boolean | UserCountOutputTypeCountEventsArgs
   notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
+  timetableLectures?: boolean | UserCountOutputTypeCountTimetableLecturesArgs
 }
 
 /**
@@ -1218,14 +1581,25 @@ export type UserCountOutputTypeCountNotificationsArgs<ExtArgs extends runtime.Ty
   where?: Prisma.NotificationWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountTimetableLecturesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TimetableLectureWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
   email?: boolean
   passwordHash?: boolean
+  department?: boolean
+  phone?: boolean
+  campus?: boolean
   role?: boolean
   isActive?: boolean
+  lastLoginAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   leaveRequests?: boolean | Prisma.User$leaveRequestsArgs<ExtArgs>
@@ -1235,6 +1609,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   duties?: boolean | Prisma.User$dutiesArgs<ExtArgs>
   events?: boolean | Prisma.User$eventsArgs<ExtArgs>
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
+  timetableLectures?: boolean | Prisma.User$timetableLecturesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1243,8 +1618,12 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   name?: boolean
   email?: boolean
   passwordHash?: boolean
+  department?: boolean
+  phone?: boolean
+  campus?: boolean
   role?: boolean
   isActive?: boolean
+  lastLoginAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -1254,8 +1633,12 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   name?: boolean
   email?: boolean
   passwordHash?: boolean
+  department?: boolean
+  phone?: boolean
+  campus?: boolean
   role?: boolean
   isActive?: boolean
+  lastLoginAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -1265,13 +1648,17 @@ export type UserSelectScalar = {
   name?: boolean
   email?: boolean
   passwordHash?: boolean
+  department?: boolean
+  phone?: boolean
+  campus?: boolean
   role?: boolean
   isActive?: boolean
+  lastLoginAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "passwordHash" | "role" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "passwordHash" | "department" | "phone" | "campus" | "role" | "isActive" | "lastLoginAt" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   leaveRequests?: boolean | Prisma.User$leaveRequestsArgs<ExtArgs>
   reviewedLeaves?: boolean | Prisma.User$reviewedLeavesArgs<ExtArgs>
@@ -1280,6 +1667,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   duties?: boolean | Prisma.User$dutiesArgs<ExtArgs>
   events?: boolean | Prisma.User$eventsArgs<ExtArgs>
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
+  timetableLectures?: boolean | Prisma.User$timetableLecturesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1295,14 +1683,19 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     duties: Prisma.$DutyPayload<ExtArgs>[]
     events: Prisma.$CalendarEventPayload<ExtArgs>[]
     notifications: Prisma.$NotificationPayload<ExtArgs>[]
+    timetableLectures: Prisma.$TimetableLecturePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
     email: string
     passwordHash: string
+    department: string | null
+    phone: string | null
+    campus: string | null
     role: $Enums.Role
     isActive: boolean
+    lastLoginAt: Date | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -1706,6 +2099,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   duties<T extends Prisma.User$dutiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$dutiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DutyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   events<T extends Prisma.User$eventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CalendarEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   notifications<T extends Prisma.User$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  timetableLectures<T extends Prisma.User$timetableLecturesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$timetableLecturesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TimetableLecturePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1739,8 +2133,12 @@ export interface UserFieldRefs {
   readonly name: Prisma.FieldRef<"User", 'String'>
   readonly email: Prisma.FieldRef<"User", 'String'>
   readonly passwordHash: Prisma.FieldRef<"User", 'String'>
+  readonly department: Prisma.FieldRef<"User", 'String'>
+  readonly phone: Prisma.FieldRef<"User", 'String'>
+  readonly campus: Prisma.FieldRef<"User", 'String'>
   readonly role: Prisma.FieldRef<"User", 'Role'>
   readonly isActive: Prisma.FieldRef<"User", 'Boolean'>
+  readonly lastLoginAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }
@@ -2301,6 +2699,30 @@ export type User$notificationsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.NotificationScalarFieldEnum | Prisma.NotificationScalarFieldEnum[]
+}
+
+/**
+ * User.timetableLectures
+ */
+export type User$timetableLecturesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TimetableLecture
+   */
+  select?: Prisma.TimetableLectureSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TimetableLecture
+   */
+  omit?: Prisma.TimetableLectureOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TimetableLectureInclude<ExtArgs> | null
+  where?: Prisma.TimetableLectureWhereInput
+  orderBy?: Prisma.TimetableLectureOrderByWithRelationInput | Prisma.TimetableLectureOrderByWithRelationInput[]
+  cursor?: Prisma.TimetableLectureWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TimetableLectureScalarFieldEnum | Prisma.TimetableLectureScalarFieldEnum[]
 }
 
 /**

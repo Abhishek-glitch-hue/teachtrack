@@ -56,7 +56,8 @@ export const ModelName = {
   Message: 'Message',
   CalendarEvent: 'CalendarEvent',
   Duty: 'Duty',
-  Notification: 'Notification'
+  Notification: 'Notification',
+  TimetableLecture: 'TimetableLecture'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -80,8 +81,12 @@ export const UserScalarFieldEnum = {
   name: 'name',
   email: 'email',
   passwordHash: 'passwordHash',
+  department: 'department',
+  phone: 'phone',
+  campus: 'campus',
   role: 'role',
   isActive: 'isActive',
+  lastLoginAt: 'lastLoginAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -160,6 +165,22 @@ export const NotificationScalarFieldEnum = {
 } as const
 
 export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
+
+
+export const TimetableLectureScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  subject: 'subject',
+  className: 'className',
+  room: 'room',
+  day: 'day',
+  time: 'time',
+  type: 'type',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TimetableLectureScalarFieldEnum = (typeof TimetableLectureScalarFieldEnum)[keyof typeof TimetableLectureScalarFieldEnum]
 
 
 export const SortOrder = {

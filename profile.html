@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TeachTrack â€” Dashboard</title>
+<title>TeachTrack</title>
 
 <!-- JS flag added BEFORE first paint: only JS users ever see hidden/reveal states -->
 <script>document.documentElement.classList.add('js');</script>
@@ -104,10 +104,10 @@
       </button>
     </header><main class="content page-view active profile-page" id="profilePage" aria-hidden="false">
       <section class="card profile-hero">
-        <div class="profile-avatar" aria-hidden="false">J</div>
+        <div class="profile-avatar" id="profileAvatar" aria-hidden="true">?</div>
         <div>
-          <h2>Jordan Anderson</h2>
-          <p class="profile-role">Senior Faculty Â· Science Department</p>
+          <h2 id="profileName">Loading profile…</h2>
+          <p class="profile-role" id="profileRole">Loading account details…</p>
           <span class="profile-status"><i></i> Active account</span>
         </div>
       </section>
@@ -116,9 +116,9 @@
         <section class="card">
           <h3>Account overview</h3>
           <div class="profile-list">
-            <div><span>Employee ID</span><strong>TT-2048</strong></div>
-            <div><span>Joined</span><strong>August 2021</strong></div>
-            <div><span>Last sign-in</span><strong>Today, 8:42 AM</strong></div>
+            <div><span>Account ID</span><strong id="profileAccountId">—</strong></div>
+            <div><span>Joined</span><strong id="profileJoined">—</strong></div>
+            <div><span>Last sign-in</span><strong id="profileLastLogin">—</strong></div>
           </div>
         </section>
       </aside>
@@ -126,12 +126,11 @@
       <section class="card profile-details">
         <div class="profile-details-head"><h3>Personal information</h3></div>
         <div class="profile-grid">
-          <div class="profile-field"><div class="profile-label">Full name</div><div class="profile-value">Jordan Anderson</div></div>
-          <div class="profile-field"><div class="profile-label">Email address</div><div class="profile-value">j.anderson@teachtrack.edu</div></div>
-          <div class="profile-field"><div class="profile-label">Department</div><div class="profile-value">Science</div></div>
-          <div class="profile-field"><div class="profile-label">Role</div><div class="profile-value">Senior Faculty</div></div>
-          <div class="profile-field"><div class="profile-label">Phone</div><div class="profile-value">+1 (555) 014-0084</div></div>
-          <div class="profile-field"><div class="profile-label">Campus</div><div class="profile-value">North Campus</div></div>
+          <div class="profile-field"><div class="profile-label">Full name</div><div class="profile-value" id="profileFullName">—</div></div>
+          <div class="profile-field"><div class="profile-label">Email address</div><div class="profile-value" id="profileEmail">—</div></div>
+          <div class="profile-field"><div class="profile-label">Department</div><div class="profile-value" id="profileDepartment">Not set</div></div>
+          <div class="profile-field"><div class="profile-label">Role</div><div class="profile-value" id="profileRoleValue">—</div></div>
+          <div class="profile-field"><div class="profile-label">Phone</div><div class="profile-value" id="profilePhone">Not set</div></div>
         </div>
       </section>
 
@@ -139,12 +138,29 @@
         <section class="card">
           <h3>Profile settings</h3>
           <p class="sub" style="margin-top:7px">Keep your contact information and account preferences current.</p>
-          <button class="profile-action" type="button">Edit profile</button>
+          <button class="profile-action" id="profileEditButton" type="button">Edit profile</button>
           <button class="profile-logout" type="button" id="logoutBtn">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="false"><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/><path d="M21 19V5a2 2 0 0 0-2-2h-6"/></svg>
             Log out
           </button>
         </section>
       </aside>
-    </main></div></div><script src="assets/app.js"></script></body></html>
+    </main></div></div>
+  <section class="profile-modal" id="profileModal" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle" hidden>
+    <div class="profile-modal-card">
+      <div class="profile-modal-head"><div><span class="kick">Account settings</span><h2 id="profileModalTitle">Edit profile</h2></div><button id="profileModalClose" type="button" aria-label="Close">&times;</button></div>
+      <form id="profileForm">
+        <div class="profile-form-grid">
+          <label>Full name<input id="profileInputName" required maxlength="80" autocomplete="name"></label>
+          <label>Email address<input id="profileInputEmail" required type="email" maxlength="120" autocomplete="email"></label>
+          <label>Department<input id="profileInputDepartment" maxlength="80" placeholder="e.g. Science"></label>
+          <label>Phone<input id="profileInputPhone" maxlength="30" autocomplete="tel"></label>
+        </div>
+        <details class="profile-password"><summary>Change password</summary><div class="profile-form-grid"><label>Current password<input id="profileInputCurrentPassword" type="password" autocomplete="current-password"></label><label>New password<input id="profileInputNewPassword" type="password" minlength="8" autocomplete="new-password"></label></div></details>
+        <p class="profile-form-message" id="profileFormMessage" role="alert"></p>
+        <div class="profile-modal-actions"><button id="profileModalCancel" type="button">Cancel</button><button id="profileSaveButton" type="submit">Save changes</button></div>
+      </form>
+    </div>
+  </section>
+  <script src="assets/app.js"></script></body></html>
 

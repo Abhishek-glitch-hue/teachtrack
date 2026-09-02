@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TeachTrack â€” Dashboard</title>
+<title>TeachTrack</title>
 
 <!-- JS flag added BEFORE first paint: only JS users ever see hidden/reveal states -->
 <script>document.documentElement.classList.add('js');</script>
@@ -110,7 +110,7 @@
             <h2>Timetable</h2>
             <p class="sub">Your weekly lecture schedule</p>
           </div>
-          <button class="tt-add" type="button">
+          <button class="tt-add" id="ttAddLecture" type="button">
             <span aria-hidden="false">+</span>
             Add Lecture
           </button>
@@ -256,5 +256,32 @@
           <span class="tt-foot-note">Hover a slot to add or inspect a lecture</span>
         </div>
       </section>
-    </main></div></div><script src="assets/app.js"></script></body></html>
+    </main></div></div>
+
+  <section class="tt-modal" id="ttModal" role="dialog" aria-modal="true" aria-labelledby="ttModalTitle" hidden>
+    <div class="tt-modal-card">
+      <div class="tt-modal-head">
+        <div><span class="kick">Weekly Schedule</span><h2 id="ttModalTitle">Add lecture</h2></div>
+        <button class="tt-modal-close" id="ttModalClose" type="button" aria-label="Close">&times;</button>
+      </div>
+      <form id="ttForm">
+        <div class="tt-form-grid">
+          <label>Subject<input id="ttSubject" name="subject" required maxlength="60" placeholder="e.g. Mathematics"></label>
+          <label>Class / section<input id="ttClass" name="className" required maxlength="40" placeholder="e.g. FY-CS-A"></label>
+          <label>Room / location<input id="ttRoom" name="room" required maxlength="40" placeholder="e.g. Room 101"></label>
+          <label>Lecture type<select id="ttType" name="type"><option value="teal">Core lecture</option><option value="blue">Lab / practical</option><option value="purple">Data / theory</option></select></label>
+          <label>Day<select id="ttDay" name="day"><option value="mon">Monday</option><option value="tue">Tuesday</option><option value="wed">Wednesday</option><option value="thu">Thursday</option><option value="fri">Friday</option><option value="sat">Saturday</option><option value="sun">Sunday</option></select></label>
+          <label>Time<select id="ttTime" name="time"><option value="09:00">09:00</option><option value="10:00">10:00</option><option value="11:00">11:00</option></select></label>
+        </div>
+        <p class="tt-form-error" id="ttFormError" role="alert"></p>
+        <div class="tt-modal-actions">
+          <button class="tt-delete" id="ttDeleteLecture" type="button" hidden>Delete</button>
+          <span></span>
+          <button class="tt-cancel" id="ttModalCancel" type="button">Cancel</button>
+          <button class="tt-save" type="submit">Save lecture</button>
+        </div>
+      </form>
+    </div>
+  </section>
+  <script src="assets/app.js"></script></body></html>
 

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script>if (window.self !== window.top) document.documentElement.classList.add('embedded');</script>
-<title>TeachTrack â€” AI Assistant</title>
+<title>TeachTrack AI Assistant</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
@@ -235,7 +235,7 @@
           <div class="empty-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3z"/><path d="M18.5 15.5l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7.7-2z"/></svg>
           </div>
-          <h1>Hi â€” how can I help with your workload today?</h1>
+          <h1>Hi - how can I help with your workload today?</h1>
           <div class="chips">
             <button class="chip">Summarize my week</button>
             <button class="chip">Any schedule conflicts this month?</button>
@@ -255,7 +255,7 @@
       <button type="button" class="clip" aria-label="Attach file">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
       </button>
-      <input id="msgInput" type="text" placeholder="Ask TeachTrack AIâ€¦" autocomplete="off">
+      <input id="msgInput" type="text" placeholder="Ask TeachTrack AI..." autocomplete="off">
       <button type="submit" class="send" aria-label="Send message">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </button>
@@ -270,17 +270,23 @@
   const form        = document.getElementById('composer');
   const input       = document.getElementById('msgInput');
 
-  const replies = [
-    { match: /(summar|week)/i,
-      text: "Here's your week at a glance:\nâ€¢ 18 class sessions taught (Monâ€“Fri)\nâ€¢ 2 lunch-duty shifts (Tue & Fri)\nâ€¢ 3 staff meetings attended\nâ€¢ 42 assignments marked, 15 still pending\n\nYou're on track â€” Friday afternoon is your lightest slot if you need focus time." },
-    { match: /(conflict|clash|overlap)/i,
-      text: "I scanned your timetable and found 1 conflict this month:\nâ€¢ Thu, Oct 16 â€” Grade 9 Math (Period 4) overlaps with the department sync meeting.\n\nWant me to propose a reschedule or notify the coordinator?" },
-    { match: /(swap|duty)/i,
-      text: "For your Friday gate duty, I found a fair swap:\nâ€¢ Priya N. covers Friday, and you take her Wednesday recess duty next week.\n\nShall I send her the swap request?" },
-    { match: /(leave|email|draft)/i,
-      text: "Here's a draft you can send:\n\nSubject: Leave Request â€“ [Date]\n\nDear Principal,\nI would like to request leave on [date] due to personal commitments. I've prepared cover notes for my classes and will share worksheets in advance.\n\nThank you,\nJordan" },
-  ];
-  const fallback = "I can help with your timetable, duties, leaves, or overall workload â€” I pull live data from TeachTrack and summarize it for you. Try one of the suggestions or ask me anything.";
+  const apiBase = 'http://localhost:4000/api';
+  const authToken = sessionStorage.getItem('teachtrack_token');
+  const chatHistory = [];
+
+  async function replyFor(text) {
+    const response = await fetch(apiBase + '/ai/chat', {
+      method: 'POST',
+      headers: {
+        Authorization: 'Bearer ' + authToken,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ message: text, history: chatHistory.slice(-12) })
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'AI service is temporarily unavailable.');
+    return data.reply;
+  }
 
   function scrollBottom(){ chatScroll.scrollTop = chatScroll.scrollHeight; }
 
@@ -305,10 +311,15 @@
     messagesEl.appendChild(typing);
     scrollBottom();
 
-    const hit = replies.find(r => r.match.test(text));
-    setTimeout(() => {
+    setTimeout(async () => {
       typing.remove();
-      addMsg('ai', hit ? hit.text : fallback);
+      try {
+        const reply = await replyFor(text);
+        chatHistory.push({ role: 'user', content: text }, { role: 'assistant', content: reply });
+        addMsg('ai', reply);
+      } catch (error) {
+        addMsg('ai', error.message || 'Unable to load live TeachTrack data right now.');
+      }
     }, 1100);
   }
 

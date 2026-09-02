@@ -33,8 +33,13 @@ export async function requireAuth(
         id: true,
         name: true,
         email: true,
+        department: true,
+        phone: true,
+        campus: true,
         role: true,
         isActive: true,
+        createdAt: true,
+        lastLoginAt: true,
       },
     });
 

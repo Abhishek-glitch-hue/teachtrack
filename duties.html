@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TeachTrack â€” Dashboard</title>
+<title>TeachTrack Duties</title>
 
 <!-- JS flag added BEFORE first paint: only JS users ever see hidden/reveal states -->
 <script>document.documentElement.classList.add('js');</script>
@@ -109,7 +109,7 @@
           <h2>Duties</h2>
           <p class="sub">Manage and track your assigned academic responsibilities.</p>
         </div>
-        <button class="duty-add" id="addDutyBtn" type="button" aria-label="Add duty">
+        <button class="duty-add" id="addDutyBtn" type="button" aria-label="Assign duty">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="false"><path d="M12 5v14M5 12h14"/></svg>
           Add Duty
         </button>
@@ -119,7 +119,7 @@
         <article class="card duty-stat">
           <div>
             <div class="duty-stat-label">Upcoming Duties</div>
-            <div class="duty-stat-value">3 <small>this week</small></div>
+            <div class="duty-stat-value" id="dutyUpcomingCount">0 <small>this week</small></div>
           </div>
           <span class="duty-stat-icon" aria-hidden="false">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 2h6v4H9zM9 13l2 2 4-4"/></svg>
@@ -128,7 +128,7 @@
         <article class="card duty-stat">
           <div>
             <div class="duty-stat-label">Total Hours</div>
-            <div class="duty-stat-value">12.5 <small>logged</small></div>
+            <div class="duty-stat-value" id="dutyTotalCount">0 <small>total</small></div>
           </div>
           <span class="duty-stat-icon" aria-hidden="false">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
@@ -163,14 +163,14 @@
         <table class="duty-table">
           <thead>
             <tr>
-              <th style="width:28%">Duty Name</th>
-              <th style="width:14%">Date</th>
-              <th style="width:18%">Time</th>
-              <th style="width:20%">Location/Venue</th>
-              <th style="width:14%">Status</th>
+              <th style="width:32%">Duty Name</th>
+              <th style="width:24%">Assigned Teacher</th>
+              <th style="width:18%">Due Date</th>
+              <th style="width:16%">Status</th>
+              <th style="width:10%">Action</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="dutyBody">
             <tr class="duty-row" data-status="upcoming">
               <td><span class="duty-name"><span class="duty-row-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10v18H7zM9 7h6M9 11h6M9 15h4"/></svg></span>Maths Exam Invigilation</span></td>
               <td>Oct 12<br>2023</td>
@@ -212,5 +212,23 @@
           </div>
         </div>
       </section>
-    </main></div></div><script src="assets/app.js"></script></body></html>
+    </main></div></div>
+
+<section class="tt-modal" id="dutyModal" hidden role="dialog" aria-modal="true" aria-labelledby="dutyModalTitle">
+  <div class="tt-modal-card">
+    <div class="tt-modal-head"><div><span class="kick">Administration</span><h2 id="dutyModalTitle">Assign duty</h2></div><button class="tt-modal-close" id="dutyModalClose" type="button" aria-label="Close">&times;</button></div>
+    <form id="dutyForm">
+      <div class="tt-form-grid">
+        <label>Teacher<select id="dutyTeacher" required></select></label>
+        <label>Duty title<input id="dutyTitle" required maxlength="120" placeholder="e.g. Exam invigilation"></label>
+        <label>Due date<input id="dutyDueDate" type="date"></label>
+        <label>Due time<input id="dutyDueTime" type="time"></label>
+        <label>Description<input id="dutyDescription" maxlength="1000" placeholder="Optional instructions"></label>
+      </div>
+      <p class="tt-form-error" id="dutyFormError" role="alert"></p>
+      <div class="tt-modal-actions"><span></span><span></span><button class="tt-cancel" id="dutyModalCancel" type="button">Cancel</button><button class="tt-save" type="submit">Assign</button></div>
+    </form>
+  </div>
+</section>
+<script src="assets/app.js"></script></body></html>
 
