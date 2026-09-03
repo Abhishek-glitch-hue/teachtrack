@@ -80,7 +80,6 @@
   </aside><div class="main"><header class="topbar">
       <div>
         <h1 id="pageTitle">Calendar</h1>
-        <p class="tdate" id="pageDate">Friday, 7 August Â· Term 3</p>
       </div>
       <div class="tspace"></div>
       <button class="ticon" id="notificationButton" aria-label="Notifications" aria-expanded="false" aria-controls="notificationPopup" type="button">
@@ -115,49 +114,6 @@
           Add Event
         </button>
       </div>
-
-      <!-- stat cards -->
-      <section class="card cal-reveal" style="padding:0;background:transparent;border:0;box-shadow:none">
-        <div class="stats cal-stats" aria-label="Calendar stats" style="gap:20px">
-
-          <article class="card stat">
-            <div class="stat-top">
-              <span class="sic teal" aria-hidden="false">
-                <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 9h18"/></svg>
-              </span>
-              <div>
-                <p class="stat-label">Events Today</p>
-                <p class="stat-value" id="calEventsToday">0<small>scheduled</small></p>
-              </div>
-            </div>
-          </article>
-
-          <article class="card stat">
-            <div class="stat-top">
-              <span class="sic blue" aria-hidden="false">
-                <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
-              </span>
-              <div>
-                <p class="stat-label">This Week</p>
-                <p class="stat-value" id="calEventsWeek">0<small>events</small></p>
-              </div>
-            </div>
-          </article>
-
-          <article class="card stat">
-            <div class="stat-top">
-              <span class="sic amber" aria-hidden="false">
-                <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>
-              </span>
-              <div>
-                <p class="stat-label">Conflicts</p>
-                <p class="stat-value" id="calConflicts">0<small>needs review</small></p>
-              </div>
-            </div>
-          </article>
-
-        </div>
-      </section>
 
       <!-- month grid card -->
       <article class="card cal-reveal">
@@ -223,9 +179,9 @@
         <div class="cal-tfoot">
           <span id="calShowingText">Showing 1 to 4 of 4 entries</span>
           <div class="cal-pagebtns" id="calPageBtns">
-            <button type="button" id="calPrevPage" aria-label="Previous page">â€¹</button>
+            <button type="button" id="calPrevPage" aria-label="Previous page">&lsaquo;</button>
             <button type="button" class="active" data-page="1">1</button>
-            <button type="button" id="calNextPage" aria-label="Next page">â€º</button>
+            <button type="button" id="calNextPage" aria-label="Next page">&rsaquo;</button>
           </div>
         </div>
       </article>

@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>TeachTrack Messages</title>
+    <script>(function () { var theme = localStorage.getItem('teachtrack_theme'); if (theme === 'dark' || theme === 'light') document.documentElement.dataset.theme = theme; })();</script>
     <style>
         * {
             box-sizing: border-box
@@ -293,6 +294,30 @@
             color: #087a71
         }
 
+        html[data-theme="dark"] body { background: #141b20; color: #f1f5f6 }
+        html[data-theme="dark"] .panel { background: #202a30; border-color: #35434b; box-shadow: 0 14px 30px -25px rgba(0,0,0,.8) }
+        html[data-theme="dark"] .sidebar-top,
+        html[data-theme="dark"] .chat-head,
+        html[data-theme="dark"] .composer { border-color: #2b373e; background: #202a30 }
+        html[data-theme="dark"] .search,
+        html[data-theme="dark"] .composer textarea { background: #1a242a; border-color: #35434b; color: #f1f5f6; color-scheme: dark }
+        html[data-theme="dark"] .search::placeholder,
+        html[data-theme="dark"] .composer textarea::placeholder { color: #82939b }
+        html[data-theme="dark"] .search:focus,
+        html[data-theme="dark"] .composer textarea:focus { box-shadow: 0 0 0 3px #193f3c }
+        html[data-theme="dark"] .person:hover,
+        html[data-theme="dark"] .person.active { background: #193f3c }
+        html[data-theme="dark"] .person-copy small,
+        html[data-theme="dark"] .person-time,
+        html[data-theme="dark"] .list-title,
+        html[data-theme="dark"] .chat-head p,
+        html[data-theme="dark"] .message-meta,
+        html[data-theme="dark"] .empty { color: #afbdc3 }
+        html[data-theme="dark"] .message-area { background: #1a242a }
+        html[data-theme="dark"] .bubble { background: #263239; border-color: #35434b; color: #f1f5f6 }
+        html[data-theme="dark"] .refresh { background: #263239; border-color: #40515a; color: #d7e1e4 }
+        html[data-theme="dark"] .status.info { color: #70dfd2 }
+
         @media(max-width:720px) {
             .chat-app {
                 grid-template-columns: 1fr;
@@ -348,6 +373,7 @@
             <p class="status" id="chatStatus"></p>
         </section>
     </main>
+    <script>window.addEventListener('storage', function (event) { if (event.key === 'teachtrack_theme' && (event.newValue === 'dark' || event.newValue === 'light')) document.documentElement.dataset.theme = event.newValue; });</script>
     <script src="http://localhost:4000/socket.io/socket.io.js"></script>
     <script>
         (() => { const token = sessionStorage.getItem('teachtrack_token'); if (!token) { window.top.location.href = 'login.html'; return } const state = { me: null, conversations: [], searchUsers: [], active: null }; const $ = id => document.getElementById(id); const api = (path, opt = {}) => { opt.headers = Object.assign({ Authorization: 'Bearer ' + token }, opt.headers || {}); return fetch('http://localhost:4000/api' + path, opt) }; const initials = name => (name || '?').split(/\s+/).filter(Boolean).slice(0, 2).map(x => x[0]).join('').toUpperCase(); const dateTime = value => new Date(value).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }); const preview = text => text.length > 46 ? text.slice(0, 46) + '…' : text; function setStatus(text = '', info = false) { const el = $('chatStatus'); el.textContent = text; el.className = 'status' + (info ? ' info' : '') } function addPerson(list, user, detail, unread) { const button = document.createElement('button'); button.className = 'person' + (state.active && state.active.id === user.id ? ' active' : ''); button.type = 'button'; button.innerHTML = '<span class="avatar"></span><span class="person-copy"><b></b><small></small></span><span class="person-side"></span>'; button.querySelector('.avatar').textContent = initials(user.name); button.querySelector('b').textContent = user.name; button.querySelector('small').textContent = detail; const side = button.querySelector('.person-side'); if (unread) { side.className = 'badge'; side.textContent = unread > 99 ? '99+' : unread } else if (detail && detail.createdAt) { side.className = 'person-time'; side.textContent = dateTime(detail.createdAt) } button.onclick = () => openChat(user); list.appendChild(button) } function renderPeople() { const list = $('peopleList'); list.innerHTML = ''; const searching = $('userSearch').value.trim(); const shown = {}; if (!searching && state.conversations.length) { list.insertAdjacentHTML('beforeend', '<p class="list-title">Recent conversations</p>'); state.conversations.forEach(item => { shown[item.user.id] = true; addPerson(list, item.user, preview(item.lastMessage.content), item.unreadCount) }) } const users = searching ? state.searchUsers : state.searchUsers.filter(user => !shown[user.id]); if (users.length) { list.insertAdjacentHTML('beforeend', '<p class="list-title">' + (searching ? 'Search results' : 'People') + '</p>'); users.forEach(user => addPerson(list, user, user.department || user.email, 0)) } if (!list.children.length) list.innerHTML = '<p class="empty">No users found. Create another account to begin a chat.</p>' } function renderMessages(messages) { const box = $('messageArea'); box.innerHTML = ''; if (!messages.length) { box.innerHTML = '<p class="empty">No messages yet. Say hello!</p>'; return } messages.forEach(message => { const mine = message.senderId === state.me.id; const item = document.createElement('article'); item.className = 'message' + (mine ? ' mine' : ''); item.innerHTML = '<div class="bubble"></div><span class="message-meta"></span>'; item.querySelector('.bubble').textContent = message.content; item.querySelector('.message-meta').textContent = dateTime(message.createdAt) + (mine ? (message.readAt ? ' · Seen' : ' · Sent') : ''); box.appendChild(item) }); box.scrollTop = box.scrollHeight } async function loadConversations() { const response = await api('/messages/conversations'); const data = await response.json(); if (!response.ok) throw new Error(data.message); state.conversations = data.conversations } async function loadUsers() { const response = await api('/messages/users?q=' + encodeURIComponent($('userSearch').value)); const data = await response.json(); if (!response.ok) throw new Error(data.message); state.searchUsers = data.users; renderPeople() } async function refresh() { try { setStatus('Refreshing…', true); await Promise.all([loadConversations(), loadUsers()]); setStatus(''); renderPeople() } catch (error) { setStatus(error.message || 'Unable to refresh messages.') } } async function openChat(user) { state.active = user; renderPeople(); $('chatHead').querySelector('.avatar').textContent = initials(user.name); $('chatHead').querySelector('h2').textContent = user.name; $('chatHead').querySelector('p').innerHTML = '<span class="online-dot"></span>' + (user.department || user.email); $('messageInput').disabled = true; $('sendButton').disabled = true; setStatus('Loading conversation…', true); try { const response = await api('/messages/' + encodeURIComponent(user.id)); const data = await response.json(); if (!response.ok) throw new Error(data.message); state.active = data.user; renderMessages(data.messages); $('messageInput').disabled = false; $('sendButton').disabled = false; $('messageInput').focus(); setStatus(''); loadConversations().then(renderPeople) } catch (error) { setStatus(error.message || 'Unable to load conversation.') } } $('chatForm').addEventListener('submit', async event => { event.preventDefault(); const content = $('messageInput').value.trim(); if (!state.active || !content) return; const button = $('sendButton'); button.disabled = true; try { const response = await api('/messages', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ receiverId: state.active.id, content }) }); const data = await response.json(); if (!response.ok) throw new Error(data.message); $('messageInput').value = ''; await openChat(state.active); loadConversations().then(renderPeople) } catch (error) { setStatus(error.message || 'Unable to send message.') } finally { button.disabled = false } }); $('messageInput').addEventListener('keydown', event => { if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); $('chatForm').requestSubmit() } }); $('userSearch').addEventListener('input', () => { clearTimeout(window.searchTimer); window.searchTimer = setTimeout(loadUsers, 200) }); $('refreshButton').onclick = refresh; Promise.all([api('/auth/me').then(r => r.json()), refresh()]).then(([data]) => { state.me = data.user }); const socket = window.io('http://localhost:4000', { auth: { token } }); socket.on('message:new', payload => { refresh(); if (state.active && payload.sender.id === state.active.id) openChat(state.active); else setStatus('New message from ' + payload.sender.name + '.', true) }) })();

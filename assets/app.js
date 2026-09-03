@@ -34,12 +34,28 @@
   (function () {
     var root = document.documentElement;
     var btn = document.getElementById('themeToggle');
+    var assistantFrame = document.querySelector('iframe[src="ai_assistant.html"]');
     var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    if (prefersDark) root.setAttribute('data-theme', 'dark');
+    var savedTheme = localStorage.getItem('teachtrack_theme');
+    if (savedTheme === 'dark' || savedTheme === 'light') {
+      root.setAttribute('data-theme', savedTheme);
+    } else if (prefersDark) {
+      root.setAttribute('data-theme', 'dark');
+    }
+    function syncAssistantTheme() {
+      if (assistantFrame && assistantFrame.contentDocument) {
+        assistantFrame.contentDocument.documentElement.setAttribute('data-theme', root.getAttribute('data-theme') || 'light');
+      }
+    }
+    if (assistantFrame) assistantFrame.addEventListener('load', syncAssistantTheme);
+    syncAssistantTheme();
     if (btn) {
       btn.addEventListener('click', function () {
         var isDark = root.getAttribute('data-theme') === 'dark';
-        root.setAttribute('data-theme', isDark ? 'light' : 'dark');
+        var nextTheme = isDark ? 'light' : 'dark';
+        root.setAttribute('data-theme', nextTheme);
+        localStorage.setItem('teachtrack_theme', nextTheme);
+        syncAssistantTheme();
       });
     }
   })();
@@ -203,6 +219,7 @@
       if (date) date.textContent = isTimetable
         ? 'Weekly schedule Â· Term 3'
         : (isDuties ? 'Manage and track your assigned academic responsibilities.' : (isLeaves ? 'Manage and track your leave applications.' : (isCalendar ? 'Tuesday, 11 August Â· Term 3' : 'Friday, 7 August Â· Term 3')));
+      if (date) date.hidden = isDuties;
 
       if (date && isAssistant) date.textContent = 'Ask about your schedule, workload, or duties.';
       if (date && isMessages) date.textContent = 'Connect with colleagues and manage conversations.';
@@ -237,6 +254,12 @@
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+
+    window.addEventListener('storage', function (event) {
+      if (event.key === 'teachtrack_theme' && event.newValue) {
+        document.documentElement.setAttribute('data-theme', event.newValue);
+      }
+    });
 
     navLinks.forEach(function (link) {
       link.addEventListener('click', function (event) {
@@ -333,10 +356,11 @@
           var teacher = document.createElement('td'); teacher.textContent = duty.assignedTo ? duty.assignedTo.name : '—';
           var date = document.createElement('td'); date.textContent = duty.dueAt ? new Date(duty.dueAt).toLocaleDateString() : 'No due date';
           var statusCell = document.createElement('td');
-          var status = document.createElement('select'); status.className = 'duty-status-select';
+          var status = document.createElement('select'); status.className = 'duty-status-select ' + duty.status.toLowerCase();
           ['PENDING', 'IN_PROGRESS', 'COMPLETED'].forEach(function (value) { var option = new Option(labelStatus(value), value); option.selected = value === duty.status; status.appendChild(option); });
           status.disabled = isAdmin;
           status.addEventListener('change', async function () {
+            status.className = 'duty-status-select ' + status.value.toLowerCase();
             var response = await fetch(dutyApi + '/' + duty.id + '/status', { method: 'PATCH', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + authToken }, body: JSON.stringify({ status: status.value }) });
             if (response.ok) { duty.status = status.value; renderDuties(); renderDutyStats(); }
           });
@@ -423,6 +447,48 @@
     }
 
     var timetableEntries = timetableSlots.length ? Array(timetableSlots.length).fill(null) : [];
+
+    function enhanceTimetableSelect(select) {
+      if (!select || select.dataset.enhanced) return;
+      var wrapper = select.closest('.tt-select');
+      if (!wrapper) return;
+      select.dataset.enhanced = 'true';
+      select.classList.add('tt-native-select');
+      var trigger = document.createElement('button');
+      trigger.type = 'button';
+      trigger.className = 'tt-select-trigger';
+      trigger.setAttribute('aria-haspopup', 'listbox');
+      trigger.setAttribute('aria-expanded', 'false');
+      trigger.textContent = select.options[select.selectedIndex].textContent;
+      var menu = document.createElement('div');
+      menu.className = 'tt-select-menu';
+      menu.setAttribute('role', 'listbox');
+      Array.prototype.forEach.call(select.options, function (option) {
+        var item = document.createElement('button');
+        item.type = 'button';
+        item.className = 'tt-select-option';
+        item.textContent = option.textContent;
+        item.dataset.value = option.value;
+        item.setAttribute('role', 'option');
+        item.addEventListener('click', function () {
+          select.value = option.value;
+          trigger.textContent = option.textContent;
+          wrapper.classList.remove('open');
+          trigger.setAttribute('aria-expanded', 'false');
+          select.dispatchEvent(new Event('change', { bubbles: true }));
+        });
+        menu.appendChild(item);
+      });
+      trigger.addEventListener('click', function () {
+        var isOpen = wrapper.classList.toggle('open');
+        trigger.setAttribute('aria-expanded', String(isOpen));
+      });
+      wrapper.appendChild(trigger);
+      wrapper.appendChild(menu);
+    }
+
+    enhanceTimetableSelect(dayFilter);
+    enhanceTimetableSelect(classFilter);
 
     function classCode(label) {
       var known = { 'FY-CS-A': 'fy', 'SY-IT-B': 'sy', 'TY-CS-A': 'ty' };
@@ -955,7 +1021,7 @@
       if (pageBtnsWrap) {
         pageBtnsWrap.innerHTML = '';
         var prev = document.createElement('button');
-        prev.type = 'button'; prev.textContent = 'â€¹'; prev.setAttribute('aria-label', 'Previous page');
+        prev.type = 'button'; prev.textContent = '\u2039'; prev.setAttribute('aria-label', 'Previous page');
         prev.disabled = currentPage === 1;
         prev.addEventListener('click', function () { if (currentPage > 1) { currentPage--; renderTable(); } });
         pageBtnsWrap.appendChild(prev);
@@ -971,7 +1037,7 @@
         }
 
         var next = document.createElement('button');
-        next.type = 'button'; next.textContent = 'â€º'; next.setAttribute('aria-label', 'Next page');
+        next.type = 'button'; next.textContent = '\u203A'; next.setAttribute('aria-label', 'Next page');
         next.disabled = currentPage === totalPages;
         next.addEventListener('click', function () { if (currentPage < totalPages) { currentPage++; renderTable(); } });
         pageBtnsWrap.appendChild(next);

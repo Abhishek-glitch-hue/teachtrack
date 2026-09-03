@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script>if (window.self !== window.top) document.documentElement.classList.add('embedded');</script>
+<script>(function () { var theme = localStorage.getItem('teachtrack_theme'); if (theme === 'dark' || theme === 'light') document.documentElement.dataset.theme = theme; })();</script>
 <title>TeachTrack AI Assistant</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,9 +17,9 @@
     --topbar:rgba(255,255,255,.72);
   }
   html[data-theme="dark"]{
-    --bg:#0c1416; --card:#151f22; --border:#26363b; --text:#e6eef0; --muted:#8ba0a8;
-    --hover:#1b272b; --teal:#17a295; --teal-dark:#6fe3d5; --teal-tint:#11302d;
-    --topbar:rgba(12,20,22,.72);
+    --bg:#141b20; --card:#202a30; --border:#35434b; --text:#f1f5f6; --muted:#afbdc3;
+    --hover:#29353b; --teal:#19a99b; --teal-dark:#70dfd2; --teal-tint:#193f3c;
+    --topbar:rgba(20,27,32,.9);
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
@@ -151,6 +152,11 @@
   /* The dashboard supplies the navigation and header when this page is embedded. */
   html.embedded .sidebar,html.embedded .topbar{display:none}
   html.embedded .app{margin-left:0;height:100vh}
+  html[data-theme="dark"] .chat-card,
+  html[data-theme="dark"] .chip,
+  html[data-theme="dark"] .composer,
+  html[data-theme="dark"] .icon-btn{background:var(--card);border-color:var(--border)}
+  html[data-theme="dark"] .msg.ai{background:#263239;border-color:var(--border)}
 </style>
 </head>
 <body>
@@ -274,6 +280,9 @@
   const authToken = sessionStorage.getItem('teachtrack_token');
   const chatHistory = [];
 
+  const savedTheme = localStorage.getItem('teachtrack_theme');
+  if (savedTheme === 'dark' || savedTheme === 'light') document.documentElement.dataset.theme = savedTheme;
+
   async function replyFor(text) {
     const response = await fetch(apiBase + '/ai/chat', {
       method: 'POST',
@@ -331,6 +340,7 @@
   document.getElementById('themeBtn').addEventListener('click', () => {
     const root = document.documentElement;
     root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('teachtrack_theme', root.dataset.theme);
   });
 </script>
 </body>

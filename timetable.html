@@ -80,7 +80,6 @@
   </aside><div class="main"><header class="topbar">
       <div>
         <h1 id="pageTitle">Timetable</h1>
-        <p class="tdate" id="pageDate">Friday, 7 August Â· Term 3</p>
       </div>
       <div class="tspace"></div>
       <button class="ticon" id="notificationButton" aria-label="Notifications" aria-expanded="false" aria-controls="notificationPopup" type="button">
@@ -123,10 +122,10 @@
               <circle cx="11" cy="11" r="7"/>
               <path d="m20 20-3.5-3.5"/>
             </svg>
-            <input id="ttSearch" type="search" placeholder="Search by subject or classâ€¦" aria-label="Search timetable">
+            <input id="ttSearch" type="search" placeholder="Search by subject or class" aria-label="Search timetable">
           </label>
 
-          <label class="tt-select">
+          <div class="tt-select">
             <select id="ttDayFilter" aria-label="Filter by day">
               <option value="all">All Days</option>
               <option value="mon">Monday</option>
@@ -139,9 +138,9 @@
                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="m6 9 6 6 6-6"/>
             </svg>
-          </label>
+          </div>
 
-          <label class="tt-select">
+          <div class="tt-select">
             <select id="ttClassFilter" aria-label="Filter by class">
               <option value="all">All Classes</option>
               <option value="fy">FY-CS-A</option>
@@ -152,7 +151,7 @@
                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="m6 9 6 6 6-6"/>
             </svg>
-          </label>
+          </div>
         </div>
 
         <div class="tt-grid-wrap">
