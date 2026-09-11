@@ -106,7 +106,6 @@
         <div class="tt-head">
           <div>
             <span class="kick">Weekly Schedule</span>
-            <h2>Timetable</h2>
             <p class="sub">Your weekly lecture schedule</p>
           </div>
           <button class="tt-add" id="ttAddLecture" type="button">
@@ -154,98 +153,25 @@
           </div>
         </div>
 
-        <div class="tt-grid-wrap">
-          <div class="tt-grid" role="grid" aria-label="Weekly timetable">
-            <div class="tt-corner" aria-hidden="false"></div>
-
-            <div class="tt-day" data-day="mon">Mon</div>
-            <div class="tt-day" data-day="tue">Tue</div>
-            <div class="tt-day" data-day="wed">Wed</div>
-            <div class="tt-day" data-day="thu">Thu</div>
-            <div class="tt-day" data-day="fri">Fri</div>
-            <div class="tt-day muted" data-day="sat">Sat</div>
-            <div class="tt-day muted" data-day="sun">Sun</div>
-
-            <!-- 09:00 -->
-            <div class="tt-time">09:00</div>
-
-            <button class="tt-slot empty tt-reveal" type="button" data-day="mon">
-              <span class="tt-plus">+</span><span class="tt-empty-label">Add lecture</span>
-            </button>
-            <button class="tt-slot lecture purple tt-reveal" type="button"
-                    data-day="tue" data-class="ty" data-subject="Data Structures">
-              <span class="tt-dot"></span><b>Data Structures</b><small>TY-CS-A Â· Room 302</small>
-            </button>
-            <button class="tt-slot empty tt-reveal" type="button" data-day="wed">
-              <span class="tt-plus">+</span><span class="tt-empty-label">Add lecture</span>
-            </button>
-            <button class="tt-slot lecture blue tt-reveal" type="button"
-                    data-day="thu" data-class="sy" data-subject="Algorithms">
-              <span class="tt-dot"></span><b>Algorithms</b><small>SY-IT-B Â· Lab 4</small>
-            </button>
-            <button class="tt-slot empty tt-reveal" type="button" data-day="fri">
-              <span class="tt-plus">+</span><span class="tt-empty-label">Add lecture</span>
-            </button>
-            <button class="tt-slot empty tt-reveal" type="button" data-day="sat">
-              <span class="tt-plus">+</span><span class="tt-empty-label">Add lecture</span>
-            </button>
-            <button class="tt-slot empty tt-reveal" type="button" data-day="sun">
-              <span class="tt-plus">+</span><span class="tt-empty-label">Add lecture</span>
-            </button>
-
-            <!-- 10:00 -->
-            <div class="tt-time">10:00</div>
-
-            <button class="tt-slot lecture teal tt-reveal" type="button"
-                    data-day="mon" data-class="fy" data-subject="Software Engineering">
-              <span class="tt-dot"></span><b>Software Engineering</b><small>FY-CS-A Â· Room 101</small>
-            </button>
-            <button class="tt-slot empty tt-reveal" type="button" data-day="tue">
-              <span class="tt-plus">+</span><span class="tt-empty-label">Add lecture</span>
-            </button>
-            <button class="tt-slot lecture purple tt-reveal" type="button"
-                    data-day="wed" data-class="ty" data-subject="Data Structures">
-              <span class="tt-dot"></span><b>Data Structures</b><small>TY-CS-A Â· Room 302</small>
-            </button>
-            <button class="tt-slot empty tt-reveal" type="button" data-day="thu">
-              <span class="tt-plus">+</span><span class="tt-empty-label">Add lecture</span>
-            </button>
-            <button class="tt-slot lecture blue tt-reveal" type="button"
-                    data-day="fri" data-class="sy" data-subject="Algorithms">
-              <span class="tt-dot"></span><b>Algorithms</b><small>SY-IT-B Â· Lab 4</small>
-            </button>
-            <button class="tt-slot empty tt-reveal" type="button" data-day="sat">
-              <span class="tt-plus">+</span><span class="tt-empty-label">Add lecture</span>
-            </button>
-            <button class="tt-slot empty tt-reveal" type="button" data-day="sun">
-              <span class="tt-plus">+</span><span class="tt-empty-label">Add lecture</span>
-            </button>
-
-            <!-- 11:00 -->
-            <div class="tt-time">11:00</div>
-
-            <button class="tt-slot empty tt-reveal" type="button" data-day="mon">
-              <span class="tt-plus">+</span><span class="tt-empty-label">Add lecture</span>
-            </button>
-            <button class="tt-slot empty tt-reveal" type="button" data-day="tue">
-              <span class="tt-plus">+</span><span class="tt-empty-label">Add lecture</span>
-            </button>
-            <button class="tt-slot empty tt-reveal" type="button" data-day="wed">
-              <span class="tt-plus">+</span><span class="tt-empty-label">Add lecture</span>
-            </button>
-            <button class="tt-slot empty tt-reveal" type="button" data-day="thu">
-              <span class="tt-plus">+</span><span class="tt-empty-label">Add lecture</span>
-            </button>
-            <button class="tt-slot empty tt-reveal" type="button" data-day="fri">
-              <span class="tt-plus">+</span><span class="tt-empty-label">Add lecture</span>
-            </button>
-            <button class="tt-slot empty tt-reveal" type="button" data-day="sat">
-              <span class="tt-plus">+</span><span class="tt-empty-label">Add lecture</span>
-            </button>
-            <button class="tt-slot empty tt-reveal" type="button" data-day="sun">
-              <span class="tt-plus">+</span><span class="tt-empty-label">Add lecture</span>
-            </button>
+        <section class="tt-planner" aria-labelledby="ttPlannerTitle">
+          <div class="tt-planner-copy">
+            <span class="kick">Day planner</span>
+            <h2 id="ttPlannerTitle">Set your teaching window</h2>
+            <p>Choose when the day starts and ends. Available lecture slots are generated from the duration and lecture count.</p>
           </div>
+          <form class="tt-planner-form" id="ttPlannerForm">
+            <label>Day<div class="tt-select"><select id="ttPlanDay"><option value="mon">Monday</option><option value="tue">Tuesday</option><option value="wed">Wednesday</option><option value="thu">Thursday</option><option value="fri">Friday</option><option value="sat">Saturday</option><option value="sun">Sunday</option></select></div></label>
+            <label>Day starts<input id="ttPlanStart" type="time" value="09:00" required></label>
+            <label>Day ends<input id="ttPlanEnd" type="time" value="12:00" required></label>
+            <label>Lecture length<div class="tt-select"><select id="ttPlanDuration"><option value="30">30 minutes</option><option value="45">45 minutes</option><option value="60" selected>60 minutes</option><option value="90">90 minutes</option><option value="120">120 minutes</option></select><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></div></label>
+            <label>Number of lectures<input id="ttPlanCount" type="number" min="1" max="20" value="3" required></label>
+            <button class="tt-plan-save" type="submit">Save day plan</button>
+          </form>
+          <p class="tt-plan-status" id="ttPlanStatus" role="status"></p>
+        </section>
+
+        <div class="tt-grid-wrap">
+          <div class="tt-grid" role="grid" aria-label="Weekly timetable"></div>
         </div>
 
         <div class="tt-foot">
@@ -268,9 +194,9 @@
           <label>Subject<input id="ttSubject" name="subject" required maxlength="60" placeholder="e.g. Mathematics"></label>
           <label>Class / section<input id="ttClass" name="className" required maxlength="40" placeholder="e.g. FY-CS-A"></label>
           <label>Room / location<input id="ttRoom" name="room" required maxlength="40" placeholder="e.g. Room 101"></label>
-          <label>Lecture type<select id="ttType" name="type"><option value="teal">Core lecture</option><option value="blue">Lab / practical</option><option value="purple">Data / theory</option></select></label>
-          <label>Day<select id="ttDay" name="day"><option value="mon">Monday</option><option value="tue">Tuesday</option><option value="wed">Wednesday</option><option value="thu">Thursday</option><option value="fri">Friday</option><option value="sat">Saturday</option><option value="sun">Sunday</option></select></label>
-          <label>Time<select id="ttTime" name="time"><option value="09:00">09:00</option><option value="10:00">10:00</option><option value="11:00">11:00</option></select></label>
+          <label>Lecture type<div class="tt-select"><select id="ttType" name="type"><option value="teal">Core lecture</option><option value="blue">Lab / practical</option><option value="purple">Data / theory</option></select><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></div></label>
+          <label>Day<div class="tt-select"><select id="ttDay" name="day"><option value="mon">Monday</option><option value="tue">Tuesday</option><option value="wed">Wednesday</option><option value="thu">Thursday</option><option value="fri">Friday</option><option value="sat">Saturday</option><option value="sun">Sunday</option></select><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></div></label>
+          <label>Available slot<div class="tt-select"><select id="ttTime" name="time" required></select><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></div></label>
         </div>
         <p class="tt-form-error" id="ttFormError" role="alert"></p>
         <div class="tt-modal-actions">
@@ -283,4 +209,3 @@
     </div>
   </section>
   <script src="assets/app.js"></script></body></html>
-
