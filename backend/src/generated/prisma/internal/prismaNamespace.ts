@@ -398,12 +398,16 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   User: 'User',
+  AiDailyUsage: 'AiDailyUsage',
+  PasswordResetToken: 'PasswordResetToken',
   LeaveRequest: 'LeaveRequest',
   Message: 'Message',
+  MessageConnection: 'MessageConnection',
   CalendarEvent: 'CalendarEvent',
   Duty: 'Duty',
   Notification: 'Notification',
-  TimetableLecture: 'TimetableLecture'
+  TimetableLecture: 'TimetableLecture',
+  TimetableSetting: 'TimetableSetting'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -419,7 +423,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "leaveRequest" | "message" | "calendarEvent" | "duty" | "notification" | "timetableLecture"
+    modelProps: "user" | "aiDailyUsage" | "passwordResetToken" | "leaveRequest" | "message" | "messageConnection" | "calendarEvent" | "duty" | "notification" | "timetableLecture" | "timetableSetting"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -494,6 +498,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.UserCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.UserCountAggregateOutputType> | number
+        }
+      }
+    }
+    AiDailyUsage: {
+      payload: Prisma.$AiDailyUsagePayload<ExtArgs>
+      fields: Prisma.AiDailyUsageFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AiDailyUsageFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiDailyUsagePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AiDailyUsageFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiDailyUsagePayload>
+        }
+        findFirst: {
+          args: Prisma.AiDailyUsageFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiDailyUsagePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AiDailyUsageFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiDailyUsagePayload>
+        }
+        findMany: {
+          args: Prisma.AiDailyUsageFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiDailyUsagePayload>[]
+        }
+        create: {
+          args: Prisma.AiDailyUsageCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiDailyUsagePayload>
+        }
+        createMany: {
+          args: Prisma.AiDailyUsageCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AiDailyUsageCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiDailyUsagePayload>[]
+        }
+        delete: {
+          args: Prisma.AiDailyUsageDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiDailyUsagePayload>
+        }
+        update: {
+          args: Prisma.AiDailyUsageUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiDailyUsagePayload>
+        }
+        deleteMany: {
+          args: Prisma.AiDailyUsageDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AiDailyUsageUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AiDailyUsageUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiDailyUsagePayload>[]
+        }
+        upsert: {
+          args: Prisma.AiDailyUsageUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AiDailyUsagePayload>
+        }
+        aggregate: {
+          args: Prisma.AiDailyUsageAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAiDailyUsage>
+        }
+        groupBy: {
+          args: Prisma.AiDailyUsageGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AiDailyUsageGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AiDailyUsageCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AiDailyUsageCountAggregateOutputType> | number
+        }
+      }
+    }
+    PasswordResetToken: {
+      payload: Prisma.$PasswordResetTokenPayload<ExtArgs>
+      fields: Prisma.PasswordResetTokenFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PasswordResetTokenFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PasswordResetTokenFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload>
+        }
+        findFirst: {
+          args: Prisma.PasswordResetTokenFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PasswordResetTokenFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload>
+        }
+        findMany: {
+          args: Prisma.PasswordResetTokenFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload>[]
+        }
+        create: {
+          args: Prisma.PasswordResetTokenCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload>
+        }
+        createMany: {
+          args: Prisma.PasswordResetTokenCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PasswordResetTokenCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload>[]
+        }
+        delete: {
+          args: Prisma.PasswordResetTokenDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload>
+        }
+        update: {
+          args: Prisma.PasswordResetTokenUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload>
+        }
+        deleteMany: {
+          args: Prisma.PasswordResetTokenDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PasswordResetTokenUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PasswordResetTokenUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload>[]
+        }
+        upsert: {
+          args: Prisma.PasswordResetTokenUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PasswordResetTokenPayload>
+        }
+        aggregate: {
+          args: Prisma.PasswordResetTokenAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePasswordResetToken>
+        }
+        groupBy: {
+          args: Prisma.PasswordResetTokenGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PasswordResetTokenGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PasswordResetTokenCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PasswordResetTokenCountAggregateOutputType> | number
         }
       }
     }
@@ -642,6 +794,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.MessageCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.MessageCountAggregateOutputType> | number
+        }
+      }
+    }
+    MessageConnection: {
+      payload: Prisma.$MessageConnectionPayload<ExtArgs>
+      fields: Prisma.MessageConnectionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MessageConnectionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessageConnectionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MessageConnectionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessageConnectionPayload>
+        }
+        findFirst: {
+          args: Prisma.MessageConnectionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessageConnectionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MessageConnectionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessageConnectionPayload>
+        }
+        findMany: {
+          args: Prisma.MessageConnectionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessageConnectionPayload>[]
+        }
+        create: {
+          args: Prisma.MessageConnectionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessageConnectionPayload>
+        }
+        createMany: {
+          args: Prisma.MessageConnectionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MessageConnectionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessageConnectionPayload>[]
+        }
+        delete: {
+          args: Prisma.MessageConnectionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessageConnectionPayload>
+        }
+        update: {
+          args: Prisma.MessageConnectionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessageConnectionPayload>
+        }
+        deleteMany: {
+          args: Prisma.MessageConnectionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MessageConnectionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MessageConnectionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessageConnectionPayload>[]
+        }
+        upsert: {
+          args: Prisma.MessageConnectionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MessageConnectionPayload>
+        }
+        aggregate: {
+          args: Prisma.MessageConnectionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMessageConnection>
+        }
+        groupBy: {
+          args: Prisma.MessageConnectionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MessageConnectionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MessageConnectionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MessageConnectionCountAggregateOutputType> | number
         }
       }
     }
@@ -941,6 +1167,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    TimetableSetting: {
+      payload: Prisma.$TimetableSettingPayload<ExtArgs>
+      fields: Prisma.TimetableSettingFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TimetableSettingFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TimetableSettingPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TimetableSettingFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TimetableSettingPayload>
+        }
+        findFirst: {
+          args: Prisma.TimetableSettingFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TimetableSettingPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TimetableSettingFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TimetableSettingPayload>
+        }
+        findMany: {
+          args: Prisma.TimetableSettingFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TimetableSettingPayload>[]
+        }
+        create: {
+          args: Prisma.TimetableSettingCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TimetableSettingPayload>
+        }
+        createMany: {
+          args: Prisma.TimetableSettingCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TimetableSettingCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TimetableSettingPayload>[]
+        }
+        delete: {
+          args: Prisma.TimetableSettingDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TimetableSettingPayload>
+        }
+        update: {
+          args: Prisma.TimetableSettingUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TimetableSettingPayload>
+        }
+        deleteMany: {
+          args: Prisma.TimetableSettingDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TimetableSettingUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TimetableSettingUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TimetableSettingPayload>[]
+        }
+        upsert: {
+          args: Prisma.TimetableSettingUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TimetableSettingPayload>
+        }
+        aggregate: {
+          args: Prisma.TimetableSettingAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTimetableSetting>
+        }
+        groupBy: {
+          args: Prisma.TimetableSettingGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TimetableSettingGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TimetableSettingCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TimetableSettingCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -998,6 +1298,30 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+export const AiDailyUsageScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  usageDate: 'usageDate',
+  requestCount: 'requestCount',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AiDailyUsageScalarFieldEnum = (typeof AiDailyUsageScalarFieldEnum)[keyof typeof AiDailyUsageScalarFieldEnum]
+
+
+export const PasswordResetTokenScalarFieldEnum = {
+  id: 'id',
+  tokenHash: 'tokenHash',
+  expiresAt: 'expiresAt',
+  usedAt: 'usedAt',
+  createdAt: 'createdAt',
+  userId: 'userId'
+} as const
+
+export type PasswordResetTokenScalarFieldEnum = (typeof PasswordResetTokenScalarFieldEnum)[keyof typeof PasswordResetTokenScalarFieldEnum]
+
+
 export const LeaveRequestScalarFieldEnum = {
   id: 'id',
   teacherId: 'teacherId',
@@ -1009,6 +1333,8 @@ export const LeaveRequestScalarFieldEnum = {
   reviewerNote: 'reviewerNote',
   reviewedById: 'reviewedById',
   reviewedAt: 'reviewedAt',
+  hiddenFromTeacher: 'hiddenFromTeacher',
+  hiddenFromAdmin: 'hiddenFromAdmin',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1022,10 +1348,24 @@ export const MessageScalarFieldEnum = {
   receiverId: 'receiverId',
   content: 'content',
   readAt: 'readAt',
+  hiddenFromSender: 'hiddenFromSender',
+  hiddenFromReceiver: 'hiddenFromReceiver',
   createdAt: 'createdAt'
 } as const
 
 export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
+
+
+export const MessageConnectionScalarFieldEnum = {
+  id: 'id',
+  requesterId: 'requesterId',
+  recipientId: 'recipientId',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MessageConnectionScalarFieldEnum = (typeof MessageConnectionScalarFieldEnum)[keyof typeof MessageConnectionScalarFieldEnum]
 
 
 export const CalendarEventScalarFieldEnum = {
@@ -1048,9 +1388,11 @@ export const DutyScalarFieldEnum = {
   id: 'id',
   assignedToId: 'assignedToId',
   title: 'title',
+  dutyType: 'dutyType',
   description: 'description',
   dueAt: 'dueAt',
   status: 'status',
+  hiddenFromTeacher: 'hiddenFromTeacher',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1085,6 +1427,21 @@ export const TimetableLectureScalarFieldEnum = {
 } as const
 
 export type TimetableLectureScalarFieldEnum = (typeof TimetableLectureScalarFieldEnum)[keyof typeof TimetableLectureScalarFieldEnum]
+
+
+export const TimetableSettingScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  day: 'day',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  lectureCount: 'lectureCount',
+  duration: 'duration',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TimetableSettingScalarFieldEnum = (typeof TimetableSettingScalarFieldEnum)[keyof typeof TimetableSettingScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1167,6 +1524,20 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
 
 
 /**
+ * Reference to a field of type 'Int'
+ */
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
  * Reference to a field of type 'LeaveStatus'
  */
 export type EnumLeaveStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeaveStatus'>
@@ -1177,6 +1548,20 @@ export type EnumLeaveStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Pris
  * Reference to a field of type 'LeaveStatus[]'
  */
 export type ListEnumLeaveStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeaveStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'ConnectionStatus'
+ */
+export type EnumConnectionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ConnectionStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'ConnectionStatus[]'
+ */
+export type ListEnumConnectionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ConnectionStatus[]'>
     
 
 
@@ -1223,16 +1608,16 @@ export type ListEnumNotificationTypeFieldRefInput<$PrismaModel> = FieldRefInputT
 
 
 /**
- * Reference to a field of type 'Int'
+ * Reference to a field of type 'Float'
  */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
     
 
 
 /**
- * Reference to a field of type 'Int[]'
+ * Reference to a field of type 'Float[]'
  */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 /**
@@ -1387,12 +1772,16 @@ export interface PrismaClientOptionsWithAdapter extends PrismaClientBaseOptions 
 export type PrismaClientOptions = PrismaClientOptionsWithAccelerateUrl | PrismaClientOptionsWithAdapter
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
+  aiDailyUsage?: Prisma.AiDailyUsageOmit
+  passwordResetToken?: Prisma.PasswordResetTokenOmit
   leaveRequest?: Prisma.LeaveRequestOmit
   message?: Prisma.MessageOmit
+  messageConnection?: Prisma.MessageConnectionOmit
   calendarEvent?: Prisma.CalendarEventOmit
   duty?: Prisma.DutyOmit
   notification?: Prisma.NotificationOmit
   timetableLecture?: Prisma.TimetableLectureOmit
+  timetableSetting?: Prisma.TimetableSettingOmit
 }
 
 /* Types for Logging */
