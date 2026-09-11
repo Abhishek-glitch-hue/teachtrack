@@ -106,7 +106,6 @@
       <div class="cal-head-row cal-reveal">
         <div>
           <span class="kick">Schedule Overview</span>
-          <h2>Calendar</h2>
           <p class="sub">View and manage all your academic events, duties, and classes in one place.</p>
         </div>
         <button class="cal-add" type="button" id="calAddEventBtn">
@@ -119,7 +118,7 @@
       <article class="card cal-reveal">
         <div class="cal-card-head">
           <div class="cal-monthnav">
-            <h3 id="calMonthLabel">August 2026</h3>
+            <h3 id="calMonthLabel">Current month</h3>
             <button class="cal-navbtn" id="calPrevMonth" type="button" aria-label="Previous month">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
             </button>
@@ -153,13 +152,21 @@
       <article class="card cal-reveal">
         <div class="chead">
           <div><span class="kick">Agenda</span><h2>Upcoming Events</h2></div>
-          <div style="display:flex;align-items:center;gap:8px">
-            <button class="ticon" style="width:34px;height:34px" aria-label="Filter events" type="button">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
-            </button>
-            <button class="ticon" style="width:34px;height:34px" aria-label="More options" type="button">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/></svg>
-            </button>
+          <div class="cal-tools">
+            <div class="cal-filter-wrap">
+              <button class="cal-tool" id="calendarFilterBtn" aria-label="Filter events" aria-expanded="false" aria-controls="calendarFilterMenu" type="button">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+              </button>
+              <div class="cal-filter-menu" id="calendarFilterMenu">
+                <label for="calendarStatusFilter">Status</label>
+                <select id="calendarStatusFilter">
+                  <option value="all">All statuses</option>
+                  <option value="upcoming">Upcoming</option>
+                  <option value="pending">Pending</option>
+                  <option value="completed">Completed</option>
+                </select>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -212,4 +219,3 @@
   </div>
 </section>
 <script src="assets/app.js"></script></body></html>
-
