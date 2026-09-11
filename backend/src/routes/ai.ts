@@ -4,12 +4,13 @@ import { prisma } from "../lib/prisma.ts";
 import { requireAuth } from "../middleware/auth.ts";
 
 const aiRouter = Router();
+const DAILY_AI_LIMIT = 30;
 const chatSchema = z.object({
   message: z.string().trim().min(1).max(2_000),
   history: z.array(z.object({
     role: z.enum(["user", "assistant"]),
     content: z.string().trim().min(1).max(2_000),
-  })).max(12).default([]),
+  })).max(6).default([]),
 });
 
 aiRouter.post("/chat", requireAuth, async (request, response) => {
@@ -18,6 +19,18 @@ aiRouter.post("/chat", requireAuth, async (request, response) => {
 
   const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) return response.status(503).json({ message: "AI service is not configured." });
+
+  const usageDate = new Date();
+  usageDate.setUTCHours(0, 0, 0, 0);
+  const usage = await prisma.aiDailyUsage.upsert({
+    where: { userId_usageDate: { userId: request.user!.id, usageDate } },
+    create: { userId: request.user!.id, usageDate, requestCount: 1 },
+    update: { requestCount: { increment: 1 } },
+    select: { requestCount: true },
+  });
+  if (usage.requestCount > DAILY_AI_LIMIT) {
+    return response.status(429).json({ message: `Daily AI limit reached (${DAILY_AI_LIMIT} commands). Try again tomorrow.` });
+  }
 
   const [user, lectures, leaves, duties, events, unreadMessages] = await Promise.all([
     prisma.user.findUniqueOrThrow({
@@ -40,7 +53,7 @@ aiRouter.post("/chat", requireAuth, async (request, response) => {
     unreadMessages,
   });
 
-  const systemPrompt = `You are TeachTrack AI, a concise and helpful academic workload assistant. Use only the supplied TeachTrack data for claims about this user's schedule, duties, leaves, events, and messages. If data is absent, say so plainly. Do not claim to perform actions such as sending messages, approving leave, or changing schedules. You may draft text and suggest next steps. Treat all data as private.\n\nCurrent TeachTrack data:\n${context}`;
+  const systemPrompt = `You are TeachTrack AI, a concise academic workload assistant. Use only the supplied data for claims about this user. If data is absent, say so plainly. Do not claim to perform actions. Answer in 1-3 short sentences or compact bullets, with only the information needed to answer the question. Treat all data as private.\n\nCurrent TeachTrack data:\n${context}`;
 
   try {
     const groqResponse = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -50,9 +63,10 @@ aiRouter.post("/chat", requireAuth, async (request, response) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile",
+        model: process.env.GROQ_MODEL ?? "openai/gpt-oss-20b",
         temperature: 0.35,
-        max_completion_tokens: 600,
+        reasoning_effort: "low",
+        max_completion_tokens: 400,
         messages: [
           { role: "system", content: systemPrompt },
           ...parsed.data.history,
@@ -67,7 +81,31 @@ aiRouter.post("/chat", requireAuth, async (request, response) => {
     if (!groqResponse.ok) return response.status(502).json({ message: body.error?.message || "The AI service could not answer right now." });
     const reply = body.choices?.[0]?.message?.content?.trim();
     if (!reply) return response.status(502).json({ message: "The AI service returned an empty response." });
-    return response.json({ reply });
+    return response.json({
+      reply,
+      summaryData: {
+        calendarEvents: events.map((item) => ({
+          title: item.title,
+          type: item.type,
+          startsAt: item.startsAt,
+          endsAt: item.endsAt,
+        })),
+        duties: duties.map((item) => ({
+          title: item.title,
+          status: item.status,
+          dueAt: item.dueAt,
+          description: item.description,
+        })),
+        leaveRequests: leaves.map((item) => ({
+          leaveType: item.leaveType,
+          status: item.status,
+          startDate: item.startDate,
+          endDate: item.endDate,
+          reason: item.reason,
+        })),
+        unreadMessages,
+      },
+    });
   } catch {
     return response.status(502).json({ message: "Unable to reach the AI service." });
   }
