@@ -104,7 +104,6 @@
     </header><main class="content page-view active leaves-page" id="leavesPage" aria-hidden="false">
       <div class="leaves-head">
         <div>
-          <h2>Leaves</h2>
           <p class="sub">Manage and track your leave applications.</p>
         </div>
         <button class="leave-add" id="applyLeaveBtn" type="button">
@@ -113,18 +112,33 @@
         </button>
       </div>
 
-      <section class="leave-stats" aria-label="Leave summary">
+      <section class="leave-stats" id="teacherLeaveStats" aria-label="Personal leave summary">
         <article class="leave-stat blue card">
           <div class="stat-label">Leaves Taken</div>
           <div class="stat-line"><span class="stat-value" id="leaveDaysTaken">0</span><span class="stat-unit">Days</span></div>
-          <div class="stat-foot">this year</div>
+          <div class="stat-foot">this month</div>
           <span class="leave-icon" aria-hidden="false"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16M9 14h6M12 12v5"/></svg></span>
         </article>
         <article class="leave-stat teal card">
           <div class="stat-label">Leave Balance</div>
-          <div class="stat-line"><span class="stat-value" id="leaveBalance">25</span><span class="stat-unit">Days</span></div>
-          <div class="stat-foot">remaining of 25 days</div>
-          <div class="leave-progress" aria-label="48 percent remaining"><svg viewBox="0 0 36 36"><path class="track" fill="none" stroke-width="4" d="M18 2.0845a15.9155 15.9155 0 0 1 0 31.831a15.9155 15.9155 0 0 1 0-31.831"/><path class="fill" fill="none" stroke-width="4" d="M18 2.0845a15.9155 15.9155 0 0 1 0 31.831a15.9155 15.9155 0 0 1 0-31.831"/></svg><span>48%</span></div>
+          <div class="stat-line"><span class="stat-value" id="leaveBalance">6</span><span class="stat-unit">Days/month</span></div>
+          <div class="stat-foot">monthly allowance</div>
+          <div class="leave-progress" aria-label="100 percent of monthly allowance remaining"><svg viewBox="0 0 36 36"><path class="track" fill="none" stroke-width="4" d="M18 2.0845a15.9155 15.9155 0 0 1 0 31.831a15.9155 15.9155 0 0 1 0-31.831"/><path class="fill" fill="none" stroke-width="4" d="M18 2.0845a15.9155 15.9155 0 0 1 0 31.831a15.9155 15.9155 0 0 1 0-31.831"/></svg><span>100%</span></div>
+        </article>
+      </section>
+
+      <section class="leave-stats admin-leave-stats" id="adminLeaveStats" aria-label="Leave management summary" hidden>
+        <article class="leave-stat amber card">
+          <div class="stat-label">Pending requests</div>
+          <div class="stat-line"><span class="stat-value" id="adminPendingLeaves">0</span><span class="stat-unit">to review</span></div>
+          <div class="stat-foot">requires your decision</div>
+          <span class="leave-icon" aria-hidden="true">…</span>
+        </article>
+        <article class="leave-stat blue card">
+          <div class="stat-label">Approved this month</div>
+          <div class="stat-line"><span class="stat-value" id="adminApprovedThisMonth">0</span><span class="stat-unit">requests</span></div>
+          <div class="stat-foot">across all staff</div>
+          <span class="leave-icon" aria-hidden="true">✓</span>
         </article>
       </section>
 
@@ -148,5 +162,22 @@
       </div>
     </div>
 
-</div></div><script src="assets/app.js"></script></body></html>
+    <section class="employee-details-modal" id="employeeDetailsModal" role="dialog" aria-modal="true" aria-labelledby="employeeDetailsTitle" hidden>
+      <div class="employee-details-card">
+        <div class="employee-details-head">
+          <div><span class="kick">Staff directory</span><h2 id="employeeDetailsTitle">Employee details</h2></div>
+          <button type="button" class="employee-details-close" aria-label="Close employee details">&times;</button>
+        </div>
+        <div class="employee-details-body">
+          <div class="employee-details-avatar" aria-hidden="true"></div>
+          <div>
+            <p class="employee-details-label">Name</p>
+            <p class="employee-details-name"></p>
+            <p class="employee-details-label">Email</p>
+            <a class="employee-details-email"></a>
+          </div>
+        </div>
+      </div>
+    </section>
 
+</div></div><script src="assets/app.js"></script></body></html>
