@@ -52,12 +52,16 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
+  AiDailyUsage: 'AiDailyUsage',
+  PasswordResetToken: 'PasswordResetToken',
   LeaveRequest: 'LeaveRequest',
   Message: 'Message',
+  MessageConnection: 'MessageConnection',
   CalendarEvent: 'CalendarEvent',
   Duty: 'Duty',
   Notification: 'Notification',
-  TimetableLecture: 'TimetableLecture'
+  TimetableLecture: 'TimetableLecture',
+  TimetableSetting: 'TimetableSetting'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -94,6 +98,30 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+export const AiDailyUsageScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  usageDate: 'usageDate',
+  requestCount: 'requestCount',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AiDailyUsageScalarFieldEnum = (typeof AiDailyUsageScalarFieldEnum)[keyof typeof AiDailyUsageScalarFieldEnum]
+
+
+export const PasswordResetTokenScalarFieldEnum = {
+  id: 'id',
+  tokenHash: 'tokenHash',
+  expiresAt: 'expiresAt',
+  usedAt: 'usedAt',
+  createdAt: 'createdAt',
+  userId: 'userId'
+} as const
+
+export type PasswordResetTokenScalarFieldEnum = (typeof PasswordResetTokenScalarFieldEnum)[keyof typeof PasswordResetTokenScalarFieldEnum]
+
+
 export const LeaveRequestScalarFieldEnum = {
   id: 'id',
   teacherId: 'teacherId',
@@ -105,6 +133,8 @@ export const LeaveRequestScalarFieldEnum = {
   reviewerNote: 'reviewerNote',
   reviewedById: 'reviewedById',
   reviewedAt: 'reviewedAt',
+  hiddenFromTeacher: 'hiddenFromTeacher',
+  hiddenFromAdmin: 'hiddenFromAdmin',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -118,10 +148,24 @@ export const MessageScalarFieldEnum = {
   receiverId: 'receiverId',
   content: 'content',
   readAt: 'readAt',
+  hiddenFromSender: 'hiddenFromSender',
+  hiddenFromReceiver: 'hiddenFromReceiver',
   createdAt: 'createdAt'
 } as const
 
 export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
+
+
+export const MessageConnectionScalarFieldEnum = {
+  id: 'id',
+  requesterId: 'requesterId',
+  recipientId: 'recipientId',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MessageConnectionScalarFieldEnum = (typeof MessageConnectionScalarFieldEnum)[keyof typeof MessageConnectionScalarFieldEnum]
 
 
 export const CalendarEventScalarFieldEnum = {
@@ -144,9 +188,11 @@ export const DutyScalarFieldEnum = {
   id: 'id',
   assignedToId: 'assignedToId',
   title: 'title',
+  dutyType: 'dutyType',
   description: 'description',
   dueAt: 'dueAt',
   status: 'status',
+  hiddenFromTeacher: 'hiddenFromTeacher',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -181,6 +227,21 @@ export const TimetableLectureScalarFieldEnum = {
 } as const
 
 export type TimetableLectureScalarFieldEnum = (typeof TimetableLectureScalarFieldEnum)[keyof typeof TimetableLectureScalarFieldEnum]
+
+
+export const TimetableSettingScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  day: 'day',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  lectureCount: 'lectureCount',
+  duration: 'duration',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TimetableSettingScalarFieldEnum = (typeof TimetableSettingScalarFieldEnum)[keyof typeof TimetableSettingScalarFieldEnum]
 
 
 export const SortOrder = {
