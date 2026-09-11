@@ -47,6 +47,16 @@ export { Prisma }
  */
 export type User = Prisma.UserModel
 /**
+ * Model AiDailyUsage
+ * 
+ */
+export type AiDailyUsage = Prisma.AiDailyUsageModel
+/**
+ * Model PasswordResetToken
+ * 
+ */
+export type PasswordResetToken = Prisma.PasswordResetTokenModel
+/**
  * Model LeaveRequest
  * 
  */
@@ -56,6 +66,11 @@ export type LeaveRequest = Prisma.LeaveRequestModel
  * 
  */
 export type Message = Prisma.MessageModel
+/**
+ * Model MessageConnection
+ * 
+ */
+export type MessageConnection = Prisma.MessageConnectionModel
 /**
  * Model CalendarEvent
  * 
@@ -76,3 +91,8 @@ export type Notification = Prisma.NotificationModel
  * 
  */
 export type TimetableLecture = Prisma.TimetableLectureModel
+/**
+ * Model TimetableSetting
+ * 
+ */
+export type TimetableSetting = Prisma.TimetableSettingModel
