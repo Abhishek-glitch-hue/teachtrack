@@ -1,0 +1,3 @@
+ALTER TABLE "Message"
+ADD COLUMN "hiddenFromSender" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN "hiddenFromReceiver" BOOLEAN NOT NULL DEFAULT false;
