@@ -30,6 +30,14 @@
     window.location.replace('login.html');
   });
 
+  window.addEventListener('message', function (event) {
+    var assistantFrame = document.querySelector('#assistantPage iframe');
+    if (!assistantFrame || event.source !== assistantFrame.contentWindow || !event.data || event.data.type !== 'teachtrack:assistant-back') return;
+    var returnPage = sessionStorage.getItem('teachtrack_assistant_return') || 'dashboard';
+    sessionStorage.removeItem('teachtrack_assistant_return');
+    window.location.hash = returnPage;
+  });
+
   /* ---------- theme toggle (light/dark) ---------- */
   (function () {
     var root = document.documentElement;
@@ -261,10 +269,21 @@
       }
     });
 
+    document.addEventListener('click', function (event) {
+      var employeeButton = event.target.closest('.employee-name-button');
+      if (!employeeButton) return;
+      event.preventDefault();
+      event.stopPropagation();
+      openEmployeeDetails({ name: employeeButton.dataset.employeeName, email: employeeButton.dataset.employeeEmail });
+    });
+
     navLinks.forEach(function (link) {
       link.addEventListener('click', function (event) {
         event.preventDefault();
         var page = link.getAttribute('data-page');
+        if (page === 'assistant') {
+          sessionStorage.setItem('teachtrack_assistant_return', window.location.hash.slice(1) || 'dashboard');
+        }
         if (window.location.hash !== '#' + page) {
           window.location.hash = page;
         } else {
@@ -283,6 +302,44 @@
     openPageFromHash();
     }
 
+    function openEmployeeDetails(employee) {
+      if (!employee) return;
+      var modal = document.getElementById('employeeDetailsModal');
+      if (!modal) {
+        modal = document.createElement('section');
+        modal.id = 'employeeDetailsModal';
+        modal.className = 'employee-details-modal';
+        modal.hidden = true;
+        modal.setAttribute('role', 'dialog');
+        modal.setAttribute('aria-modal', 'true');
+        modal.setAttribute('aria-labelledby', 'employeeDetailsTitle');
+        modal.innerHTML = '<div class="employee-details-card"><div class="employee-details-head"><div><span class="kick">Staff directory</span><h2 id="employeeDetailsTitle">Employee details</h2></div><button type="button" class="employee-details-close" aria-label="Close employee details">&times;</button></div><div class="employee-details-body"><div class="employee-details-avatar" aria-hidden="true"></div><div><p class="employee-details-label">Name</p><p class="employee-details-name"></p><p class="employee-details-label">Email</p><a class="employee-details-email"></a></div></div></div>';
+        document.body.appendChild(modal);
+      }
+      if (!modal.dataset.bound) {
+        modal.querySelector('.employee-details-close').addEventListener('click', function () { modal.hidden = true; });
+        modal.addEventListener('click', function (event) { if (event.target === modal) modal.hidden = true; });
+        modal.dataset.bound = 'true';
+      }
+      var name = String(employee.name || 'Employee');
+      var email = String(employee.email || 'Email unavailable');
+      modal.querySelector('.employee-details-avatar').textContent = name.charAt(0).toUpperCase();
+      modal.querySelector('.employee-details-name').textContent = name;
+      var emailLink = modal.querySelector('.employee-details-email');
+      emailLink.textContent = email;
+      emailLink.href = employee.email ? 'mailto:' + employee.email : '#';
+      modal.hidden = false;
+      modal.querySelector('.employee-details-close').focus();
+    }
+    window.openEmployeeDetails = openEmployeeDetails;
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape') {
+        var employeeModal = document.getElementById('employeeDetailsModal');
+        if (employeeModal) employeeModal.hidden = true;
+      }
+    });
+
     /* Dashboard: render the authenticated user's live aggregate data. */
     (function () {
       var dashboard = document.getElementById('dashboardPage');
@@ -298,24 +355,49 @@
           if (status) status.innerHTML = pending ? (pending > 5 ? 'High' : 'Active') : 'Clear';
           var meter = document.getElementById('dashboardDutyMeter'); if (meter) meter.style.setProperty('--w', (total ? Math.min(100, Math.round(pending / total * 100)) : 0) + '%');
           var dutyFoot = document.getElementById('dashboardDutyFoot'); if (dutyFoot) dutyFoot.textContent = pending + ' pending of ' + total + ' assigned duties';
-          var lessons = document.getElementById('dashboardLessonCount'); if (lessons) lessons.innerHTML = stats.scheduledLessons + '<small>lessons</small>';
-          var lessonFoot = document.getElementById('dashboardLessonFoot'); if (lessonFoot) lessonFoot.textContent = stats.upcomingThisWeek + ' items this week';
-          var leave = document.getElementById('dashboardLeaveBalance'); if (leave) leave.innerHTML = stats.approvedLeaveDays + '<small>days</small>';
-          var leaveFoot = document.getElementById('dashboardLeaveFoot'); if (leaveFoot) leaveFoot.textContent = 'Approved leave days';
+          var lessons = document.getElementById('dashboardLessonCount'); if (lessons) lessons.innerHTML = (Number(stats.weeklyHours) || 0) + '<small>hours</small>';
+          var lessonFoot = document.getElementById('dashboardLessonFoot'); if (lessonFoot) lessonFoot.textContent = (stats.scheduledLessons || 0) + ' lessons · ' + (stats.upcomingThisWeek || 0) + ' scheduled items this week';
+          var allowance = stats.monthlyLeaveAllowance || 6;
+          var leave = document.getElementById('dashboardLeaveBalance'); if (leave) leave.innerHTML = stats.leaveBalance + '<small>days/month</small>';
+          var leaveUsed = Math.max(0, Number(stats.leaveDaysTaken) || 0);
+          var leaveFoot = document.getElementById('dashboardLeaveFoot'); if (leaveFoot) leaveFoot.textContent = leaveUsed > allowance ? allowance + ' of ' + allowance + ' days used · ' + (leaveUsed - allowance) + ' over allowance' : leaveUsed + ' of ' + allowance + ' days taken this month';
           var next = data.upcoming && data.upcoming[0];
           var nextItem = document.getElementById('dashboardNextItem'); if (nextItem) nextItem.textContent = next ? next.title : 'None';
           var nextFoot = document.getElementById('dashboardNextItemFoot'); if (nextFoot) nextFoot.textContent = next ? when(next.date) + ' · ' + next.kind : 'No upcoming events';
-          var notice = document.getElementById('dashboardNotice'); if (notice) notice.innerHTML = '<b>' + pending + ' duties need attention</b> · ' + (stats.upcomingThisWeek || 0) + ' calendar items this week.';
+          var notice = document.getElementById('dashboardNotice'); if (notice) notice.innerHTML = '<b>' + pending + ' duties need attention</b> · ' + (stats.upcomingThisWeek || 0) + ' scheduled items this week.';
           var count = document.getElementById('dashboardUpcomingCount'); if (count) count.textContent = (data.upcoming || []).length + ' items';
           var list = document.getElementById('dashboardUpcomingList');
-          if (list) { list.innerHTML = ''; (data.upcoming || []).forEach(function (item) { var li = document.createElement('li'); li.className = 'uitem ' + (item.kind === 'duty' ? 'high' : 'norm'); var wrapper = document.createElement('div'); var title = document.createElement('b'); title.textContent = item.title; var date = document.createElement('span'); date.className = 'uwhen'; date.textContent = when(item.date); wrapper.appendChild(title); wrapper.appendChild(date); var tag = document.createElement('span'); tag.className = 'tag ' + (item.kind === 'duty' ? 'high' : 'norm'); tag.textContent = item.kind === 'duty' ? 'Duty' : 'Calendar'; li.appendChild(wrapper); li.appendChild(tag); list.appendChild(li); }); }
+          if (list) { list.innerHTML = ''; (data.upcoming || []).forEach(function (item) { var urgentDuty = item.kind === 'duty' && item.isUrgent; var li = document.createElement('li'); li.className = 'uitem ' + (urgentDuty ? 'high' : 'norm'); var wrapper = document.createElement('div'); var title = document.createElement('b'); title.textContent = item.title; var date = document.createElement('span'); date.className = 'uwhen'; date.textContent = when(item.date); wrapper.appendChild(title); wrapper.appendChild(date); var tag = document.createElement('span'); tag.className = 'tag ' + (urgentDuty ? 'high' : 'norm'); tag.textContent = urgentDuty ? 'Urgent duty' : item.kind === 'duty' ? 'Duty' : 'Calendar'; li.appendChild(wrapper); li.appendChild(tag); list.appendChild(li); }); }
           var messages = document.getElementById('dashboardMessagesList');
           if (messages) { messages.innerHTML = ''; (data.messages || []).slice(0, 3).forEach(function (message, index) { var other = message.senderId === data.user.id ? message.receiver : message.sender; var link = document.createElement('a'); link.className = 'msg'; link.href = 'messages.html'; var avatar = document.createElement('span'); avatar.className = 'avatar a' + (index + 1); avatar.textContent = (other.name || '?').charAt(0).toUpperCase(); var body = document.createElement('span'); body.className = 'msg-body'; var name = document.createElement('b'); name.textContent = other.name; var preview = document.createElement('span'); preview.className = 'msg-prev'; preview.textContent = message.content; body.appendChild(name); body.appendChild(preview); var meta = document.createElement('span'); meta.className = 'msg-meta'; var time = document.createElement('time'); time.textContent = when(message.createdAt); meta.appendChild(time); link.appendChild(avatar); link.appendChild(body); link.appendChild(meta); messages.appendChild(link); }); }
+          var barsContainer = document.querySelector('.bars');
+          if (barsContainer) {
+            barsContainer.textContent = '';
+            (data.weeks || []).forEach(function (week, index) {
+              var bar = document.createElement('button');
+              bar.type = 'button';
+              bar.className = 'tcol' + (week.isCurrent ? ' cur' : '');
+              bar.style.setProperty('--h', '0%');
+              bar.setAttribute('aria-label', week.week + ': ' + week.hours + ' hours');
+              var fill = document.createElement('span'); fill.className = 'tfill'; fill.style.setProperty('--d', (index * 90) + 'ms');
+              var tip = document.createElement('span'); tip.className = 'tip'; tip.textContent = week.week + ' · ' + week.hours + ' hrs';
+              var label = document.createElement('span'); label.className = 'tx'; label.textContent = week.week + (week.isCurrent ? ' · now' : '');
+              bar.appendChild(fill); bar.appendChild(tip); bar.appendChild(label); barsContainer.appendChild(bar);
+            });
+          }
+          var period = document.getElementById('weeklyTrendPeriod'); if (period) period.textContent = data.trendPeriod || 'Current calendar month';
           var bars = document.querySelectorAll('.tcol');
-          var maxHours = Math.max(1, Math.max.apply(null, (data.weeks || []).map(function (w) { return w.hours; })));
+          var highestHours = Math.max.apply(null, (data.weeks || []).map(function (w) { return w.hours; }).concat([0]));
+          var maxHours = Math.max(10, Math.ceil(highestHours / 10) * 10);
           var avgHours = (data.weeks || []).reduce(function (sum, w) { return sum + w.hours; }, 0) / (data.weeks || []).length || 0;
           bars.forEach(function (bar, index) { var week = (data.weeks || [])[index]; if (week) { var height = (week.hours / maxHours * 100); bar.style.setProperty('--h', height + '%'); bar.setAttribute('aria-label', week.week + ': ' + week.hours + ' hours'); bar.querySelector('.tip').textContent = week.week + ' · ' + week.hours + ' hrs'; } });
           var avgElem = document.querySelector('.avg'); if (avgElem && avgHours > 0) avgElem.style.setProperty('--p', (avgHours / maxHours * 100) + '%'); if (avgElem) avgElem.querySelector('em').textContent = 'avg ' + Math.round(avgHours) + 'h';
+          var yAxis = document.querySelector('.yaxis');
+          if (yAxis) {
+            Array.prototype.forEach.call(yAxis.querySelectorAll('span'), function (label, index) {
+              label.textContent = String(Math.round(maxHours - index * maxHours / 4));
+            });
+          }
           var breakdownRows = document.querySelectorAll('.drow');
           var breakdownData = data.breakdown || [];
           breakdownRows.forEach(function (row, index) { if (index < breakdownData.length) { row.style.display = ''; var item = breakdownData[index]; var dhead = row.querySelector('.dhead'); if (dhead) { var b = dhead.querySelector('b'); if (b) b.textContent = item.percentage + '%'; var label = dhead.textContent.split(/\d+%/)[0].trim(); dhead.textContent = ''; var dsw = document.createElement('span'); dsw.className = 'dsw c' + (index + 1); dhead.appendChild(dsw); dhead.appendChild(document.createTextNode(item.type + ' ')); var bb = document.createElement('b'); bb.textContent = item.percentage + '%'; dhead.appendChild(bb); } var dfill = row.querySelector('.dfill'); if (dfill) { dfill.style.setProperty('--w', item.percentage + '%'); dfill.style.setProperty('--d', (index * 120 + 100) + 'ms'); } } else { row.style.display = 'none'; } });
@@ -339,21 +421,48 @@
       var count = document.getElementById('dutyCount');
       var addDuty = document.getElementById('addDutyBtn');
       var duties = [];
+      var summaryDuties = [];
+      var dutyPage = 1;
+      var dutyPageSize = 4;
       var dutyApi = 'http://localhost:4000/api/duties';
       var isAdmin = false;
-      try { isAdmin = JSON.parse(sessionStorage.getItem('teachtrack_user') || '{}').role === 'ADMIN'; } catch (_) {}
+      try { isAdmin = String(JSON.parse(sessionStorage.getItem('teachtrack_user') || '{}').role || '').toUpperCase() === 'ADMIN'; } catch (_) {}
 
       if (addDuty && !isAdmin) addDuty.style.display = 'none';
+      var primaryLabel = document.getElementById('dutyPrimaryLabel');
+      var secondaryLabel = document.getElementById('dutySecondaryLabel');
+      if (isAdmin) {
+        if (primaryLabel) primaryLabel.textContent = 'Due This Week';
+        if (secondaryLabel) secondaryLabel.textContent = 'Active Assignments';
+      }
       function labelStatus(status) { return status === 'IN_PROGRESS' ? 'In progress' : status.charAt(0) + status.slice(1).toLowerCase(); }
+      function labelDutyType(type) { return String(type || 'LECTURES').charAt(0) + String(type || 'LECTURES').slice(1).toLowerCase(); }
       function renderDuties() {
         if (!body) return;
         var filter = statusFilter ? statusFilter.value : 'all';
         var visible = duties.filter(function (duty) { return filter === 'all' || duty.status.toLowerCase() === filter; });
+        var pageCount = Math.max(1, Math.ceil(visible.length / dutyPageSize));
+        dutyPage = Math.min(dutyPage, pageCount);
+        var pageStart = (dutyPage - 1) * dutyPageSize;
+        var pageItems = visible.slice(pageStart, pageStart + dutyPageSize);
         body.innerHTML = '';
-        visible.forEach(function (duty) {
+        pageItems.forEach(function (duty) {
           var row = document.createElement('tr'); row.className = 'duty-row'; row.dataset.status = duty.status.toLowerCase();
+          var type = document.createElement('td'); type.textContent = labelDutyType(duty.dutyType);
           var title = document.createElement('td'); title.textContent = duty.title;
-          var teacher = document.createElement('td'); teacher.textContent = duty.assignedTo ? duty.assignedTo.name : '—';
+          var teacher = document.createElement('td');
+          if (duty.assignedTo) {
+            var teacherButton = document.createElement('button');
+            teacherButton.type = 'button';
+            teacherButton.className = 'employee-name-button';
+            teacherButton.textContent = duty.assignedTo.name;
+            teacherButton.dataset.employeeName = duty.assignedTo.name || '';
+            teacherButton.dataset.employeeEmail = duty.assignedTo.email || '';
+            teacherButton.addEventListener('click', function () { openEmployeeDetails(duty.assignedTo); });
+            teacher.appendChild(teacherButton);
+          } else {
+            teacher.textContent = '—';
+          }
           var date = document.createElement('td'); date.textContent = duty.dueAt ? new Date(duty.dueAt).toLocaleDateString() : 'No due date';
           var statusCell = document.createElement('td');
           var status = document.createElement('select'); status.className = 'duty-status-select ' + duty.status.toLowerCase();
@@ -362,10 +471,10 @@
           status.addEventListener('change', async function () {
             status.className = 'duty-status-select ' + status.value.toLowerCase();
             var response = await fetch(dutyApi + '/' + duty.id + '/status', { method: 'PATCH', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + authToken }, body: JSON.stringify({ status: status.value }) });
-            if (response.ok) { duty.status = status.value; renderDuties(); renderDutyStats(); }
+            if (response.ok) { duty.status = status.value; summaryDuties.forEach(function (item) { if (item.id === duty.id) item.status = status.value; }); renderDuties(); renderDutyStats(); }
           });
           statusCell.appendChild(status);
-          row.appendChild(title); row.appendChild(teacher); row.appendChild(date); row.appendChild(statusCell);
+          row.appendChild(type); row.appendChild(title); row.appendChild(teacher); row.appendChild(date); row.appendChild(statusCell);
           if (isAdmin) {
             var actionCell = document.createElement('td');
             var remove = document.createElement('button'); remove.type = 'button'; remove.className = 'duty-remove'; remove.textContent = 'Remove';
@@ -375,21 +484,69 @@
               if (response.ok) { duties = duties.filter(function (item) { return item.id !== duty.id; }); renderDuties(); renderDutyStats(); }
             });
             actionCell.appendChild(remove); row.appendChild(actionCell);
+          } else {
+            var historyCell = document.createElement('td');
+            var hideHistory = document.createElement('button'); hideHistory.type = 'button'; hideHistory.className = 'duty-remove'; hideHistory.textContent = 'Remove';
+            hideHistory.addEventListener('click', async function () {
+              if (!window.confirm('Remove this duty from your history? Its status and totals will not change.')) return;
+              var response = await fetch(dutyApi + '/' + duty.id + '/history', { method: 'DELETE', headers: { Authorization: 'Bearer ' + authToken } });
+              if (response.ok) { duties = duties.filter(function (item) { return item.id !== duty.id; }); renderDuties(); }
+            });
+            historyCell.appendChild(hideHistory); row.appendChild(historyCell);
           }
           body.appendChild(row);
         });
-        if (count) count.textContent = visible.length ? 'Showing 1 to ' + visible.length + ' of ' + duties.length + ' entries' : 'No duties match this filter';
+        if (count) {
+          count.textContent = visible.length
+            ? 'Showing ' + (pageStart + 1) + ' to ' + Math.min(pageStart + dutyPageSize, visible.length) + ' of ' + visible.length + ' entries'
+            : 'No duties match this filter';
+        }
+        var pageNav = document.querySelector('.duty-pages');
+        if (pageNav) {
+          var previousButton = pageNav.querySelector('[aria-label="Previous page"]');
+          var nextButton = pageNav.querySelector('[aria-label="Next page"]');
+          pageNav.querySelectorAll('[data-page]').forEach(function (button) { button.remove(); });
+          for (var page = 1; page <= pageCount; page++) {
+            var pageButton = document.createElement('button');
+            pageButton.className = 'duty-page-btn' + (page === dutyPage ? ' active' : '');
+            pageButton.type = 'button';
+            pageButton.dataset.page = String(page);
+            pageButton.textContent = String(page);
+            pageButton.addEventListener('click', (function (selectedPage) {
+              return function () { dutyPage = selectedPage; renderDuties(); };
+            })(page));
+            pageNav.insertBefore(pageButton, nextButton);
+          }
+          if (previousButton) {
+            previousButton.disabled = dutyPage === 1;
+            previousButton.onclick = function () { if (dutyPage > 1) { dutyPage--; renderDuties(); } };
+          }
+          if (nextButton) {
+            nextButton.disabled = dutyPage === pageCount;
+            nextButton.onclick = function () { if (dutyPage < pageCount) { dutyPage++; renderDuties(); } };
+          }
+        }
       }
       function renderDutyStats() {
-        var upcoming = duties.filter(function (duty) { return duty.status !== 'COMPLETED' && duty.dueAt && new Date(duty.dueAt) >= new Date(); }).length;
-        var upcomingEl = document.getElementById('dutyUpcomingCount'); if (upcomingEl) upcomingEl.innerHTML = upcoming + ' <small>upcoming</small>';
-        var totalEl = document.getElementById('dutyTotalCount'); if (totalEl) totalEl.innerHTML = duties.length + ' <small>assigned</small>';
+        var now = new Date();
+        var weekEnd = new Date(now);
+        weekEnd.setDate(now.getDate() + 7);
+        var dutyStats = summaryDuties.length ? summaryDuties : duties;
+        var upcoming = dutyStats.filter(function (duty) { return duty.status !== 'COMPLETED' && duty.dueAt && new Date(duty.dueAt) >= now; }).length;
+        var dueThisWeek = dutyStats.filter(function (duty) { return duty.status !== 'COMPLETED' && duty.dueAt && new Date(duty.dueAt) >= now && new Date(duty.dueAt) < weekEnd; }).length;
+        var active = dutyStats.filter(function (duty) { return duty.status !== 'COMPLETED'; }).length;
+        var completed = dutyStats.filter(function (duty) { return duty.status === 'COMPLETED'; }).length;
+        var primaryEl = document.getElementById('dutyUpcomingCount');
+        var secondaryEl = document.getElementById('dutyTotalCount');
+        if (primaryEl) primaryEl.innerHTML = (isAdmin ? dueThisWeek : upcoming) + ' <small>' + (isAdmin ? 'due this week' : 'upcoming') + '</small>';
+        if (secondaryEl) secondaryEl.innerHTML = (isAdmin ? active : completed) + ' <small>' + (isAdmin ? 'active' : 'completed') + '</small>';
       }
       async function loadDuties() {
-        try { var response = await fetch(dutyApi, { headers: { Authorization: 'Bearer ' + authToken } }); if (!response.ok) return; duties = (await response.json()).duties || []; renderDuties(); renderDutyStats(); } catch (_) {}
+        try { var response = await fetch(dutyApi, { headers: { Authorization: 'Bearer ' + authToken } }); if (!response.ok) return; var data = await response.json(); duties = data.duties || []; summaryDuties = data.summaryDuties || duties; renderDuties(); renderDutyStats(); } catch (_) {}
       }
 
       function applyDutyFilter() {
+        dutyPage = 1;
         renderDuties();
       }
 
@@ -409,21 +566,30 @@
 
       if (addDuty) {
         addDuty.addEventListener('click', function () {
-          var modal = document.getElementById('dutyModal'); if (modal) { modal.hidden = false; document.body.classList.add('tt-modal-open'); }
+          var modal = document.getElementById('dutyModal');
+          var dueDate = document.getElementById('dutyDueDate');
+          var today = new Date();
+          var todayValue = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+          if (dueDate) dueDate.min = todayValue;
+          if (modal) { modal.hidden = false; document.body.classList.add('tt-modal-open'); }
         });
       }
       var dutyModal = document.getElementById('dutyModal');
       var dutyForm = document.getElementById('dutyForm');
-      async function loadTeachers() { var response = await fetch(dutyApi + '/teachers', { headers: { Authorization: 'Bearer ' + authToken } }); if (!response.ok) return; var select = document.getElementById('dutyTeacher'); select.innerHTML = ''; (await response.json()).teachers.forEach(function (teacher) { select.appendChild(new Option(teacher.name + ' (' + teacher.email + ')', teacher.id)); }); }
+      async function loadTeachers() { var response = await fetch(dutyApi + '/teachers', { headers: { Authorization: 'Bearer ' + authToken } }); if (!response.ok) return; var select = document.getElementById('dutyTeacher'); select.innerHTML = ''; (await response.json()).teachers.forEach(function (teacher) { select.appendChild(new Option(teacher.name + ' (' + teacher.email + ')', teacher.id)); }); enhanceTimetableSelect(select); }
+      enhanceTimetableSelect(document.getElementById('dutyType'));
       function closeDutyModal() { if (dutyModal) dutyModal.hidden = true; document.body.classList.remove('tt-modal-open'); }
       if (dutyModal) { document.getElementById('dutyModalClose').addEventListener('click', closeDutyModal); document.getElementById('dutyModalCancel').addEventListener('click', closeDutyModal); dutyModal.addEventListener('click', function (event) { if (event.target === dutyModal) closeDutyModal(); }); }
       if (dutyForm) dutyForm.addEventListener('submit', async function (event) {
         event.preventDefault();
         var date = document.getElementById('dutyDueDate').value, time = document.getElementById('dutyDueTime').value;
-        var payload = { assignedToId: document.getElementById('dutyTeacher').value, title: document.getElementById('dutyTitle').value, description: document.getElementById('dutyDescription').value };
+        var dutyTypeInput = document.getElementById('dutyType');
+        var payload = { assignedToId: document.getElementById('dutyTeacher').value, title: document.getElementById('dutyTitle').value, dutyType: dutyTypeInput ? dutyTypeInput.value : 'LECTURES', description: document.getElementById('dutyDescription').value };
+        var today = new Date(); today.setHours(0, 0, 0, 0);
+        if (date && new Date(date + 'T00:00') < today) { document.getElementById('dutyFormError').textContent = 'Due date cannot be earlier than today.'; return; }
         if (date) payload.dueAt = new Date(date + 'T' + (time || '09:00')).toISOString();
         var response = await fetch(dutyApi, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + authToken }, body: JSON.stringify(payload) });
-        if (!response.ok) { document.getElementById('dutyFormError').textContent = 'Could not assign this duty.'; return; }
+        if (!response.ok) { var errorData = await response.json().catch(function () { return {}; }); document.getElementById('dutyFormError').textContent = errorData.message || 'Could not assign this duty.'; return; }
         duties.unshift((await response.json()).duty); closeDutyModal(); dutyForm.reset(); renderDuties(); renderDutyStats();
       });
       if (isAdmin) loadTeachers();
@@ -432,21 +598,69 @@
       loadDuties();
     })();
 
-    /* Timetable: each signed-in user's lectures are stored through the API. */
+    /* Timetable: each teacher configures a day, then lectures use generated slots. */
     var search = document.getElementById('ttSearch');
     var dayFilter = document.getElementById('ttDayFilter');
     var classFilter = document.getElementById('ttClassFilter');
-    var timetableSlots = Array.prototype.slice.call(document.querySelectorAll('.tt-slot'));
+    var timetableGrid = document.querySelector('.tt-grid');
+    var timetableSlots = [];
+    var timetableSlotMeta = [];
     var timetableModal = document.getElementById('ttModal');
     var timetableForm = document.getElementById('ttForm');
+    var plannerForm = document.getElementById('ttPlannerForm');
     var timetableEditingIndex = null;
+    var timetableDays = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+    var timetableDayNames = { mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday', sun: 'Sunday' };
+    var timetableSettings = {};
+    var timetableLectures = [];
+    var timetableEntries = [];
+    var defaultTimetableSetting = { startTime: '09:00', endTime: '12:00', lectureCount: 3, duration: 60 };
 
-    function slotInfo(index) {
-      var days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
-      return { day: days[index % 7], time: ['09:00', '10:00', '11:00'][Math.floor(index / 7)] };
+    function minutesFromTime(value) { var parts = value.split(':'); return Number(parts[0]) * 60 + Number(parts[1]); }
+    function timeFromMinutes(value) { return String(Math.floor(value / 60)).padStart(2, '0') + ':' + String(value % 60).padStart(2, '0'); }
+    function settingFor(day) {
+      return timetableSettings[day] || timetableSettings.mon || defaultTimetableSetting;
     }
-
-    var timetableEntries = timetableSlots.length ? Array(timetableSlots.length).fill(null) : [];
+    function timesFor(day) {
+      var setting = settingFor(day);
+      if (!setting) return [];
+      var start = minutesFromTime(setting.startTime), end = minutesFromTime(setting.endTime);
+      var duration = Number(setting.duration), count = Number(setting.lectureCount), result = [];
+      for (var i = 0; i < count; i++) {
+        if (start + ((i + 1) * duration) > end) break;
+        result.push(timeFromMinutes(start + (i * duration)));
+      }
+      return result;
+    }
+    function slotInfo(index) { return timetableSlotMeta[index] || { day: 'mon', time: '09:00' }; }
+    function indexFor(day, time) {
+      return timetableSlotMeta.findIndex(function (slot) { return slot.day === day && slot.time === time; });
+    }
+    function rebuildTimetableGrid() {
+      if (!timetableGrid) return;
+      var times = [];
+      timetableDays.forEach(function (day) { timesFor(day).forEach(function (time) { if (times.indexOf(time) === -1) times.push(time); }); });
+      times.sort();
+      timetableGrid.innerHTML = '';
+      timetableSlots = [];
+      timetableSlotMeta = [];
+      var corner = document.createElement('div'); corner.className = 'tt-corner'; timetableGrid.appendChild(corner);
+      timetableDays.forEach(function (day) { var header = document.createElement('div'); header.className = 'tt-day' + (day === 'sat' || day === 'sun' ? ' muted' : ''); header.dataset.day = day; header.textContent = timetableDayNames[day].slice(0, 3); timetableGrid.appendChild(header); });
+      times.forEach(function (time) {
+        var timeCell = document.createElement('div'); timeCell.className = 'tt-time'; timeCell.textContent = time; timetableGrid.appendChild(timeCell);
+        timetableDays.forEach(function (day) {
+          var slot = document.createElement('button'); slot.type = 'button'; slot.className = 'tt-slot empty tt-reveal'; slot.dataset.day = day; slot.dataset.time = time;
+          var isAvailable = timesFor(day).indexOf(time) !== -1;
+          if (!isAvailable) { slot.classList.add('tt-unavailable'); slot.disabled = true; slot.innerHTML = '<span class="tt-empty-label">Outside plan</span>'; }
+          else { slot.innerHTML = '<span class="tt-plus">+</span><span class="tt-empty-label">Add lecture</span>'; }
+          timetableGrid.appendChild(slot); timetableSlots.push(slot); timetableSlotMeta.push({ day: day, time: time });
+        });
+      });
+      timetableEntries = timetableSlotMeta.map(function (slot) { return timetableLectures.find(function (lecture) { return lecture.day === slot.day && lecture.time === slot.time; }) || null; });
+      timetableSlots.forEach(function (slot, index) { slot.addEventListener('click', function () { openTimetableModal(index); }); });
+      timetableGrid.style.gridTemplateRows = '44px repeat(' + times.length + ',106px)';
+      renderTimetable();
+    }
 
     function enhanceTimetableSelect(select) {
       if (!select || select.dataset.enhanced) return;
@@ -483,12 +697,19 @@
         var isOpen = wrapper.classList.toggle('open');
         trigger.setAttribute('aria-expanded', String(isOpen));
       });
+      select.addEventListener('change', function () {
+        trigger.textContent = select.options[select.selectedIndex].textContent;
+      });
       wrapper.appendChild(trigger);
       wrapper.appendChild(menu);
     }
 
     enhanceTimetableSelect(dayFilter);
     enhanceTimetableSelect(classFilter);
+    enhanceTimetableSelect(document.getElementById('ttType'));
+    enhanceTimetableSelect(document.getElementById('ttDay'));
+    enhanceTimetableSelect(document.getElementById('ttPlanDay'));
+    enhanceTimetableSelect(document.getElementById('ttPlanDuration'));
 
     function classCode(label) {
       var known = { 'FY-CS-A': 'fy', 'SY-IT-B': 'sy', 'TY-CS-A': 'ty' };
@@ -529,11 +750,9 @@
         var response = await timetableApi('/');
         if (!response.ok) throw new Error('Unable to load timetable.');
         var data = await response.json();
-        timetableEntries = Array(timetableSlots.length).fill(null);
-        (data.lectures || []).forEach(function (lecture) {
-          var index = indexFor(lecture.day, lecture.time);
-          if (index >= 0) timetableEntries[index] = lecture;
-        });
+        timetableLectures = data.lectures || [];
+        (data.settings || []).forEach(function (setting) { timetableSettings[setting.day] = setting; });
+        rebuildTimetableGrid();
         renderTimetable();
       } catch (error) {
         console.error(error);
@@ -578,6 +797,22 @@
     if (dayFilter) dayFilter.addEventListener('change', filterTimetable);
     if (classFilter) classFilter.addEventListener('change', filterTimetable);
 
+    function updateTimeOptions(day, selectedTime) {
+      var timeSelect = document.getElementById('ttTime'); if (!timeSelect) return;
+      var timeWrapper = timeSelect.closest('.tt-select');
+      if (timeSelect.dataset.enhanced && timeWrapper) {
+        var oldTrigger = timeWrapper.querySelector('.tt-select-trigger');
+        var oldMenu = timeWrapper.querySelector('.tt-select-menu');
+        if (oldTrigger) oldTrigger.remove();
+        if (oldMenu) oldMenu.remove();
+        delete timeSelect.dataset.enhanced;
+        timeSelect.classList.remove('tt-native-select');
+      }
+      timeSelect.innerHTML = '';
+      timesFor(day).forEach(function (time) { timeSelect.appendChild(new Option(time, time)); });
+      if (selectedTime && timesFor(day).indexOf(selectedTime) !== -1) timeSelect.value = selectedTime;
+      enhanceTimetableSelect(timeSelect);
+    }
     function openTimetableModal(index) {
       if (!timetableModal || !timetableForm) return;
       timetableEditingIndex = index;
@@ -590,7 +825,11 @@
       document.getElementById('ttRoom').value = entry ? entry.room : '';
       document.getElementById('ttType').value = entry ? entry.type : 'teal';
       document.getElementById('ttDay').value = info.day;
+      updateTimeOptions(info.day, info.time);
       document.getElementById('ttTime').value = info.time;
+      ['ttType', 'ttDay', 'ttTime'].forEach(function (id) {
+        document.getElementById(id).dispatchEvent(new Event('change'));
+      });
       document.getElementById('ttDeleteLecture').hidden = !entry;
       document.getElementById('ttFormError').textContent = '';
       timetableModal.hidden = false;
@@ -603,13 +842,31 @@
       document.body.classList.remove('tt-modal-open');
       timetableEditingIndex = null;
     }
-    function indexFor(day, time) {
-      var days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
-      return ['09:00', '10:00', '11:00'].indexOf(time) * 7 + days.indexOf(day);
-    }
-    if (timetableSlots.length) {
+    function plannerValues() { return { day: document.getElementById('ttPlanDay').value, startTime: document.getElementById('ttPlanStart').value, endTime: document.getElementById('ttPlanEnd').value, duration: Number(document.getElementById('ttPlanDuration').value), lectureCount: Number(document.getElementById('ttPlanCount').value) }; }
+    function showPlannerStatus(message, isError) { var status = document.getElementById('ttPlanStatus'); if (status) { status.textContent = message; status.className = 'tt-plan-status' + (isError ? ' is-error' : ' is-success'); } }
+    function loadPlannerForm(day) { var setting = settingFor(day) || defaultTimetableSetting; document.getElementById('ttPlanStart').value = setting.startTime; document.getElementById('ttPlanEnd').value = setting.endTime; document.getElementById('ttPlanDuration').value = String(setting.duration); document.getElementById('ttPlanCount').value = String(setting.lectureCount); }
+    if (timetableGrid && timetableForm) {
+      rebuildTimetableGrid();
+      loadPlannerForm('mon');
+      document.getElementById('ttPlanDay').addEventListener('change', function () { loadPlannerForm(this.value); });
+      document.getElementById('ttDay').addEventListener('change', function () { updateTimeOptions(this.value); });
+      plannerForm.addEventListener('submit', async function (event) {
+        event.preventDefault();
+        var values = plannerValues(), error = '';
+        if (minutesFromTime(values.endTime) <= minutesFromTime(values.startTime)) error = 'End time must be later than start time.';
+        if (!error && values.lectureCount * values.duration > minutesFromTime(values.endTime) - minutesFromTime(values.startTime)) error = 'This day is too short for that many lectures at the selected duration.';
+        var oldTimes = timesFor(values.day), newTimes = [];
+        for (var i = 0; i < values.lectureCount; i++) newTimes.push(timeFromMinutes(minutesFromTime(values.startTime) + (i * values.duration)));
+        var hiddenLecture = timetableLectures.some(function (lecture) { return lecture.day === values.day && oldTimes.indexOf(lecture.time) !== -1 && newTimes.indexOf(lecture.time) === -1; });
+        if (!error && hiddenLecture) error = 'Save blocked: an existing lecture would fall outside the new teaching window.';
+        if (error) { showPlannerStatus(error, true); return; }
+        try {
+          var response = await timetableApi('/settings/' + values.day, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(values) });
+          var data = await response.json(); if (!response.ok) throw new Error(data.message || 'Unable to save this day plan.');
+          timetableSettings[values.day] = data.setting; rebuildTimetableGrid(); updateTimeOptions(document.getElementById('ttDay').value); showPlannerStatus(timetableDayNames[values.day] + ' plan saved. ' + newTimes.length + ' slots are available.', false);
+        } catch (error) { showPlannerStatus(error.message || 'Unable to save this day plan.', true); }
+      });
       renderTimetable();
-      timetableSlots.forEach(function (slot, index) { slot.addEventListener('click', function () { openTimetableModal(index); }); });
       var addLecture = document.getElementById('ttAddLecture');
       if (addLecture) addLecture.addEventListener('click', function () {
         var firstEmpty = timetableEntries.findIndex(function (entry) { return !entry; });
@@ -625,6 +882,7 @@
         try {
           var response = await timetableApi('/' + entry.id, { method: 'DELETE' });
           if (!response.ok) throw new Error('Unable to delete this lecture.');
+          timetableLectures = timetableLectures.filter(function (lecture) { return lecture.id !== entry.id; });
           timetableEntries[timetableEditingIndex] = null;
           renderTimetable(); closeTimetableModal();
         } catch (error) {
@@ -658,6 +916,8 @@
           if (!response.ok) throw new Error(data.message || 'Unable to save this lecture.');
           timetableEntries[timetableEditingIndex] = null;
           timetableEntries[targetIndex] = data.lecture;
+          timetableLectures = timetableLectures.filter(function (lecture) { return !existing || lecture.id !== existing.id; });
+          timetableLectures.push(data.lecture);
           renderTimetable(); closeTimetableModal();
         } catch (error) {
           formError.textContent = error.message || 'Unable to save this lecture.';
@@ -773,7 +1033,16 @@
     var leaveCancelBtn = document.getElementById('leaveCancelBtn');
     var leaveForm = document.getElementById('leaveForm');
     function closeLeaveModal(){ if(leaveModal) leaveModal.classList.remove('open'); }
-    if(applyLeaveBtn && leaveModal) applyLeaveBtn.addEventListener('click', function(){ leaveModal.classList.add('open'); var f=document.getElementById('leaveFrom'); if(f) f.focus(); });
+    if(applyLeaveBtn && leaveModal) applyLeaveBtn.addEventListener('click', function(){
+      var today = new Date();
+      var todayValue = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+      var from = document.getElementById('leaveFrom');
+      var to = document.getElementById('leaveTo');
+      if (from) from.min = todayValue;
+      if (to) to.min = todayValue;
+      leaveModal.classList.add('open');
+      if(from) from.focus();
+    });
     if(leaveCancelBtn) leaveCancelBtn.addEventListener('click', closeLeaveModal);
     if(leaveModal) leaveModal.addEventListener('click', function(e){ if(e.target===leaveModal) closeLeaveModal(); });
     document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeLeaveModal(); });
@@ -795,7 +1064,9 @@
     var grid = document.getElementById('calGrid');
     if (!grid) return; // calendar markup not present
 
-    var TODAY = new Date(2026, 7, 11); // 11 Aug 2026 â€” matches the app's "current" date
+    // Calendar always opens on the device's real date and month.
+    var TODAY = new Date();
+    TODAY.setHours(0, 0, 0, 0);
 
     var CATEGORY = {
       duty:    { label: 'Duty',    cls: 'duty',    icon: 'M5 4h14v17H5zM9 2h6v4H9zM9 13l2 2 4-4' },
@@ -821,6 +1092,7 @@
     var currentView = 'month';
     var currentPage = 1;
     var PAGE_SIZE = 4;
+    var calendarFilter = 'all';
 
     function fmt(d) {
       return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
@@ -984,7 +1256,9 @@
       var pageBtnsWrap = document.getElementById('calPageBtns');
       if (!tbody) return;
 
-      var sorted = events.slice().sort(function (a, b) { return a.date.localeCompare(b.date); });
+      var sorted = events.filter(function (event) {
+        return calendarFilter === 'all' || event.status === calendarFilter;
+      }).sort(function (a, b) { return a.date.localeCompare(b.date); });
       var totalPages = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
       if (currentPage > totalPages) currentPage = totalPages;
 
@@ -1051,6 +1325,27 @@
       renderTable();
     }
 
+    var calendarFilterBtn = document.getElementById('calendarFilterBtn');
+    var calendarFilterMenu = document.getElementById('calendarFilterMenu');
+    var calendarStatusFilter = document.getElementById('calendarStatusFilter');
+    if (calendarFilterBtn && calendarFilterMenu) {
+      calendarFilterBtn.addEventListener('click', function (event) {
+        event.stopPropagation();
+        var open = calendarFilterMenu.classList.toggle('open');
+        calendarFilterBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+      calendarFilterMenu.addEventListener('click', function (event) { event.stopPropagation(); });
+      document.addEventListener('click', function () {
+        calendarFilterMenu.classList.remove('open');
+        calendarFilterBtn.setAttribute('aria-expanded', 'false');
+      });
+    }
+    if (calendarStatusFilter) calendarStatusFilter.addEventListener('change', function () {
+      calendarFilter = calendarStatusFilter.value;
+      currentPage = 1;
+      renderTable();
+    });
+
     var prevBtn = document.getElementById('calPrevMonth');
     var nextBtn = document.getElementById('calNextMonth');
     if (prevBtn) prevBtn.addEventListener('click', function () {
@@ -1091,12 +1386,16 @@
     }
     function openEventModal(event) {
       editingEvent = event;
+      var today = new Date();
+      var todayValue = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
       document.getElementById('calendarEventTitle').textContent = event ? 'Edit task or reminder' : 'Add task or reminder';
       document.getElementById('calendarEventName').value = event ? event.name : '';
       document.getElementById('calendarEventType').value = event ? event.category.toUpperCase() : 'REMINDER';
       document.getElementById('calendarEventDate').value = event ? event.date : (selectedDate || fmt(TODAY));
+      document.getElementById('calendarEventDate').min = todayValue;
       document.getElementById('calendarEventTime').value = event && event.startsAt ? localDateTime(event.startsAt).slice(11) : '09:00';
       document.getElementById('calendarEventReminder').value = event ? localDateTime(event.reminderAt) : '';
+      document.getElementById('calendarEventReminder').min = event && event.startsAt ? localDateTime(event.startsAt) : document.getElementById('calendarEventDate').value + 'T00:00';
       document.getElementById('calendarEventDescription').value = event ? event.description : '';
       document.getElementById('calendarEventDelete').style.display = event ? '' : 'none';
       document.getElementById('calendarEventError').textContent = '';
@@ -1124,6 +1423,14 @@
         startsAt: new Date(date + 'T' + time).toISOString(),
         reminderAt: document.getElementById('calendarEventReminder').value ? new Date(document.getElementById('calendarEventReminder').value).toISOString() : undefined,
       };
+      if (new Date(date + 'T00:00') < new Date(new Date().toDateString())) {
+        document.getElementById('calendarEventError').textContent = 'Event date cannot be earlier than today.';
+        return;
+      }
+      if (payload.reminderAt && new Date(payload.reminderAt) < new Date(payload.startsAt)) {
+        document.getElementById('calendarEventError').textContent = 'Reminder cannot be earlier than the event.';
+        return;
+      }
       var response = await fetch(editingEvent ? calendarApi + '/' + editingEvent.id : calendarApi, {
         method: editingEvent ? 'PATCH' : 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + authToken },
@@ -1149,14 +1456,24 @@
     var applyButton = document.getElementById('applyLeaveBtn');
     var daysTaken = document.getElementById('leaveDaysTaken');
     var balance = document.getElementById('leaveBalance');
+    var teacherStats = document.getElementById('teacherLeaveStats');
+    var adminStats = document.getElementById('adminLeaveStats');
     if (!page || !history || !form) return;
 
     var user = {};
     try { user = JSON.parse(sessionStorage.getItem('teachtrack_user') || '{}'); } catch (e) {}
-    var isAdmin = user.role === 'ADMIN';
+    var isAdmin = String(user.role || '').toUpperCase() === 'ADMIN';
     var apiBase = 'http://localhost:4000/api';
 
-    if (isAdmin && applyButton) applyButton.style.display = 'none';
+    if (isAdmin) {
+      if (applyButton) applyButton.style.display = 'none';
+      if (teacherStats) teacherStats.hidden = true;
+      if (adminStats) adminStats.hidden = false;
+      var subtitle = page.querySelector('.leaves-head .sub');
+      if (subtitle) subtitle.textContent = 'Review staff leave requests and monitor availability.';
+      var historyTitle = document.getElementById('leaveHistoryTitle');
+      if (historyTitle) historyTitle.textContent = 'Staff Leave Requests';
+    }
 
     function api(path, options) {
       options = options || {};
@@ -1212,17 +1529,38 @@
       }
     }
 
-    function renderLeaves(leaves) {
-      clearHistory();
+    async function removeLeave(leave) {
+      var label = isAdmin && leave.teacher
+        ? leave.teacher.name + "'s " + leave.leaveType + ' request'
+        : 'this ' + leave.leaveType + ' request';
+      if (!window.confirm('Remove ' + label + ' from this history? Leave totals and balances will not change.')) return;
 
-      if (!leaves.length) {
+      try {
+        var response = await api('/leaves/' + leave.id, { method: 'DELETE' });
+        if (!response.ok) {
+          var data = await response.json().catch(function () { return {}; });
+          throw new Error(data.message || 'Unable to remove this leave request.');
+        }
+        loadLeaves();
+      } catch (error) {
+        window.alert(error.message || 'Unable to remove this leave request.');
+      }
+    }
+
+    function renderLeaves(leaves, summary) {
+      clearHistory();
+      var visibleLeaves = isAdmin
+        ? leaves.filter(function (leave) { return leave.status === 'PENDING'; })
+        : leaves;
+
+      if (!visibleLeaves.length) {
         var empty = document.createElement('p');
         empty.className = 'leave-empty';
-        empty.textContent = isAdmin ? 'No leave requests have been submitted yet.' : 'You have not submitted any leave requests yet.';
+        empty.textContent = isAdmin ? 'No pending leave requests.' : 'You have not submitted any leave requests yet.';
         history.appendChild(empty);
       }
 
-      leaves.forEach(function (leave) {
+      visibleLeaves.forEach(function (leave) {
         var row = document.createElement('article');
         row.className = 'leave-row ' + (
           leave.status === 'APPROVED' ? 'teal' : leave.status === 'REJECTED' ? 'red' : 'purp'
@@ -1234,15 +1572,29 @@
 
         var main = document.createElement('div');
         main.className = 'leave-main';
-        var summary = document.createElement('div');
+        var summaryBlock = document.createElement('div');
         var type = document.createElement('div');
         type.className = 'leave-name';
-        type.textContent = isAdmin && leave.teacher ? leave.teacher.name + ' · ' + leave.leaveType : leave.leaveType;
+        var leaveEmployee = leave.teacher || leave.assignedTo || leave.employee;
+        if (leaveEmployee) {
+          var employeeButton = document.createElement('button');
+          employeeButton.type = 'button';
+          employeeButton.className = 'employee-name-button';
+          employeeButton.title = 'View employee details';
+          employeeButton.textContent = leaveEmployee.name || 'Employee';
+          employeeButton.dataset.employeeName = leaveEmployee.name || 'Employee';
+          employeeButton.dataset.employeeEmail = leaveEmployee.email || '';
+          employeeButton.addEventListener('click', function () { openEmployeeDetails(leaveEmployee); });
+          type.appendChild(employeeButton);
+          type.appendChild(document.createTextNode(' · ' + leave.leaveType));
+        } else {
+          type.textContent = leave.leaveType;
+        }
         var duration = document.createElement('div');
         duration.className = 'leave-days';
         duration.textContent = leaveDays(leave) + ' day' + (leaveDays(leave) === 1 ? '' : 's');
-        summary.appendChild(type);
-        summary.appendChild(duration);
+        summaryBlock.appendChild(type);
+        summaryBlock.appendChild(duration);
 
         var details = document.createElement('div');
         var dates = document.createElement('div');
@@ -1253,7 +1605,7 @@
         reason.textContent = leave.reason;
         details.appendChild(dates);
         details.appendChild(reason);
-        main.appendChild(summary);
+        main.appendChild(summaryBlock);
         main.appendChild(details);
 
         var status = document.createElement('span');
@@ -1269,19 +1621,45 @@
           actions.className = 'leave-actions-inline';
           actions.appendChild(actionButton('Approve', 'approve', function () { reviewLeave(leave, 'APPROVED'); }));
           actions.appendChild(actionButton('Reject', 'reject', function () { reviewLeave(leave, 'REJECTED'); }));
+          actions.appendChild(actionButton('Remove', 'remove', function () { removeLeave(leave); }));
           row.appendChild(actions);
+        } else {
+          var removeActions = document.createElement('div');
+          removeActions.className = 'leave-actions-inline';
+          removeActions.appendChild(actionButton('Remove', 'remove', function () { removeLeave(leave); }));
+          row.appendChild(removeActions);
         }
 
         history.appendChild(row);
       });
 
-      if (count) count.textContent = 'Showing ' + leaves.length + ' leave request' + (leaves.length === 1 ? '' : 's');
+      if (count) count.textContent = 'Showing ' + visibleLeaves.length + ' leave request' + (visibleLeaves.length === 1 ? '' : 's');
 
-      if (!isAdmin) {
-        var approvedDays = leaves.filter(function (leave) { return leave.status === 'APPROVED'; })
-          .reduce(function (total, leave) { return total + leaveDays(leave); }, 0);
-        if (daysTaken) daysTaken.textContent = approvedDays;
-        if (balance) balance.textContent = Math.max(0, 25 - approvedDays);
+      if (isAdmin) {
+        var management = summary || {};
+        var pendingElement = document.getElementById('adminPendingLeaves');
+        var approvedElement = document.getElementById('adminApprovedThisMonth');
+        if (pendingElement) pendingElement.textContent = management.pendingRequests || 0;
+        if (approvedElement) approvedElement.textContent = management.approvedThisMonth || 0;
+        return;
+      }
+
+      // The API owns this calculation so the dashboard and this page always
+      // show the same allowance after an approval.
+      summary = summary || { monthlyAllowance: 6, leaveDaysTaken: 0, leaveBalance: 6 };
+      var monthlyAllowance = summary.monthlyAllowance || 6;
+      var usedThisMonth = summary.leaveDaysTaken || 0;
+      var remainingDays = typeof summary.leaveBalance === 'number' ? summary.leaveBalance : Math.max(0, monthlyAllowance - usedThisMonth);
+      if (daysTaken) daysTaken.textContent = usedThisMonth;
+      if (balance) balance.textContent = remainingDays;
+      var progress = document.querySelector('.leave-progress');
+      if (progress) {
+        var percentage = Math.round(remainingDays / monthlyAllowance * 100);
+        var fill = progress.querySelector('.fill');
+        var label = progress.querySelector('span');
+        if (fill) fill.setAttribute('stroke-dasharray', percentage + ' 100');
+        if (label) label.textContent = percentage + '%';
+        progress.setAttribute('aria-label', percentage + ' percent of monthly allowance remaining');
       }
     }
 
@@ -1290,7 +1668,7 @@
         var response = await api(isAdmin ? '/leaves' : '/leaves/my');
         var data = await response.json();
         if (!response.ok) throw new Error(data.message || 'Unable to load leave requests.');
-        renderLeaves(data.leaves || []);
+        renderLeaves(data.leaves || [], data.summary);
       } catch (error) {
         clearHistory();
         var failure = document.createElement('p');
@@ -1309,12 +1687,19 @@
       if (submit) submit.disabled = true;
 
       try {
+        var startDate = document.getElementById('leaveFrom').value;
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+        if (startDate && new Date(startDate + 'T00:00') < today) {
+          throw new Error('Leave cannot start before today.');
+        }
+
         var response = await api('/leaves', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             leaveType: document.getElementById('leaveType').value,
-            startDate: document.getElementById('leaveFrom').value,
+            startDate: startDate,
             endDate: document.getElementById('leaveTo').value,
             reason: document.getElementById('leaveReason').value
           })
@@ -1347,6 +1732,13 @@
 
     var notifications = [];
     var apiBase = 'http://localhost:4000/api';
+    var notificationHead = notificationPopup.querySelector('.notification-head');
+    var removeAll = document.createElement('button');
+    removeAll.type = 'button';
+    removeAll.className = 'notification-remove-all';
+    removeAll.textContent = 'Remove all';
+    removeAll.setAttribute('aria-label', 'Remove all notifications');
+    if (notificationHead) notificationHead.appendChild(removeAll);
 
     function renderMessageBadge(count) {
       Array.prototype.slice.call(document.querySelectorAll('.nbadge')).forEach(function (badge) {
@@ -1417,9 +1809,31 @@
             ? new Date(notification.createdAt).toLocaleString()
             : 'Just now';
 
+          var remove = document.createElement('button');
+          remove.type = 'button';
+          remove.className = 'notification-remove';
+          remove.textContent = 'Remove';
+          remove.setAttribute('aria-label', 'Remove notification: ' + notification.title);
+          remove.addEventListener('click', async function (event) {
+            event.stopPropagation();
+            remove.disabled = true;
+            try {
+              var response = await fetch(apiBase + '/notifications/' + encodeURIComponent(notification.id), {
+                method: 'DELETE',
+                headers: { Authorization: 'Bearer ' + authToken },
+              });
+              if (!response.ok) throw new Error('Unable to remove notification.');
+              notifications = notifications.filter(function (item) { return item.id !== notification.id; });
+              renderNotifications();
+            } catch {
+              remove.disabled = false;
+            }
+          });
+
           copy.appendChild(title);
           copy.appendChild(message);
           copy.appendChild(time);
+          copy.appendChild(remove);
 
           item.appendChild(iconFor(notification.type));
           item.appendChild(copy);
@@ -1440,6 +1854,22 @@
         dot.style.display = unread ? '' : 'none';
       }
     }
+
+    removeAll.addEventListener('click', async function (event) {
+      event.stopPropagation();
+      removeAll.disabled = true;
+      try {
+        var response = await fetch(apiBase + '/notifications', {
+          method: 'DELETE',
+          headers: { Authorization: 'Bearer ' + authToken },
+        });
+        if (!response.ok) throw new Error('Unable to remove notifications.');
+        notifications = [];
+        renderNotifications();
+      } catch {
+        removeAll.disabled = false;
+      }
+    });
 
     async function loadNotifications() {
       try {
@@ -1513,6 +1943,13 @@
         document.dispatchEvent(new CustomEvent('teachtrack:dashboard-refresh'));
       });
 
+      socket.on('leave:created', function (payload) {
+        document.dispatchEvent(new CustomEvent('teachtrack:leave-updated', {
+          detail: payload
+        }));
+        document.dispatchEvent(new CustomEvent('teachtrack:dashboard-refresh'));
+      });
+
       socket.on('message:new', function () {
         loadUnreadMessageCount();
         document.dispatchEvent(new CustomEvent('teachtrack:dashboard-refresh'));
@@ -1523,7 +1960,13 @@
         document.dispatchEvent(new CustomEvent('teachtrack:dashboard-refresh'));
       });
 
-      socket.on('duty:updated', function () {
+      socket.on('duty:updated', function (duty) {
+        if (duty && duty.status === 'COMPLETED') {
+          notifications = notifications.filter(function (notification) {
+            return notification.type !== 'DUTY' || notification.message !== duty.title + ' was assigned to you.';
+          });
+          renderNotifications();
+        }
         document.dispatchEvent(new CustomEvent('teachtrack:duty-updated'));
         document.dispatchEvent(new CustomEvent('teachtrack:dashboard-refresh'));
       });
@@ -1541,6 +1984,7 @@
     notificationButton.addEventListener('click', function () {
       window.setTimeout(function () {
         if (notificationPopup.classList.contains('open')) {
+          loadNotifications();
           markNotificationsRead();
         }
       }, 0);
@@ -1548,6 +1992,7 @@
 
     loadNotifications();
     loadUnreadMessageCount();
+    window.setInterval(loadNotifications, 10000);
     window.setInterval(loadUnreadMessageCount, 15000);
     window.addEventListener('message', function (event) {
       if (event.origin === window.location.origin && event.data && event.data.type === 'teachtrack:messages-read') {
