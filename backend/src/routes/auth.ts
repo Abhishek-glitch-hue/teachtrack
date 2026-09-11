@@ -1,9 +1,11 @@
 import { Router } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { createHash, randomBytes } from "node:crypto";
 import { z } from "zod";
 import { prisma } from "../lib/prisma.ts";
 import { requireAuth } from "../middleware/auth.ts";
+import { sendPasswordResetEmail } from "../lib/mailer.ts";
 
 const authRouter = Router();
 
@@ -16,6 +18,15 @@ const registerSchema = z.object({
 const loginSchema = z.object({
   email: z.string().trim().email(),
   password: z.string().min(1),
+});
+
+const forgotPasswordSchema = z.object({
+  email: z.string().trim().email().max(120),
+});
+
+const resetPasswordSchema = z.object({
+  token: z.string().min(32).max(200),
+  password: z.string().min(8).max(72),
 });
 
 const updateProfileSchema = z.object({
@@ -150,6 +161,63 @@ authRouter.post("/login", async (request, response) => {
     token,
     user: publicUser(signedInUser),
   });
+});
+
+authRouter.post("/forgot-password", async (request, response) => {
+  const parsed = forgotPasswordSchema.safeParse(request.body);
+  if (!parsed.success) return response.status(400).json({ message: "Enter a valid email address." });
+
+  const user = await prisma.user.findUnique({
+    where: { email: parsed.data.email.toLowerCase() },
+    select: { id: true, email: true, isActive: true },
+  });
+
+  // Keep this response identical for every valid address to avoid exposing account membership.
+  const success = { message: "If an active account uses that email address, a password reset link has been sent." };
+  if (!user || !user.isActive) return response.json(success);
+
+  const token = randomBytes(32).toString("hex");
+  const tokenHash = createHash("sha256").update(token).digest("hex");
+  const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
+
+  await prisma.$transaction([
+    prisma.passwordResetToken.deleteMany({ where: { userId: user.id } }),
+    prisma.passwordResetToken.create({ data: { userId: user.id, tokenHash, expiresAt } }),
+  ]);
+
+  const frontendUrl = process.env.FRONTEND_URL ?? "http://127.0.0.1:5500";
+  const resetUrl = new URL("reset-password.html", frontendUrl.endsWith("/") ? frontendUrl : `${frontendUrl}/`);
+  resetUrl.searchParams.set("token", token);
+
+  try {
+    await sendPasswordResetEmail(user.email, resetUrl.toString());
+  } catch (error) {
+    await prisma.passwordResetToken.deleteMany({ where: { tokenHash } });
+    console.error("Password-reset email could not be sent:", error);
+    return response.status(503).json({ message: "Password reset email is temporarily unavailable. Please try again later." });
+  }
+
+  return response.json(success);
+});
+
+authRouter.post("/reset-password", async (request, response) => {
+  const parsed = resetPasswordSchema.safeParse(request.body);
+  if (!parsed.success) return response.status(400).json({ message: "Use a valid reset link and a password of at least 8 characters." });
+
+  const tokenHash = createHash("sha256").update(parsed.data.token).digest("hex");
+  const resetToken = await prisma.passwordResetToken.findUnique({ where: { tokenHash } });
+  if (!resetToken || resetToken.usedAt || resetToken.expiresAt <= new Date()) {
+    return response.status(400).json({ message: "This reset link is invalid or has expired. Request a new one." });
+  }
+
+  const passwordHash = await bcrypt.hash(parsed.data.password, 12);
+  await prisma.$transaction([
+    prisma.user.update({ where: { id: resetToken.userId }, data: { passwordHash } }),
+    prisma.passwordResetToken.update({ where: { id: resetToken.id }, data: { usedAt: new Date() } }),
+    prisma.passwordResetToken.deleteMany({ where: { userId: resetToken.userId, id: { not: resetToken.id } } }),
+  ]);
+
+  return response.json({ message: "Your password has been reset. You can now sign in." });
 });
 
 authRouter.get("/me", requireAuth, (request, response) => {
