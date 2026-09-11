@@ -28,9 +28,11 @@ export type DutyMinAggregateOutputType = {
   id: string | null
   assignedToId: string | null
   title: string | null
+  dutyType: string | null
   description: string | null
   dueAt: Date | null
   status: $Enums.DutyStatus | null
+  hiddenFromTeacher: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -39,9 +41,11 @@ export type DutyMaxAggregateOutputType = {
   id: string | null
   assignedToId: string | null
   title: string | null
+  dutyType: string | null
   description: string | null
   dueAt: Date | null
   status: $Enums.DutyStatus | null
+  hiddenFromTeacher: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -50,9 +54,11 @@ export type DutyCountAggregateOutputType = {
   id: number
   assignedToId: number
   title: number
+  dutyType: number
   description: number
   dueAt: number
   status: number
+  hiddenFromTeacher: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -63,9 +69,11 @@ export type DutyMinAggregateInputType = {
   id?: true
   assignedToId?: true
   title?: true
+  dutyType?: true
   description?: true
   dueAt?: true
   status?: true
+  hiddenFromTeacher?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -74,9 +82,11 @@ export type DutyMaxAggregateInputType = {
   id?: true
   assignedToId?: true
   title?: true
+  dutyType?: true
   description?: true
   dueAt?: true
   status?: true
+  hiddenFromTeacher?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -85,9 +95,11 @@ export type DutyCountAggregateInputType = {
   id?: true
   assignedToId?: true
   title?: true
+  dutyType?: true
   description?: true
   dueAt?: true
   status?: true
+  hiddenFromTeacher?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -169,9 +181,11 @@ export type DutyGroupByOutputType = {
   id: string
   assignedToId: string
   title: string
+  dutyType: string | null
   description: string | null
   dueAt: Date | null
   status: $Enums.DutyStatus
+  hiddenFromTeacher: boolean
   createdAt: Date
   updatedAt: Date
   _count: DutyCountAggregateOutputType | null
@@ -201,9 +215,11 @@ export type DutyWhereInput = {
   id?: Prisma.StringFilter<"Duty"> | string
   assignedToId?: Prisma.StringFilter<"Duty"> | string
   title?: Prisma.StringFilter<"Duty"> | string
+  dutyType?: Prisma.StringNullableFilter<"Duty"> | string | null
   description?: Prisma.StringNullableFilter<"Duty"> | string | null
   dueAt?: Prisma.DateTimeNullableFilter<"Duty"> | Date | string | null
   status?: Prisma.EnumDutyStatusFilter<"Duty"> | $Enums.DutyStatus
+  hiddenFromTeacher?: Prisma.BoolFilter<"Duty"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Duty"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Duty"> | Date | string
   assignedTo?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -213,9 +229,11 @@ export type DutyOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   assignedToId?: Prisma.SortOrder
   title?: Prisma.SortOrder
+  dutyType?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   dueAt?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  hiddenFromTeacher?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   assignedTo?: Prisma.UserOrderByWithRelationInput
@@ -228,9 +246,11 @@ export type DutyWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.DutyWhereInput | Prisma.DutyWhereInput[]
   assignedToId?: Prisma.StringFilter<"Duty"> | string
   title?: Prisma.StringFilter<"Duty"> | string
+  dutyType?: Prisma.StringNullableFilter<"Duty"> | string | null
   description?: Prisma.StringNullableFilter<"Duty"> | string | null
   dueAt?: Prisma.DateTimeNullableFilter<"Duty"> | Date | string | null
   status?: Prisma.EnumDutyStatusFilter<"Duty"> | $Enums.DutyStatus
+  hiddenFromTeacher?: Prisma.BoolFilter<"Duty"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Duty"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Duty"> | Date | string
   assignedTo?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -240,9 +260,11 @@ export type DutyOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   assignedToId?: Prisma.SortOrder
   title?: Prisma.SortOrder
+  dutyType?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   dueAt?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
+  hiddenFromTeacher?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.DutyCountOrderByAggregateInput
@@ -257,9 +279,11 @@ export type DutyScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Duty"> | string
   assignedToId?: Prisma.StringWithAggregatesFilter<"Duty"> | string
   title?: Prisma.StringWithAggregatesFilter<"Duty"> | string
+  dutyType?: Prisma.StringNullableWithAggregatesFilter<"Duty"> | string | null
   description?: Prisma.StringNullableWithAggregatesFilter<"Duty"> | string | null
   dueAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Duty"> | Date | string | null
   status?: Prisma.EnumDutyStatusWithAggregatesFilter<"Duty"> | $Enums.DutyStatus
+  hiddenFromTeacher?: Prisma.BoolWithAggregatesFilter<"Duty"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Duty"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Duty"> | Date | string
 }
@@ -267,9 +291,11 @@ export type DutyScalarWhereWithAggregatesInput = {
 export type DutyCreateInput = {
   id?: string
   title: string
+  dutyType?: string | null
   description?: string | null
   dueAt?: Date | string | null
   status?: $Enums.DutyStatus
+  hiddenFromTeacher?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   assignedTo: Prisma.UserCreateNestedOneWithoutDutiesInput
@@ -279,9 +305,11 @@ export type DutyUncheckedCreateInput = {
   id?: string
   assignedToId: string
   title: string
+  dutyType?: string | null
   description?: string | null
   dueAt?: Date | string | null
   status?: $Enums.DutyStatus
+  hiddenFromTeacher?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -289,9 +317,11 @@ export type DutyUncheckedCreateInput = {
 export type DutyUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  dutyType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumDutyStatusFieldUpdateOperationsInput | $Enums.DutyStatus
+  hiddenFromTeacher?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignedTo?: Prisma.UserUpdateOneRequiredWithoutDutiesNestedInput
@@ -301,9 +331,11 @@ export type DutyUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   assignedToId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  dutyType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumDutyStatusFieldUpdateOperationsInput | $Enums.DutyStatus
+  hiddenFromTeacher?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -312,9 +344,11 @@ export type DutyCreateManyInput = {
   id?: string
   assignedToId: string
   title: string
+  dutyType?: string | null
   description?: string | null
   dueAt?: Date | string | null
   status?: $Enums.DutyStatus
+  hiddenFromTeacher?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -322,9 +356,11 @@ export type DutyCreateManyInput = {
 export type DutyUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  dutyType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumDutyStatusFieldUpdateOperationsInput | $Enums.DutyStatus
+  hiddenFromTeacher?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -333,9 +369,11 @@ export type DutyUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   assignedToId?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  dutyType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumDutyStatusFieldUpdateOperationsInput | $Enums.DutyStatus
+  hiddenFromTeacher?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -354,9 +392,11 @@ export type DutyCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   assignedToId?: Prisma.SortOrder
   title?: Prisma.SortOrder
+  dutyType?: Prisma.SortOrder
   description?: Prisma.SortOrder
   dueAt?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  hiddenFromTeacher?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -365,9 +405,11 @@ export type DutyMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   assignedToId?: Prisma.SortOrder
   title?: Prisma.SortOrder
+  dutyType?: Prisma.SortOrder
   description?: Prisma.SortOrder
   dueAt?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  hiddenFromTeacher?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -376,9 +418,11 @@ export type DutyMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   assignedToId?: Prisma.SortOrder
   title?: Prisma.SortOrder
+  dutyType?: Prisma.SortOrder
   description?: Prisma.SortOrder
   dueAt?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  hiddenFromTeacher?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -432,9 +476,11 @@ export type EnumDutyStatusFieldUpdateOperationsInput = {
 export type DutyCreateWithoutAssignedToInput = {
   id?: string
   title: string
+  dutyType?: string | null
   description?: string | null
   dueAt?: Date | string | null
   status?: $Enums.DutyStatus
+  hiddenFromTeacher?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -442,9 +488,11 @@ export type DutyCreateWithoutAssignedToInput = {
 export type DutyUncheckedCreateWithoutAssignedToInput = {
   id?: string
   title: string
+  dutyType?: string | null
   description?: string | null
   dueAt?: Date | string | null
   status?: $Enums.DutyStatus
+  hiddenFromTeacher?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -482,9 +530,11 @@ export type DutyScalarWhereInput = {
   id?: Prisma.StringFilter<"Duty"> | string
   assignedToId?: Prisma.StringFilter<"Duty"> | string
   title?: Prisma.StringFilter<"Duty"> | string
+  dutyType?: Prisma.StringNullableFilter<"Duty"> | string | null
   description?: Prisma.StringNullableFilter<"Duty"> | string | null
   dueAt?: Prisma.DateTimeNullableFilter<"Duty"> | Date | string | null
   status?: Prisma.EnumDutyStatusFilter<"Duty"> | $Enums.DutyStatus
+  hiddenFromTeacher?: Prisma.BoolFilter<"Duty"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Duty"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Duty"> | Date | string
 }
@@ -492,9 +542,11 @@ export type DutyScalarWhereInput = {
 export type DutyCreateManyAssignedToInput = {
   id?: string
   title: string
+  dutyType?: string | null
   description?: string | null
   dueAt?: Date | string | null
   status?: $Enums.DutyStatus
+  hiddenFromTeacher?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -502,9 +554,11 @@ export type DutyCreateManyAssignedToInput = {
 export type DutyUpdateWithoutAssignedToInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  dutyType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumDutyStatusFieldUpdateOperationsInput | $Enums.DutyStatus
+  hiddenFromTeacher?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -512,9 +566,11 @@ export type DutyUpdateWithoutAssignedToInput = {
 export type DutyUncheckedUpdateWithoutAssignedToInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  dutyType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumDutyStatusFieldUpdateOperationsInput | $Enums.DutyStatus
+  hiddenFromTeacher?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -522,9 +578,11 @@ export type DutyUncheckedUpdateWithoutAssignedToInput = {
 export type DutyUncheckedUpdateManyWithoutAssignedToInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  dutyType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dueAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   status?: Prisma.EnumDutyStatusFieldUpdateOperationsInput | $Enums.DutyStatus
+  hiddenFromTeacher?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -535,9 +593,11 @@ export type DutySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   id?: boolean
   assignedToId?: boolean
   title?: boolean
+  dutyType?: boolean
   description?: boolean
   dueAt?: boolean
   status?: boolean
+  hiddenFromTeacher?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   assignedTo?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -547,9 +607,11 @@ export type DutySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   id?: boolean
   assignedToId?: boolean
   title?: boolean
+  dutyType?: boolean
   description?: boolean
   dueAt?: boolean
   status?: boolean
+  hiddenFromTeacher?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   assignedTo?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -559,9 +621,11 @@ export type DutySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   id?: boolean
   assignedToId?: boolean
   title?: boolean
+  dutyType?: boolean
   description?: boolean
   dueAt?: boolean
   status?: boolean
+  hiddenFromTeacher?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   assignedTo?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -571,14 +635,16 @@ export type DutySelectScalar = {
   id?: boolean
   assignedToId?: boolean
   title?: boolean
+  dutyType?: boolean
   description?: boolean
   dueAt?: boolean
   status?: boolean
+  hiddenFromTeacher?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type DutyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "assignedToId" | "title" | "description" | "dueAt" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["duty"]>
+export type DutyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "assignedToId" | "title" | "dutyType" | "description" | "dueAt" | "status" | "hiddenFromTeacher" | "createdAt" | "updatedAt", ExtArgs["result"]["duty"]>
 export type DutyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   assignedTo?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -598,9 +664,11 @@ export type $DutyPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     id: string
     assignedToId: string
     title: string
+    dutyType: string | null
     description: string | null
     dueAt: Date | null
     status: $Enums.DutyStatus
+    hiddenFromTeacher: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["duty"]>
@@ -1030,9 +1098,11 @@ export interface DutyFieldRefs {
   readonly id: Prisma.FieldRef<"Duty", 'String'>
   readonly assignedToId: Prisma.FieldRef<"Duty", 'String'>
   readonly title: Prisma.FieldRef<"Duty", 'String'>
+  readonly dutyType: Prisma.FieldRef<"Duty", 'String'>
   readonly description: Prisma.FieldRef<"Duty", 'String'>
   readonly dueAt: Prisma.FieldRef<"Duty", 'DateTime'>
   readonly status: Prisma.FieldRef<"Duty", 'DutyStatus'>
+  readonly hiddenFromTeacher: Prisma.FieldRef<"Duty", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Duty", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Duty", 'DateTime'>
 }
