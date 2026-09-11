@@ -105,7 +105,6 @@
       <div class="duties-head">
         <div>
           <span class="kick">Academic Responsibilities</span>
-          <h2>Duties</h2>
           <p class="sub">Manage and track your assigned academic responsibilities.</p>
         </div>
         <button class="duty-add" id="addDutyBtn" type="button" aria-label="Assign duty">
@@ -117,7 +116,7 @@
       <section class="duty-stats" aria-label="Duty summary">
         <article class="card duty-stat">
           <div>
-            <div class="duty-stat-label">Upcoming Duties</div>
+            <div class="duty-stat-label" id="dutyPrimaryLabel">Upcoming Duties</div>
             <div class="duty-stat-value" id="dutyUpcomingCount">0 <small>this week</small></div>
           </div>
           <span class="duty-stat-icon" aria-hidden="false">
@@ -126,7 +125,7 @@
         </article>
         <article class="card duty-stat">
           <div>
-            <div class="duty-stat-label">Total Hours</div>
+            <div class="duty-stat-label" id="dutySecondaryLabel">Completed Duties</div>
             <div class="duty-stat-value" id="dutyTotalCount">0 <small>total</small></div>
           </div>
           <span class="duty-stat-icon" aria-hidden="false">
@@ -153,20 +152,18 @@
                 </select>
               </div>
             </div>
-            <button class="duty-tool" id="dutyMoreBtn" type="button" aria-label="More duty options">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>
-            </button>
           </div>
         </div>
 
         <table class="duty-table">
           <thead>
             <tr>
-              <th style="width:32%">Duty Name</th>
-              <th style="width:24%">Assigned Teacher</th>
-              <th style="width:18%">Due Date</th>
-              <th style="width:16%">Status</th>
-              <th style="width:10%">Action</th>
+              <th style="width:16%">Duty Type</th>
+              <th style="width:26%">Duty Name</th>
+              <th style="width:22%">Assigned Teacher</th>
+              <th style="width:16%">Due Date</th>
+              <th style="width:12%">Status</th>
+              <th style="width:8%">Action</th>
             </tr>
           </thead>
           <tbody id="dutyBody">
@@ -205,8 +202,8 @@
           <span id="dutyCount">Showing 1 to 4 of 4 entries</span>
           <div class="duty-pages" aria-label="Duty pagination">
             <button class="duty-page-btn" type="button" disabled aria-label="Previous page">&lsaquo;</button>
-            <button class="duty-page-btn active" type="button">1</button>
-            <button class="duty-page-btn" type="button">2</button>
+            <button class="duty-page-btn active" type="button" data-page="1">1</button>
+            <button class="duty-page-btn" type="button" data-page="2" hidden>2</button>
             <button class="duty-page-btn" type="button" aria-label="Next page">&rsaquo;</button>
           </div>
         </div>
@@ -218,8 +215,9 @@
     <div class="tt-modal-head"><div><span class="kick">Administration</span><h2 id="dutyModalTitle">Assign duty</h2></div><button class="tt-modal-close" id="dutyModalClose" type="button" aria-label="Close">&times;</button></div>
     <form id="dutyForm">
       <div class="tt-form-grid">
-        <label>Teacher<select id="dutyTeacher" required></select></label>
+        <label>Teacher<div class="tt-select"><select id="dutyTeacher" required></select><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></div></label>
         <label>Duty title<input id="dutyTitle" required maxlength="120" placeholder="e.g. Exam invigilation"></label>
+        <label>Duty type<div class="tt-select"><select id="dutyType" required><option value="LECTURES">Lectures</option><option value="INVIGILATION">Invigilation</option><option value="MENTORING">Mentoring</option><option value="COMMITTEE">Committee</option></select><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></div></label>
         <label>Due date<input id="dutyDueDate" type="date"></label>
         <label>Due time<input id="dutyDueTime" type="time"></label>
         <label>Description<input id="dutyDescription" maxlength="1000" placeholder="Optional instructions"></label>
@@ -230,4 +228,3 @@
   </div>
 </section>
 <script src="assets/app.js"></script></body></html>
-
