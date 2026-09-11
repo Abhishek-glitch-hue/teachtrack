@@ -14,6 +14,7 @@
     .card { width:min(420px,100%); padding:34px; border:1px solid var(--line); border-radius:20px; background:#fff; box-shadow:0 24px 60px -35px rgba(24,38,48,.45); }
     .brand { display:flex; align-items:center; gap:10px; margin-bottom:25px; font-family:Sora,sans-serif; font-size:19px; font-weight:800; }
     .logo { width:38px; height:38px; display:grid; place-items:center; border-radius:11px; background:linear-gradient(135deg,#14b8a6,#0b6e66); color:#fff; }
+    .logo svg { width:22px; height:22px; }
     h1 { margin:0; font:700 23px Sora,sans-serif; } p { margin:7px 0 22px; color:var(--mut); font-size:13px; }
     label { display:block; margin:13px 0 5px; font-size:12px; font-weight:700; }
     input { width:100%; padding:11px 12px; border:1px solid var(--line); border-radius:9px; font:inherit; outline:none; }
@@ -27,12 +28,14 @@
     .message.success { display:block; background:#e2f7ed; color:#087a47; }
     .name-field { display:none; }
     body.registering .name-field { display:block; }
+    .forgot { margin:14px 0 0; padding:10px 12px; border:1px solid #b9dedb; border-radius:9px; background:#f1fbfa; text-align:center; font-size:12px; }
+    .forgot button { width:auto; margin:0; padding:0; background:none; color:var(--teal); font:700 12px "Public Sans",sans-serif; text-decoration:underline; }
   </style>
 </head>
 <body>
   <main class="card">
     <div class="brand">
-      <span class="logo">T</span>
+      <span class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5v6"/><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg></span>
       <span>TeachTrack</span>
     </div>
 
@@ -50,6 +53,8 @@
 
       <label for="password">Password</label>
       <input id="password" type="password" autocomplete="current-password" minlength="8" required>
+
+      <p class="forgot" id="forgotWrap"><button id="forgotButton" type="button">Forgot password?</button></p>
 
       <button id="submitButton" type="submit">Sign in</button>
       <div id="message" class="message" role="alert"></div>
@@ -76,6 +81,8 @@
     const submitButton = document.getElementById("submitButton");
     const modeButton = document.getElementById("modeButton");
     const message = document.getElementById("message");
+    const forgotButton = document.getElementById("forgotButton");
+    const forgotWrap = document.getElementById("forgotWrap");
 
     function showMessage(text, type) {
       message.textContent = text;
@@ -95,11 +102,37 @@
       modeButton.textContent = registering ? "Sign in" : "Create an account";
       nameInput.required = registering;
       passwordInput.autocomplete = registering ? "new-password" : "current-password";
+      forgotWrap.hidden = registering;
       message.className = "message";
     }
 
     modeButton.addEventListener("click", () => {
       setMode(mode === "login" ? "register" : "login");
+    });
+
+    forgotButton.addEventListener("click", async () => {
+      const email = emailInput.value.trim();
+      if (!email || !emailInput.checkValidity()) {
+        showMessage("Enter your email address first, then select Forgot password.", "error");
+        emailInput.focus();
+        return;
+      }
+      forgotButton.disabled = true;
+      message.className = "message";
+      try {
+        const response = await fetch(`${API_URL}/auth/forgot-password`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message || "Unable to send a reset email.");
+        showMessage(data.message, "success");
+      } catch (error) {
+        showMessage(error.message || "Network error. Is the backend running?", "error");
+      } finally {
+        forgotButton.disabled = false;
+      }
     });
 
     form.addEventListener("submit", async (event) => {
@@ -108,10 +141,7 @@
       submitButton.disabled = true;
 
       try {
-        const payload = {
-          email: emailInput.value.trim(),
-          password: passwordInput.value,
-        };
+        const payload = { email: emailInput.value.trim(), password: passwordInput.value };
 
         if (mode === "register") {
           payload.name = nameInput.value.trim();
@@ -141,6 +171,8 @@
         submitButton.disabled = false;
       }
     });
+
+    setMode("login");
   </script>
 </body>
 </html>
