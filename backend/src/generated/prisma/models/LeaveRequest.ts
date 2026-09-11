@@ -35,6 +35,8 @@ export type LeaveRequestMinAggregateOutputType = {
   reviewerNote: string | null
   reviewedById: string | null
   reviewedAt: Date | null
+  hiddenFromTeacher: boolean | null
+  hiddenFromAdmin: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -50,6 +52,8 @@ export type LeaveRequestMaxAggregateOutputType = {
   reviewerNote: string | null
   reviewedById: string | null
   reviewedAt: Date | null
+  hiddenFromTeacher: boolean | null
+  hiddenFromAdmin: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -65,6 +69,8 @@ export type LeaveRequestCountAggregateOutputType = {
   reviewerNote: number
   reviewedById: number
   reviewedAt: number
+  hiddenFromTeacher: number
+  hiddenFromAdmin: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -82,6 +88,8 @@ export type LeaveRequestMinAggregateInputType = {
   reviewerNote?: true
   reviewedById?: true
   reviewedAt?: true
+  hiddenFromTeacher?: true
+  hiddenFromAdmin?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -97,6 +105,8 @@ export type LeaveRequestMaxAggregateInputType = {
   reviewerNote?: true
   reviewedById?: true
   reviewedAt?: true
+  hiddenFromTeacher?: true
+  hiddenFromAdmin?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -112,6 +122,8 @@ export type LeaveRequestCountAggregateInputType = {
   reviewerNote?: true
   reviewedById?: true
   reviewedAt?: true
+  hiddenFromTeacher?: true
+  hiddenFromAdmin?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -200,6 +212,8 @@ export type LeaveRequestGroupByOutputType = {
   reviewerNote: string | null
   reviewedById: string | null
   reviewedAt: Date | null
+  hiddenFromTeacher: boolean
+  hiddenFromAdmin: boolean
   createdAt: Date
   updatedAt: Date
   _count: LeaveRequestCountAggregateOutputType | null
@@ -236,6 +250,8 @@ export type LeaveRequestWhereInput = {
   reviewerNote?: Prisma.StringNullableFilter<"LeaveRequest"> | string | null
   reviewedById?: Prisma.StringNullableFilter<"LeaveRequest"> | string | null
   reviewedAt?: Prisma.DateTimeNullableFilter<"LeaveRequest"> | Date | string | null
+  hiddenFromTeacher?: Prisma.BoolFilter<"LeaveRequest"> | boolean
+  hiddenFromAdmin?: Prisma.BoolFilter<"LeaveRequest"> | boolean
   createdAt?: Prisma.DateTimeFilter<"LeaveRequest"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LeaveRequest"> | Date | string
   teacher?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -253,6 +269,8 @@ export type LeaveRequestOrderByWithRelationInput = {
   reviewerNote?: Prisma.SortOrderInput | Prisma.SortOrder
   reviewedById?: Prisma.SortOrderInput | Prisma.SortOrder
   reviewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  hiddenFromTeacher?: Prisma.SortOrder
+  hiddenFromAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   teacher?: Prisma.UserOrderByWithRelationInput
@@ -273,6 +291,8 @@ export type LeaveRequestWhereUniqueInput = Prisma.AtLeast<{
   reviewerNote?: Prisma.StringNullableFilter<"LeaveRequest"> | string | null
   reviewedById?: Prisma.StringNullableFilter<"LeaveRequest"> | string | null
   reviewedAt?: Prisma.DateTimeNullableFilter<"LeaveRequest"> | Date | string | null
+  hiddenFromTeacher?: Prisma.BoolFilter<"LeaveRequest"> | boolean
+  hiddenFromAdmin?: Prisma.BoolFilter<"LeaveRequest"> | boolean
   createdAt?: Prisma.DateTimeFilter<"LeaveRequest"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LeaveRequest"> | Date | string
   teacher?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -290,6 +310,8 @@ export type LeaveRequestOrderByWithAggregationInput = {
   reviewerNote?: Prisma.SortOrderInput | Prisma.SortOrder
   reviewedById?: Prisma.SortOrderInput | Prisma.SortOrder
   reviewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  hiddenFromTeacher?: Prisma.SortOrder
+  hiddenFromAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.LeaveRequestCountOrderByAggregateInput
@@ -311,6 +333,8 @@ export type LeaveRequestScalarWhereWithAggregatesInput = {
   reviewerNote?: Prisma.StringNullableWithAggregatesFilter<"LeaveRequest"> | string | null
   reviewedById?: Prisma.StringNullableWithAggregatesFilter<"LeaveRequest"> | string | null
   reviewedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"LeaveRequest"> | Date | string | null
+  hiddenFromTeacher?: Prisma.BoolWithAggregatesFilter<"LeaveRequest"> | boolean
+  hiddenFromAdmin?: Prisma.BoolWithAggregatesFilter<"LeaveRequest"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"LeaveRequest"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"LeaveRequest"> | Date | string
 }
@@ -324,6 +348,8 @@ export type LeaveRequestCreateInput = {
   status?: $Enums.LeaveStatus
   reviewerNote?: string | null
   reviewedAt?: Date | string | null
+  hiddenFromTeacher?: boolean
+  hiddenFromAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   teacher: Prisma.UserCreateNestedOneWithoutLeaveRequestsInput
@@ -341,6 +367,8 @@ export type LeaveRequestUncheckedCreateInput = {
   reviewerNote?: string | null
   reviewedById?: string | null
   reviewedAt?: Date | string | null
+  hiddenFromTeacher?: boolean
+  hiddenFromAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -354,6 +382,8 @@ export type LeaveRequestUpdateInput = {
   status?: Prisma.EnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus
   reviewerNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hiddenFromTeacher?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hiddenFromAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   teacher?: Prisma.UserUpdateOneRequiredWithoutLeaveRequestsNestedInput
@@ -371,6 +401,8 @@ export type LeaveRequestUncheckedUpdateInput = {
   reviewerNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hiddenFromTeacher?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hiddenFromAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -386,6 +418,8 @@ export type LeaveRequestCreateManyInput = {
   reviewerNote?: string | null
   reviewedById?: string | null
   reviewedAt?: Date | string | null
+  hiddenFromTeacher?: boolean
+  hiddenFromAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -399,6 +433,8 @@ export type LeaveRequestUpdateManyMutationInput = {
   status?: Prisma.EnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus
   reviewerNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hiddenFromTeacher?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hiddenFromAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -414,6 +450,8 @@ export type LeaveRequestUncheckedUpdateManyInput = {
   reviewerNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hiddenFromTeacher?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hiddenFromAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -439,6 +477,8 @@ export type LeaveRequestCountOrderByAggregateInput = {
   reviewerNote?: Prisma.SortOrder
   reviewedById?: Prisma.SortOrder
   reviewedAt?: Prisma.SortOrder
+  hiddenFromTeacher?: Prisma.SortOrder
+  hiddenFromAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -454,6 +494,8 @@ export type LeaveRequestMaxOrderByAggregateInput = {
   reviewerNote?: Prisma.SortOrder
   reviewedById?: Prisma.SortOrder
   reviewedAt?: Prisma.SortOrder
+  hiddenFromTeacher?: Prisma.SortOrder
+  hiddenFromAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -469,6 +511,8 @@ export type LeaveRequestMinOrderByAggregateInput = {
   reviewerNote?: Prisma.SortOrder
   reviewedById?: Prisma.SortOrder
   reviewedAt?: Prisma.SortOrder
+  hiddenFromTeacher?: Prisma.SortOrder
+  hiddenFromAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -570,6 +614,8 @@ export type LeaveRequestCreateWithoutTeacherInput = {
   status?: $Enums.LeaveStatus
   reviewerNote?: string | null
   reviewedAt?: Date | string | null
+  hiddenFromTeacher?: boolean
+  hiddenFromAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   reviewedBy?: Prisma.UserCreateNestedOneWithoutReviewedLeavesInput
@@ -585,6 +631,8 @@ export type LeaveRequestUncheckedCreateWithoutTeacherInput = {
   reviewerNote?: string | null
   reviewedById?: string | null
   reviewedAt?: Date | string | null
+  hiddenFromTeacher?: boolean
+  hiddenFromAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -608,6 +656,8 @@ export type LeaveRequestCreateWithoutReviewedByInput = {
   status?: $Enums.LeaveStatus
   reviewerNote?: string | null
   reviewedAt?: Date | string | null
+  hiddenFromTeacher?: boolean
+  hiddenFromAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   teacher: Prisma.UserCreateNestedOneWithoutLeaveRequestsInput
@@ -623,6 +673,8 @@ export type LeaveRequestUncheckedCreateWithoutReviewedByInput = {
   status?: $Enums.LeaveStatus
   reviewerNote?: string | null
   reviewedAt?: Date | string | null
+  hiddenFromTeacher?: boolean
+  hiddenFromAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -667,6 +719,8 @@ export type LeaveRequestScalarWhereInput = {
   reviewerNote?: Prisma.StringNullableFilter<"LeaveRequest"> | string | null
   reviewedById?: Prisma.StringNullableFilter<"LeaveRequest"> | string | null
   reviewedAt?: Prisma.DateTimeNullableFilter<"LeaveRequest"> | Date | string | null
+  hiddenFromTeacher?: Prisma.BoolFilter<"LeaveRequest"> | boolean
+  hiddenFromAdmin?: Prisma.BoolFilter<"LeaveRequest"> | boolean
   createdAt?: Prisma.DateTimeFilter<"LeaveRequest"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"LeaveRequest"> | Date | string
 }
@@ -697,6 +751,8 @@ export type LeaveRequestCreateManyTeacherInput = {
   reviewerNote?: string | null
   reviewedById?: string | null
   reviewedAt?: Date | string | null
+  hiddenFromTeacher?: boolean
+  hiddenFromAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -711,6 +767,8 @@ export type LeaveRequestCreateManyReviewedByInput = {
   status?: $Enums.LeaveStatus
   reviewerNote?: string | null
   reviewedAt?: Date | string | null
+  hiddenFromTeacher?: boolean
+  hiddenFromAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -724,6 +782,8 @@ export type LeaveRequestUpdateWithoutTeacherInput = {
   status?: Prisma.EnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus
   reviewerNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hiddenFromTeacher?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hiddenFromAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reviewedBy?: Prisma.UserUpdateOneWithoutReviewedLeavesNestedInput
@@ -739,6 +799,8 @@ export type LeaveRequestUncheckedUpdateWithoutTeacherInput = {
   reviewerNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hiddenFromTeacher?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hiddenFromAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -753,6 +815,8 @@ export type LeaveRequestUncheckedUpdateManyWithoutTeacherInput = {
   reviewerNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hiddenFromTeacher?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hiddenFromAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -766,6 +830,8 @@ export type LeaveRequestUpdateWithoutReviewedByInput = {
   status?: Prisma.EnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus
   reviewerNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hiddenFromTeacher?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hiddenFromAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   teacher?: Prisma.UserUpdateOneRequiredWithoutLeaveRequestsNestedInput
@@ -781,6 +847,8 @@ export type LeaveRequestUncheckedUpdateWithoutReviewedByInput = {
   status?: Prisma.EnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus
   reviewerNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hiddenFromTeacher?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hiddenFromAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -795,6 +863,8 @@ export type LeaveRequestUncheckedUpdateManyWithoutReviewedByInput = {
   status?: Prisma.EnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus
   reviewerNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  hiddenFromTeacher?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hiddenFromAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -812,6 +882,8 @@ export type LeaveRequestSelect<ExtArgs extends runtime.Types.Extensions.Internal
   reviewerNote?: boolean
   reviewedById?: boolean
   reviewedAt?: boolean
+  hiddenFromTeacher?: boolean
+  hiddenFromAdmin?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   teacher?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -829,6 +901,8 @@ export type LeaveRequestSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   reviewerNote?: boolean
   reviewedById?: boolean
   reviewedAt?: boolean
+  hiddenFromTeacher?: boolean
+  hiddenFromAdmin?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   teacher?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -846,6 +920,8 @@ export type LeaveRequestSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   reviewerNote?: boolean
   reviewedById?: boolean
   reviewedAt?: boolean
+  hiddenFromTeacher?: boolean
+  hiddenFromAdmin?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   teacher?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -863,11 +939,13 @@ export type LeaveRequestSelectScalar = {
   reviewerNote?: boolean
   reviewedById?: boolean
   reviewedAt?: boolean
+  hiddenFromTeacher?: boolean
+  hiddenFromAdmin?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type LeaveRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "teacherId" | "leaveType" | "startDate" | "endDate" | "reason" | "status" | "reviewerNote" | "reviewedById" | "reviewedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["leaveRequest"]>
+export type LeaveRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "teacherId" | "leaveType" | "startDate" | "endDate" | "reason" | "status" | "reviewerNote" | "reviewedById" | "reviewedAt" | "hiddenFromTeacher" | "hiddenFromAdmin" | "createdAt" | "updatedAt", ExtArgs["result"]["leaveRequest"]>
 export type LeaveRequestInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   teacher?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   reviewedBy?: boolean | Prisma.LeaveRequest$reviewedByArgs<ExtArgs>
@@ -898,6 +976,8 @@ export type $LeaveRequestPayload<ExtArgs extends runtime.Types.Extensions.Intern
     reviewerNote: string | null
     reviewedById: string | null
     reviewedAt: Date | null
+    hiddenFromTeacher: boolean
+    hiddenFromAdmin: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["leaveRequest"]>
@@ -1335,6 +1415,8 @@ export interface LeaveRequestFieldRefs {
   readonly reviewerNote: Prisma.FieldRef<"LeaveRequest", 'String'>
   readonly reviewedById: Prisma.FieldRef<"LeaveRequest", 'String'>
   readonly reviewedAt: Prisma.FieldRef<"LeaveRequest", 'DateTime'>
+  readonly hiddenFromTeacher: Prisma.FieldRef<"LeaveRequest", 'Boolean'>
+  readonly hiddenFromAdmin: Prisma.FieldRef<"LeaveRequest", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"LeaveRequest", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"LeaveRequest", 'DateTime'>
 }
