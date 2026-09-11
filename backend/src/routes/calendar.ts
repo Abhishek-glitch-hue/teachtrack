@@ -13,10 +13,22 @@ const eventSchema = z.object({
   startsAt: z.string().datetime(),
   endsAt: z.string().datetime().optional(),
   reminderAt: z.string().datetime().optional(),
+}).superRefine((data, context) => {
+  if (data.reminderAt && new Date(data.reminderAt) < new Date(data.startsAt)) {
+    context.addIssue({ code: z.ZodIssueCode.custom, path: ["reminderAt"], message: "Reminder cannot be earlier than the event." });
+  }
 });
 
 function notificationMessage(title: string, startsAt: string) {
   return `${title} is scheduled for ${new Date(startsAt).toLocaleString()}.`;
+}
+
+function isBeforeToday(value: string) {
+  const date = new Date(value);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  date.setHours(0, 0, 0, 0);
+  return date < today;
 }
 
 calendarRouter.get("/", requireAuth, async (request, response) => {
@@ -29,7 +41,8 @@ calendarRouter.get("/", requireAuth, async (request, response) => {
 
 calendarRouter.post("/", requireAuth, async (request, response) => {
   const parsed = eventSchema.safeParse(request.body);
-  if (!parsed.success) return response.status(400).json({ message: "Please provide valid event details." });
+  if (!parsed.success) return response.status(400).json({ message: parsed.error.issues[0]?.message || "Please provide valid event details." });
+  if (isBeforeToday(parsed.data.startsAt)) return response.status(400).json({ message: "Event date cannot be earlier than today." });
 
   const event = await prisma.calendarEvent.create({
     data: {
@@ -60,7 +73,8 @@ calendarRouter.post("/", requireAuth, async (request, response) => {
 
 calendarRouter.patch("/:id", requireAuth, async (request, response) => {
   const parsed = eventSchema.safeParse(request.body);
-  if (!parsed.success) return response.status(400).json({ message: "Please provide valid event details." });
+  if (!parsed.success) return response.status(400).json({ message: parsed.error.issues[0]?.message || "Please provide valid event details." });
+  if (isBeforeToday(parsed.data.startsAt)) return response.status(400).json({ message: "Event date cannot be earlier than today." });
 
   const id = Array.isArray(request.params.id) ? request.params.id[0] : request.params.id;
   const existing = await prisma.calendarEvent.findFirst({ where: { id, userId: request.user!.id } });
