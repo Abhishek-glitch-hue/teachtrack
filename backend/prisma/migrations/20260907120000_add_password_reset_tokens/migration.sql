@@ -1,0 +1,2 @@
+-- This migration directory already existed without a migration file.
+-- It is intentionally a no-op so Prisma can track it without blocking later migrations.
