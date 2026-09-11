@@ -71,7 +71,7 @@
   .profile svg{width:17px;height:17px;color:var(--muted)}
 
   /* ============ APP / TOP BAR ============ */
-  .app{margin-left:240px;height:100vh;display:flex;flex-direction:column}
+  .app{position:relative;margin-left:240px;height:100vh;display:flex;flex-direction:column}
   .topbar{
     position:sticky;top:0;z-index:10;flex:none;
     display:flex;align-items:center;justify-content:space-between;
@@ -81,7 +81,10 @@
   }
   .page-title{font-family:'Sora',sans-serif;font-weight:700;font-size:17px;letter-spacing:-.2px}
   .page-sub{font-size:12.5px;color:var(--muted);margin-top:2px}
-  .top-actions{display:flex;gap:10px}
+  .top-actions{display:flex;gap:10px;align-items:center}
+  .new-chat-btn{display:none;position:absolute;top:12px;right:140px;z-index:25;border:0;border-radius:9px;padding:9px 14px;background:var(--grad);color:#fff;font:600 13px 'Public Sans',sans-serif;cursor:pointer}
+  .new-chat-btn.visible{display:inline-flex}
+  .new-chat-btn:hover{filter:brightness(1.08)}
   .icon-btn{
     width:38px;height:38px;border-radius:10px;background:var(--card);
     border:1px solid var(--border);display:grid;place-items:center;
@@ -116,6 +119,14 @@
     color:var(--text);cursor:pointer;text-align:center;transition:border-color .15s;
   }
   .chip:hover{border-color:var(--teal)}
+
+  .csv-result{display:none;max-width:680px;width:100%;margin:auto;padding:20px;background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:0 8px 24px rgba(18,50,60,.08)}
+  .csv-result.visible{display:block}
+  .csv-header{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:14px}
+  .csv-title{font-family:'Sora',sans-serif;font-size:17px;font-weight:700;color:var(--text)}
+  .csv-download{border:0;border-radius:8px;padding:8px 12px;background:var(--grad);color:#fff;font:600 12px 'Public Sans',sans-serif;cursor:pointer}
+  .csv-download:hover{filter:brightness(1.08)}
+  .csv-preview{margin:0;overflow:auto;padding:14px;background:#f3f7f7;border:1px solid var(--border);border-radius:8px;color:#20343c;font:12px/1.7 Consolas,'Courier New',monospace;white-space:pre}
 
   /* Messages */
   .messages{display:flex;flex-direction:column;gap:14px}
@@ -232,6 +243,8 @@
     </div>
   </header>
 
+  <button class="new-chat-btn" id="newChatBtn" type="button">+ New Chat</button>
+
   <section class="chat-zone">
     <div class="chat-card">
       <div class="chat-scroll" id="chatScroll">
@@ -249,6 +262,14 @@
             <button class="chip">Draft a leave request email</button>
           </div>
         </div>
+
+        <section class="csv-result" id="csvResult" aria-live="polite">
+          <div class="csv-header">
+            <div class="csv-title">Your Week - Summary.csv</div>
+            <button type="button" class="csv-download" id="downloadCsv">Download CSV</button>
+          </div>
+          <pre class="csv-preview" id="csvPreview"></pre>
+        </section>
 
         <!-- Messages -->
         <div class="messages" id="messages"></div>
@@ -275,6 +296,9 @@
   const messagesEl  = document.getElementById('messages');
   const form        = document.getElementById('composer');
   const input       = document.getElementById('msgInput');
+  const csvResult   = document.getElementById('csvResult');
+  const csvPreview  = document.getElementById('csvPreview');
+  const newChatBtn  = document.getElementById('newChatBtn');
 
   const apiBase = 'http://localhost:4000/api';
   const authToken = sessionStorage.getItem('teachtrack_token');
@@ -283,7 +307,7 @@
   const savedTheme = localStorage.getItem('teachtrack_theme');
   if (savedTheme === 'dark' || savedTheme === 'light') document.documentElement.dataset.theme = savedTheme;
 
-  async function replyFor(text) {
+  async function requestAi(text) {
     const response = await fetch(apiBase + '/ai/chat', {
       method: 'POST',
       headers: {
@@ -294,10 +318,62 @@
     });
     const data = await response.json();
     if (!response.ok) throw new Error(data.message || 'AI service is temporarily unavailable.');
+    return data;
+  }
+
+  async function replyFor(text) {
+    const data = await requestAi(text);
     return data.reply;
   }
 
+  function csvCell(value){
+    const text = value == null ? '' : String(value);
+    return /[",\n]/.test(text) ? '"' + text.replace(/"/g, '""') + '"' : text;
+  }
+
+  function buildSummaryCsv(summaryData){
+    const events = summaryData?.calendarEvents || [];
+    const duties = summaryData?.duties || [];
+    const leaves = summaryData?.leaveRequests || [];
+    const rows = [
+      ['Metric', 'Value'],
+      ['Calendar events', events.length],
+      ['Duties assigned', duties.length],
+      ['Leave requests', leaves.length],
+      ['Unread messages', summaryData?.unreadMessages ?? 0],
+    ];
+    events.forEach((event, index) => rows.push(['Calendar event ' + (index + 1), [event.title, event.startsAt, event.type].filter(Boolean).join(' | ')]));
+    duties.forEach((duty, index) => rows.push(['Duty ' + (index + 1), [duty.title, duty.status, duty.dueAt].filter(Boolean).join(' | ')]));
+    leaves.forEach((leave, index) => rows.push(['Leave request ' + (index + 1), [leave.leaveType, leave.status, leave.startDate, leave.endDate].filter(Boolean).join(' | ')]));
+    return rows.map(row => row.map(csvCell).join(',')).join('\n');
+  }
+
+  async function showSummaryCsv(){
+    const button = document.querySelector('.chip');
+    showNewChat();
+    button.disabled = true;
+    button.textContent = 'Loading summary...';
+    try {
+      const data = await requestAi('Summarize my week using my current TeachTrack data.');
+      const csvContent = buildSummaryCsv(data.summaryData);
+      csvPreview.textContent = csvContent;
+      csvResult.classList.add('visible');
+      csvResult.dataset.content = csvContent;
+      emptyState.style.display = 'none';
+      scrollBottom();
+    } catch (error) {
+      addMsg('ai', error.message || 'Unable to load your current summary.');
+    } finally {
+      button.disabled = false;
+      button.textContent = 'Summarize my week';
+    }
+  }
+
   function scrollBottom(){ chatScroll.scrollTop = chatScroll.scrollHeight; }
+
+  function showNewChat(){
+    newChatBtn.classList.add('visible');
+  }
 
   function addMsg(role, text){
     emptyState.style.display = 'none';
@@ -311,6 +387,7 @@
   function send(){
     const text = input.value.trim();
     if(!text) return;
+    showNewChat();
     input.value = '';
     addMsg('user', text);
 
@@ -334,8 +411,38 @@
 
   form.addEventListener('submit', e => { e.preventDefault(); send(); });
   document.querySelectorAll('.chip').forEach(c =>
-    c.addEventListener('click', () => { input.value = c.textContent; send(); })
+    c.addEventListener('click', () => {
+      if (c.textContent.trim() === 'Summarize my week') {
+        showSummaryCsv();
+        return;
+      }
+      showNewChat();
+      input.value = c.textContent;
+      send();
+    })
   );
+
+  document.getElementById('downloadCsv').addEventListener('click', () => {
+    const csvContent = csvResult.dataset.content;
+    if (!csvContent) return;
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'your-week-summary.csv';
+    link.click();
+    URL.revokeObjectURL(link.href);
+  });
+
+  newChatBtn.addEventListener('click', () => {
+    chatHistory.length = 0;
+    messagesEl.replaceChildren();
+    csvResult.classList.remove('visible');
+    csvResult.dataset.content = '';
+    csvPreview.textContent = '';
+    emptyState.style.display = '';
+    input.value = '';
+    newChatBtn.classList.remove('visible');
+  });
 
   document.getElementById('themeBtn').addEventListener('click', () => {
     const root = document.documentElement;
