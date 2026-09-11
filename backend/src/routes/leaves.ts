@@ -2,6 +2,7 @@ import { Router } from "express";
 import { z } from "zod";
 import { prisma } from "../lib/prisma.ts";
 import { emitToUser } from "../lib/socket.ts";
+import { uniqueLeaveDaysInCurrentMonth, MONTHLY_LEAVE_ALLOWANCE } from "../lib/leaveBalance.ts";
 import { requireAuth, requireRole } from "../middleware/auth.ts";
 
 const leaveRouter = Router();
@@ -16,6 +17,16 @@ const createLeaveSchema = z
   .refine((data) => data.endDate >= data.startDate, {
     message: "End date cannot be earlier than start date.",
     path: ["endDate"],
+  })
+  .refine((data) => {
+    const startDate = new Date(data.startDate);
+    const today = new Date();
+    startDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+    return startDate >= today;
+  }, {
+    message: "Leave cannot start before today.",
+    path: ["startDate"],
   });
 
 const reviewLeaveSchema = z.object({
@@ -71,6 +82,7 @@ leaveRouter.post("/", requireAuth, async (request, response) => {
         message,
         leaveId: leave.id,
       });
+      emitToUser(admin.id, "leave:created", { leaveId: leave.id });
     });
   }
 
@@ -83,7 +95,20 @@ leaveRouter.get("/my", requireAuth, async (request, response) => {
     orderBy: { createdAt: "desc" },
   });
 
-  return response.json({ leaves });
+  const now = new Date();
+  const leaveDaysTaken = uniqueLeaveDaysInCurrentMonth(
+    leaves.filter((leave) => leave.status === "APPROVED"),
+    now,
+  );
+
+  return response.json({
+    leaves: leaves.filter((leave) => !leave.hiddenFromTeacher),
+    summary: {
+      monthlyAllowance: MONTHLY_LEAVE_ALLOWANCE,
+      leaveDaysTaken,
+      leaveBalance: Math.max(0, MONTHLY_LEAVE_ALLOWANCE - leaveDaysTaken),
+    },
+  });
 });
 
 leaveRouter.get("/", requireAuth, requireRole("ADMIN"), async (_request, response) => {
@@ -106,7 +131,20 @@ leaveRouter.get("/", requireAuth, requireRole("ADMIN"), async (_request, respons
     orderBy: { createdAt: "desc" },
   });
 
-  return response.json({ leaves });
+  const now = new Date();
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+  const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+  const approvedLeaves = leaves.filter((leave) => leave.status === "APPROVED");
+
+  return response.json({
+    leaves: leaves.filter((leave) => !leave.hiddenFromAdmin),
+    summary: {
+      pendingRequests: leaves.filter((leave) => leave.status === "PENDING").length,
+      approvedThisMonth: approvedLeaves.filter(
+        (leave) => leave.startDate <= monthEnd && leave.endDate >= monthStart,
+      ).length,
+    },
+  });
 });
 
 leaveRouter.patch(
@@ -123,7 +161,7 @@ leaveRouter.patch(
     }
 
     const existingLeave = await prisma.leaveRequest.findUnique({
-      where: { id: request.params.id },
+      where: { id: String(request.params.id) },
     });
 
     if (!existingLeave) {
@@ -169,5 +207,33 @@ leaveRouter.patch(
     return response.json({ leave });
   },
 );
+
+leaveRouter.delete("/:id", requireAuth, async (request, response) => {
+  const leave = await prisma.leaveRequest.findUnique({
+    where: { id: String(request.params.id) },
+  });
+
+  if (!leave) {
+    return response.status(404).json({
+      message: "Leave request not found.",
+    });
+  }
+
+  const isAdmin = request.user!.role === "ADMIN";
+  const isOwner = leave.teacherId === request.user!.id;
+
+  if (!isOwner && !isAdmin) {
+    return response.status(403).json({
+      message: "You do not have permission to remove this leave request.",
+    });
+  }
+
+  await prisma.leaveRequest.update({
+    where: { id: leave.id },
+    data: isAdmin ? { hiddenFromAdmin: true } : { hiddenFromTeacher: true },
+  });
+
+  return response.status(204).send();
+});
 
 export default leaveRouter;
