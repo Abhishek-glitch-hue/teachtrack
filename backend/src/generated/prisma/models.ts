@@ -9,10 +9,14 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/User.ts'
+export type * from './models/AiDailyUsage.ts'
+export type * from './models/PasswordResetToken.ts'
 export type * from './models/LeaveRequest.ts'
 export type * from './models/Message.ts'
+export type * from './models/MessageConnection.ts'
 export type * from './models/CalendarEvent.ts'
 export type * from './models/Duty.ts'
 export type * from './models/Notification.ts'
 export type * from './models/TimetableLecture.ts'
+export type * from './models/TimetableSetting.ts'
 export type * from './commonInputTypes.ts'
