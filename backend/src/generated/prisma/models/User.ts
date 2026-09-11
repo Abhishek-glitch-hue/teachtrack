@@ -246,6 +246,11 @@ export type UserWhereInput = {
   events?: Prisma.CalendarEventListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
   timetableLectures?: Prisma.TimetableLectureListRelationFilter
+  timetableSettings?: Prisma.TimetableSettingListRelationFilter
+  sentConnectionRequests?: Prisma.MessageConnectionListRelationFilter
+  receivedConnectionRequests?: Prisma.MessageConnectionListRelationFilter
+  passwordResetTokens?: Prisma.PasswordResetTokenListRelationFilter
+  aiDailyUsages?: Prisma.AiDailyUsageListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -269,6 +274,11 @@ export type UserOrderByWithRelationInput = {
   events?: Prisma.CalendarEventOrderByRelationAggregateInput
   notifications?: Prisma.NotificationOrderByRelationAggregateInput
   timetableLectures?: Prisma.TimetableLectureOrderByRelationAggregateInput
+  timetableSettings?: Prisma.TimetableSettingOrderByRelationAggregateInput
+  sentConnectionRequests?: Prisma.MessageConnectionOrderByRelationAggregateInput
+  receivedConnectionRequests?: Prisma.MessageConnectionOrderByRelationAggregateInput
+  passwordResetTokens?: Prisma.PasswordResetTokenOrderByRelationAggregateInput
+  aiDailyUsages?: Prisma.AiDailyUsageOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -295,6 +305,11 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   events?: Prisma.CalendarEventListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
   timetableLectures?: Prisma.TimetableLectureListRelationFilter
+  timetableSettings?: Prisma.TimetableSettingListRelationFilter
+  sentConnectionRequests?: Prisma.MessageConnectionListRelationFilter
+  receivedConnectionRequests?: Prisma.MessageConnectionListRelationFilter
+  passwordResetTokens?: Prisma.PasswordResetTokenListRelationFilter
+  aiDailyUsages?: Prisma.AiDailyUsageListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -354,6 +369,11 @@ export type UserCreateInput = {
   events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   timetableLectures?: Prisma.TimetableLectureCreateNestedManyWithoutUserInput
+  timetableSettings?: Prisma.TimetableSettingCreateNestedManyWithoutUserInput
+  sentConnectionRequests?: Prisma.MessageConnectionCreateNestedManyWithoutRequesterInput
+  receivedConnectionRequests?: Prisma.MessageConnectionCreateNestedManyWithoutRecipientInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  aiDailyUsages?: Prisma.AiDailyUsageCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -377,6 +397,11 @@ export type UserUncheckedCreateInput = {
   events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   timetableLectures?: Prisma.TimetableLectureUncheckedCreateNestedManyWithoutUserInput
+  timetableSettings?: Prisma.TimetableSettingUncheckedCreateNestedManyWithoutUserInput
+  sentConnectionRequests?: Prisma.MessageConnectionUncheckedCreateNestedManyWithoutRequesterInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUncheckedCreateNestedManyWithoutRecipientInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  aiDailyUsages?: Prisma.AiDailyUsageUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -400,6 +425,11 @@ export type UserUpdateInput = {
   events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   timetableLectures?: Prisma.TimetableLectureUpdateManyWithoutUserNestedInput
+  timetableSettings?: Prisma.TimetableSettingUpdateManyWithoutUserNestedInput
+  sentConnectionRequests?: Prisma.MessageConnectionUpdateManyWithoutRequesterNestedInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUpdateManyWithoutRecipientNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  aiDailyUsages?: Prisma.AiDailyUsageUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -423,6 +453,11 @@ export type UserUncheckedUpdateInput = {
   events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   timetableLectures?: Prisma.TimetableLectureUncheckedUpdateManyWithoutUserNestedInput
+  timetableSettings?: Prisma.TimetableSettingUncheckedUpdateManyWithoutUserNestedInput
+  sentConnectionRequests?: Prisma.MessageConnectionUncheckedUpdateManyWithoutRequesterNestedInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUncheckedUpdateManyWithoutRecipientNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  aiDailyUsages?: Prisma.AiDailyUsageUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -549,6 +584,34 @@ export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
 }
 
+export type UserCreateNestedOneWithoutAiDailyUsagesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAiDailyUsagesInput, Prisma.UserUncheckedCreateWithoutAiDailyUsagesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAiDailyUsagesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutAiDailyUsagesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAiDailyUsagesInput, Prisma.UserUncheckedCreateWithoutAiDailyUsagesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAiDailyUsagesInput
+  upsert?: Prisma.UserUpsertWithoutAiDailyUsagesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAiDailyUsagesInput, Prisma.UserUpdateWithoutAiDailyUsagesInput>, Prisma.UserUncheckedUpdateWithoutAiDailyUsagesInput>
+}
+
+export type UserCreateNestedOneWithoutPasswordResetTokensInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPasswordResetTokensInput, Prisma.UserUncheckedCreateWithoutPasswordResetTokensInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPasswordResetTokensInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutPasswordResetTokensNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPasswordResetTokensInput, Prisma.UserUncheckedCreateWithoutPasswordResetTokensInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPasswordResetTokensInput
+  upsert?: Prisma.UserUpsertWithoutPasswordResetTokensInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPasswordResetTokensInput, Prisma.UserUpdateWithoutPasswordResetTokensInput>, Prisma.UserUncheckedUpdateWithoutPasswordResetTokensInput>
+}
+
 export type UserCreateNestedOneWithoutLeaveRequestsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutLeaveRequestsInput, Prisma.UserUncheckedCreateWithoutLeaveRequestsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutLeaveRequestsInput
@@ -607,6 +670,34 @@ export type UserUpdateOneRequiredWithoutReceivedMessagesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReceivedMessagesInput, Prisma.UserUpdateWithoutReceivedMessagesInput>, Prisma.UserUncheckedUpdateWithoutReceivedMessagesInput>
 }
 
+export type UserCreateNestedOneWithoutSentConnectionRequestsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSentConnectionRequestsInput, Prisma.UserUncheckedCreateWithoutSentConnectionRequestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSentConnectionRequestsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutReceivedConnectionRequestsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReceivedConnectionRequestsInput, Prisma.UserUncheckedCreateWithoutReceivedConnectionRequestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReceivedConnectionRequestsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutSentConnectionRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSentConnectionRequestsInput, Prisma.UserUncheckedCreateWithoutSentConnectionRequestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSentConnectionRequestsInput
+  upsert?: Prisma.UserUpsertWithoutSentConnectionRequestsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSentConnectionRequestsInput, Prisma.UserUpdateWithoutSentConnectionRequestsInput>, Prisma.UserUncheckedUpdateWithoutSentConnectionRequestsInput>
+}
+
+export type UserUpdateOneRequiredWithoutReceivedConnectionRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReceivedConnectionRequestsInput, Prisma.UserUncheckedCreateWithoutReceivedConnectionRequestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReceivedConnectionRequestsInput
+  upsert?: Prisma.UserUpsertWithoutReceivedConnectionRequestsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReceivedConnectionRequestsInput, Prisma.UserUpdateWithoutReceivedConnectionRequestsInput>, Prisma.UserUncheckedUpdateWithoutReceivedConnectionRequestsInput>
+}
+
 export type UserCreateNestedOneWithoutEventsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutEventsInput, Prisma.UserUncheckedCreateWithoutEventsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutEventsInput
@@ -663,6 +754,268 @@ export type UserUpdateOneRequiredWithoutTimetableLecturesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTimetableLecturesInput, Prisma.UserUpdateWithoutTimetableLecturesInput>, Prisma.UserUncheckedUpdateWithoutTimetableLecturesInput>
 }
 
+export type UserCreateNestedOneWithoutTimetableSettingsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutTimetableSettingsInput, Prisma.UserUncheckedCreateWithoutTimetableSettingsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTimetableSettingsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutTimetableSettingsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutTimetableSettingsInput, Prisma.UserUncheckedCreateWithoutTimetableSettingsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTimetableSettingsInput
+  upsert?: Prisma.UserUpsertWithoutTimetableSettingsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTimetableSettingsInput, Prisma.UserUpdateWithoutTimetableSettingsInput>, Prisma.UserUncheckedUpdateWithoutTimetableSettingsInput>
+}
+
+export type UserCreateWithoutAiDailyUsagesInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  department?: string | null
+  phone?: string | null
+  campus?: string | null
+  role?: $Enums.Role
+  isActive?: boolean
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutTeacherInput
+  reviewedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutReviewedByInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
+  duties?: Prisma.DutyCreateNestedManyWithoutAssignedToInput
+  events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  timetableLectures?: Prisma.TimetableLectureCreateNestedManyWithoutUserInput
+  timetableSettings?: Prisma.TimetableSettingCreateNestedManyWithoutUserInput
+  sentConnectionRequests?: Prisma.MessageConnectionCreateNestedManyWithoutRequesterInput
+  receivedConnectionRequests?: Prisma.MessageConnectionCreateNestedManyWithoutRecipientInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutAiDailyUsagesInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  department?: string | null
+  phone?: string | null
+  campus?: string | null
+  role?: $Enums.Role
+  isActive?: boolean
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTeacherInput
+  reviewedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
+  duties?: Prisma.DutyUncheckedCreateNestedManyWithoutAssignedToInput
+  events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  timetableLectures?: Prisma.TimetableLectureUncheckedCreateNestedManyWithoutUserInput
+  timetableSettings?: Prisma.TimetableSettingUncheckedCreateNestedManyWithoutUserInput
+  sentConnectionRequests?: Prisma.MessageConnectionUncheckedCreateNestedManyWithoutRequesterInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUncheckedCreateNestedManyWithoutRecipientInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutAiDailyUsagesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAiDailyUsagesInput, Prisma.UserUncheckedCreateWithoutAiDailyUsagesInput>
+}
+
+export type UserUpsertWithoutAiDailyUsagesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAiDailyUsagesInput, Prisma.UserUncheckedUpdateWithoutAiDailyUsagesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAiDailyUsagesInput, Prisma.UserUncheckedCreateWithoutAiDailyUsagesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAiDailyUsagesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAiDailyUsagesInput, Prisma.UserUncheckedUpdateWithoutAiDailyUsagesInput>
+}
+
+export type UserUpdateWithoutAiDailyUsagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutTeacherNestedInput
+  reviewedLeaves?: Prisma.LeaveRequestUpdateManyWithoutReviewedByNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
+  duties?: Prisma.DutyUpdateManyWithoutAssignedToNestedInput
+  events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  timetableLectures?: Prisma.TimetableLectureUpdateManyWithoutUserNestedInput
+  timetableSettings?: Prisma.TimetableSettingUpdateManyWithoutUserNestedInput
+  sentConnectionRequests?: Prisma.MessageConnectionUpdateManyWithoutRequesterNestedInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUpdateManyWithoutRecipientNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAiDailyUsagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTeacherNestedInput
+  reviewedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
+  duties?: Prisma.DutyUncheckedUpdateManyWithoutAssignedToNestedInput
+  events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  timetableLectures?: Prisma.TimetableLectureUncheckedUpdateManyWithoutUserNestedInput
+  timetableSettings?: Prisma.TimetableSettingUncheckedUpdateManyWithoutUserNestedInput
+  sentConnectionRequests?: Prisma.MessageConnectionUncheckedUpdateManyWithoutRequesterNestedInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUncheckedUpdateManyWithoutRecipientNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutPasswordResetTokensInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  department?: string | null
+  phone?: string | null
+  campus?: string | null
+  role?: $Enums.Role
+  isActive?: boolean
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutTeacherInput
+  reviewedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutReviewedByInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
+  duties?: Prisma.DutyCreateNestedManyWithoutAssignedToInput
+  events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  timetableLectures?: Prisma.TimetableLectureCreateNestedManyWithoutUserInput
+  timetableSettings?: Prisma.TimetableSettingCreateNestedManyWithoutUserInput
+  sentConnectionRequests?: Prisma.MessageConnectionCreateNestedManyWithoutRequesterInput
+  receivedConnectionRequests?: Prisma.MessageConnectionCreateNestedManyWithoutRecipientInput
+  aiDailyUsages?: Prisma.AiDailyUsageCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  department?: string | null
+  phone?: string | null
+  campus?: string | null
+  role?: $Enums.Role
+  isActive?: boolean
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTeacherInput
+  reviewedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
+  duties?: Prisma.DutyUncheckedCreateNestedManyWithoutAssignedToInput
+  events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  timetableLectures?: Prisma.TimetableLectureUncheckedCreateNestedManyWithoutUserInput
+  timetableSettings?: Prisma.TimetableSettingUncheckedCreateNestedManyWithoutUserInput
+  sentConnectionRequests?: Prisma.MessageConnectionUncheckedCreateNestedManyWithoutRequesterInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUncheckedCreateNestedManyWithoutRecipientInput
+  aiDailyUsages?: Prisma.AiDailyUsageUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutPasswordResetTokensInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPasswordResetTokensInput, Prisma.UserUncheckedCreateWithoutPasswordResetTokensInput>
+}
+
+export type UserUpsertWithoutPasswordResetTokensInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPasswordResetTokensInput, Prisma.UserUncheckedUpdateWithoutPasswordResetTokensInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPasswordResetTokensInput, Prisma.UserUncheckedCreateWithoutPasswordResetTokensInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPasswordResetTokensInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPasswordResetTokensInput, Prisma.UserUncheckedUpdateWithoutPasswordResetTokensInput>
+}
+
+export type UserUpdateWithoutPasswordResetTokensInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutTeacherNestedInput
+  reviewedLeaves?: Prisma.LeaveRequestUpdateManyWithoutReviewedByNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
+  duties?: Prisma.DutyUpdateManyWithoutAssignedToNestedInput
+  events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  timetableLectures?: Prisma.TimetableLectureUpdateManyWithoutUserNestedInput
+  timetableSettings?: Prisma.TimetableSettingUpdateManyWithoutUserNestedInput
+  sentConnectionRequests?: Prisma.MessageConnectionUpdateManyWithoutRequesterNestedInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUpdateManyWithoutRecipientNestedInput
+  aiDailyUsages?: Prisma.AiDailyUsageUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTeacherNestedInput
+  reviewedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
+  duties?: Prisma.DutyUncheckedUpdateManyWithoutAssignedToNestedInput
+  events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  timetableLectures?: Prisma.TimetableLectureUncheckedUpdateManyWithoutUserNestedInput
+  timetableSettings?: Prisma.TimetableSettingUncheckedUpdateManyWithoutUserNestedInput
+  sentConnectionRequests?: Prisma.MessageConnectionUncheckedUpdateManyWithoutRequesterNestedInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUncheckedUpdateManyWithoutRecipientNestedInput
+  aiDailyUsages?: Prisma.AiDailyUsageUncheckedUpdateManyWithoutUserNestedInput
+}
+
 export type UserCreateWithoutLeaveRequestsInput = {
   id?: string
   name: string
@@ -683,6 +1036,11 @@ export type UserCreateWithoutLeaveRequestsInput = {
   events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   timetableLectures?: Prisma.TimetableLectureCreateNestedManyWithoutUserInput
+  timetableSettings?: Prisma.TimetableSettingCreateNestedManyWithoutUserInput
+  sentConnectionRequests?: Prisma.MessageConnectionCreateNestedManyWithoutRequesterInput
+  receivedConnectionRequests?: Prisma.MessageConnectionCreateNestedManyWithoutRecipientInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  aiDailyUsages?: Prisma.AiDailyUsageCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLeaveRequestsInput = {
@@ -705,6 +1063,11 @@ export type UserUncheckedCreateWithoutLeaveRequestsInput = {
   events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   timetableLectures?: Prisma.TimetableLectureUncheckedCreateNestedManyWithoutUserInput
+  timetableSettings?: Prisma.TimetableSettingUncheckedCreateNestedManyWithoutUserInput
+  sentConnectionRequests?: Prisma.MessageConnectionUncheckedCreateNestedManyWithoutRequesterInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUncheckedCreateNestedManyWithoutRecipientInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  aiDailyUsages?: Prisma.AiDailyUsageUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLeaveRequestsInput = {
@@ -732,6 +1095,11 @@ export type UserCreateWithoutReviewedLeavesInput = {
   events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   timetableLectures?: Prisma.TimetableLectureCreateNestedManyWithoutUserInput
+  timetableSettings?: Prisma.TimetableSettingCreateNestedManyWithoutUserInput
+  sentConnectionRequests?: Prisma.MessageConnectionCreateNestedManyWithoutRequesterInput
+  receivedConnectionRequests?: Prisma.MessageConnectionCreateNestedManyWithoutRecipientInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  aiDailyUsages?: Prisma.AiDailyUsageCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReviewedLeavesInput = {
@@ -754,6 +1122,11 @@ export type UserUncheckedCreateWithoutReviewedLeavesInput = {
   events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   timetableLectures?: Prisma.TimetableLectureUncheckedCreateNestedManyWithoutUserInput
+  timetableSettings?: Prisma.TimetableSettingUncheckedCreateNestedManyWithoutUserInput
+  sentConnectionRequests?: Prisma.MessageConnectionUncheckedCreateNestedManyWithoutRequesterInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUncheckedCreateNestedManyWithoutRecipientInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  aiDailyUsages?: Prisma.AiDailyUsageUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReviewedLeavesInput = {
@@ -792,6 +1165,11 @@ export type UserUpdateWithoutLeaveRequestsInput = {
   events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   timetableLectures?: Prisma.TimetableLectureUpdateManyWithoutUserNestedInput
+  timetableSettings?: Prisma.TimetableSettingUpdateManyWithoutUserNestedInput
+  sentConnectionRequests?: Prisma.MessageConnectionUpdateManyWithoutRequesterNestedInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUpdateManyWithoutRecipientNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  aiDailyUsages?: Prisma.AiDailyUsageUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLeaveRequestsInput = {
@@ -814,6 +1192,11 @@ export type UserUncheckedUpdateWithoutLeaveRequestsInput = {
   events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   timetableLectures?: Prisma.TimetableLectureUncheckedUpdateManyWithoutUserNestedInput
+  timetableSettings?: Prisma.TimetableSettingUncheckedUpdateManyWithoutUserNestedInput
+  sentConnectionRequests?: Prisma.MessageConnectionUncheckedUpdateManyWithoutRequesterNestedInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUncheckedUpdateManyWithoutRecipientNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  aiDailyUsages?: Prisma.AiDailyUsageUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutReviewedLeavesInput = {
@@ -847,6 +1230,11 @@ export type UserUpdateWithoutReviewedLeavesInput = {
   events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   timetableLectures?: Prisma.TimetableLectureUpdateManyWithoutUserNestedInput
+  timetableSettings?: Prisma.TimetableSettingUpdateManyWithoutUserNestedInput
+  sentConnectionRequests?: Prisma.MessageConnectionUpdateManyWithoutRequesterNestedInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUpdateManyWithoutRecipientNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  aiDailyUsages?: Prisma.AiDailyUsageUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviewedLeavesInput = {
@@ -869,6 +1257,11 @@ export type UserUncheckedUpdateWithoutReviewedLeavesInput = {
   events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   timetableLectures?: Prisma.TimetableLectureUncheckedUpdateManyWithoutUserNestedInput
+  timetableSettings?: Prisma.TimetableSettingUncheckedUpdateManyWithoutUserNestedInput
+  sentConnectionRequests?: Prisma.MessageConnectionUncheckedUpdateManyWithoutRequesterNestedInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUncheckedUpdateManyWithoutRecipientNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  aiDailyUsages?: Prisma.AiDailyUsageUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSentMessagesInput = {
@@ -891,6 +1284,11 @@ export type UserCreateWithoutSentMessagesInput = {
   events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   timetableLectures?: Prisma.TimetableLectureCreateNestedManyWithoutUserInput
+  timetableSettings?: Prisma.TimetableSettingCreateNestedManyWithoutUserInput
+  sentConnectionRequests?: Prisma.MessageConnectionCreateNestedManyWithoutRequesterInput
+  receivedConnectionRequests?: Prisma.MessageConnectionCreateNestedManyWithoutRecipientInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  aiDailyUsages?: Prisma.AiDailyUsageCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSentMessagesInput = {
@@ -913,6 +1311,11 @@ export type UserUncheckedCreateWithoutSentMessagesInput = {
   events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   timetableLectures?: Prisma.TimetableLectureUncheckedCreateNestedManyWithoutUserInput
+  timetableSettings?: Prisma.TimetableSettingUncheckedCreateNestedManyWithoutUserInput
+  sentConnectionRequests?: Prisma.MessageConnectionUncheckedCreateNestedManyWithoutRequesterInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUncheckedCreateNestedManyWithoutRecipientInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  aiDailyUsages?: Prisma.AiDailyUsageUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSentMessagesInput = {
@@ -940,6 +1343,11 @@ export type UserCreateWithoutReceivedMessagesInput = {
   events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   timetableLectures?: Prisma.TimetableLectureCreateNestedManyWithoutUserInput
+  timetableSettings?: Prisma.TimetableSettingCreateNestedManyWithoutUserInput
+  sentConnectionRequests?: Prisma.MessageConnectionCreateNestedManyWithoutRequesterInput
+  receivedConnectionRequests?: Prisma.MessageConnectionCreateNestedManyWithoutRecipientInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  aiDailyUsages?: Prisma.AiDailyUsageCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReceivedMessagesInput = {
@@ -962,6 +1370,11 @@ export type UserUncheckedCreateWithoutReceivedMessagesInput = {
   events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   timetableLectures?: Prisma.TimetableLectureUncheckedCreateNestedManyWithoutUserInput
+  timetableSettings?: Prisma.TimetableSettingUncheckedCreateNestedManyWithoutUserInput
+  sentConnectionRequests?: Prisma.MessageConnectionUncheckedCreateNestedManyWithoutRequesterInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUncheckedCreateNestedManyWithoutRecipientInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  aiDailyUsages?: Prisma.AiDailyUsageUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReceivedMessagesInput = {
@@ -1000,6 +1413,11 @@ export type UserUpdateWithoutSentMessagesInput = {
   events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   timetableLectures?: Prisma.TimetableLectureUpdateManyWithoutUserNestedInput
+  timetableSettings?: Prisma.TimetableSettingUpdateManyWithoutUserNestedInput
+  sentConnectionRequests?: Prisma.MessageConnectionUpdateManyWithoutRequesterNestedInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUpdateManyWithoutRecipientNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  aiDailyUsages?: Prisma.AiDailyUsageUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSentMessagesInput = {
@@ -1022,6 +1440,11 @@ export type UserUncheckedUpdateWithoutSentMessagesInput = {
   events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   timetableLectures?: Prisma.TimetableLectureUncheckedUpdateManyWithoutUserNestedInput
+  timetableSettings?: Prisma.TimetableSettingUncheckedUpdateManyWithoutUserNestedInput
+  sentConnectionRequests?: Prisma.MessageConnectionUncheckedUpdateManyWithoutRequesterNestedInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUncheckedUpdateManyWithoutRecipientNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  aiDailyUsages?: Prisma.AiDailyUsageUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutReceivedMessagesInput = {
@@ -1055,6 +1478,11 @@ export type UserUpdateWithoutReceivedMessagesInput = {
   events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   timetableLectures?: Prisma.TimetableLectureUpdateManyWithoutUserNestedInput
+  timetableSettings?: Prisma.TimetableSettingUpdateManyWithoutUserNestedInput
+  sentConnectionRequests?: Prisma.MessageConnectionUpdateManyWithoutRequesterNestedInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUpdateManyWithoutRecipientNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  aiDailyUsages?: Prisma.AiDailyUsageUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReceivedMessagesInput = {
@@ -1077,6 +1505,259 @@ export type UserUncheckedUpdateWithoutReceivedMessagesInput = {
   events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   timetableLectures?: Prisma.TimetableLectureUncheckedUpdateManyWithoutUserNestedInput
+  timetableSettings?: Prisma.TimetableSettingUncheckedUpdateManyWithoutUserNestedInput
+  sentConnectionRequests?: Prisma.MessageConnectionUncheckedUpdateManyWithoutRequesterNestedInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUncheckedUpdateManyWithoutRecipientNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  aiDailyUsages?: Prisma.AiDailyUsageUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutSentConnectionRequestsInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  department?: string | null
+  phone?: string | null
+  campus?: string | null
+  role?: $Enums.Role
+  isActive?: boolean
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutTeacherInput
+  reviewedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutReviewedByInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
+  duties?: Prisma.DutyCreateNestedManyWithoutAssignedToInput
+  events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  timetableLectures?: Prisma.TimetableLectureCreateNestedManyWithoutUserInput
+  timetableSettings?: Prisma.TimetableSettingCreateNestedManyWithoutUserInput
+  receivedConnectionRequests?: Prisma.MessageConnectionCreateNestedManyWithoutRecipientInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  aiDailyUsages?: Prisma.AiDailyUsageCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutSentConnectionRequestsInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  department?: string | null
+  phone?: string | null
+  campus?: string | null
+  role?: $Enums.Role
+  isActive?: boolean
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTeacherInput
+  reviewedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
+  duties?: Prisma.DutyUncheckedCreateNestedManyWithoutAssignedToInput
+  events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  timetableLectures?: Prisma.TimetableLectureUncheckedCreateNestedManyWithoutUserInput
+  timetableSettings?: Prisma.TimetableSettingUncheckedCreateNestedManyWithoutUserInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUncheckedCreateNestedManyWithoutRecipientInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  aiDailyUsages?: Prisma.AiDailyUsageUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutSentConnectionRequestsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSentConnectionRequestsInput, Prisma.UserUncheckedCreateWithoutSentConnectionRequestsInput>
+}
+
+export type UserCreateWithoutReceivedConnectionRequestsInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  department?: string | null
+  phone?: string | null
+  campus?: string | null
+  role?: $Enums.Role
+  isActive?: boolean
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutTeacherInput
+  reviewedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutReviewedByInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
+  duties?: Prisma.DutyCreateNestedManyWithoutAssignedToInput
+  events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  timetableLectures?: Prisma.TimetableLectureCreateNestedManyWithoutUserInput
+  timetableSettings?: Prisma.TimetableSettingCreateNestedManyWithoutUserInput
+  sentConnectionRequests?: Prisma.MessageConnectionCreateNestedManyWithoutRequesterInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  aiDailyUsages?: Prisma.AiDailyUsageCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutReceivedConnectionRequestsInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  department?: string | null
+  phone?: string | null
+  campus?: string | null
+  role?: $Enums.Role
+  isActive?: boolean
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTeacherInput
+  reviewedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
+  duties?: Prisma.DutyUncheckedCreateNestedManyWithoutAssignedToInput
+  events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  timetableLectures?: Prisma.TimetableLectureUncheckedCreateNestedManyWithoutUserInput
+  timetableSettings?: Prisma.TimetableSettingUncheckedCreateNestedManyWithoutUserInput
+  sentConnectionRequests?: Prisma.MessageConnectionUncheckedCreateNestedManyWithoutRequesterInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  aiDailyUsages?: Prisma.AiDailyUsageUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutReceivedConnectionRequestsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutReceivedConnectionRequestsInput, Prisma.UserUncheckedCreateWithoutReceivedConnectionRequestsInput>
+}
+
+export type UserUpsertWithoutSentConnectionRequestsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSentConnectionRequestsInput, Prisma.UserUncheckedUpdateWithoutSentConnectionRequestsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSentConnectionRequestsInput, Prisma.UserUncheckedCreateWithoutSentConnectionRequestsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSentConnectionRequestsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSentConnectionRequestsInput, Prisma.UserUncheckedUpdateWithoutSentConnectionRequestsInput>
+}
+
+export type UserUpdateWithoutSentConnectionRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutTeacherNestedInput
+  reviewedLeaves?: Prisma.LeaveRequestUpdateManyWithoutReviewedByNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
+  duties?: Prisma.DutyUpdateManyWithoutAssignedToNestedInput
+  events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  timetableLectures?: Prisma.TimetableLectureUpdateManyWithoutUserNestedInput
+  timetableSettings?: Prisma.TimetableSettingUpdateManyWithoutUserNestedInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUpdateManyWithoutRecipientNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  aiDailyUsages?: Prisma.AiDailyUsageUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSentConnectionRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTeacherNestedInput
+  reviewedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
+  duties?: Prisma.DutyUncheckedUpdateManyWithoutAssignedToNestedInput
+  events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  timetableLectures?: Prisma.TimetableLectureUncheckedUpdateManyWithoutUserNestedInput
+  timetableSettings?: Prisma.TimetableSettingUncheckedUpdateManyWithoutUserNestedInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUncheckedUpdateManyWithoutRecipientNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  aiDailyUsages?: Prisma.AiDailyUsageUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserUpsertWithoutReceivedConnectionRequestsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutReceivedConnectionRequestsInput, Prisma.UserUncheckedUpdateWithoutReceivedConnectionRequestsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutReceivedConnectionRequestsInput, Prisma.UserUncheckedCreateWithoutReceivedConnectionRequestsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutReceivedConnectionRequestsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutReceivedConnectionRequestsInput, Prisma.UserUncheckedUpdateWithoutReceivedConnectionRequestsInput>
+}
+
+export type UserUpdateWithoutReceivedConnectionRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutTeacherNestedInput
+  reviewedLeaves?: Prisma.LeaveRequestUpdateManyWithoutReviewedByNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
+  duties?: Prisma.DutyUpdateManyWithoutAssignedToNestedInput
+  events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  timetableLectures?: Prisma.TimetableLectureUpdateManyWithoutUserNestedInput
+  timetableSettings?: Prisma.TimetableSettingUpdateManyWithoutUserNestedInput
+  sentConnectionRequests?: Prisma.MessageConnectionUpdateManyWithoutRequesterNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  aiDailyUsages?: Prisma.AiDailyUsageUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutReceivedConnectionRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTeacherNestedInput
+  reviewedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
+  duties?: Prisma.DutyUncheckedUpdateManyWithoutAssignedToNestedInput
+  events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  timetableLectures?: Prisma.TimetableLectureUncheckedUpdateManyWithoutUserNestedInput
+  timetableSettings?: Prisma.TimetableSettingUncheckedUpdateManyWithoutUserNestedInput
+  sentConnectionRequests?: Prisma.MessageConnectionUncheckedUpdateManyWithoutRequesterNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  aiDailyUsages?: Prisma.AiDailyUsageUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutEventsInput = {
@@ -1099,6 +1780,11 @@ export type UserCreateWithoutEventsInput = {
   duties?: Prisma.DutyCreateNestedManyWithoutAssignedToInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   timetableLectures?: Prisma.TimetableLectureCreateNestedManyWithoutUserInput
+  timetableSettings?: Prisma.TimetableSettingCreateNestedManyWithoutUserInput
+  sentConnectionRequests?: Prisma.MessageConnectionCreateNestedManyWithoutRequesterInput
+  receivedConnectionRequests?: Prisma.MessageConnectionCreateNestedManyWithoutRecipientInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  aiDailyUsages?: Prisma.AiDailyUsageCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutEventsInput = {
@@ -1121,6 +1807,11 @@ export type UserUncheckedCreateWithoutEventsInput = {
   duties?: Prisma.DutyUncheckedCreateNestedManyWithoutAssignedToInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   timetableLectures?: Prisma.TimetableLectureUncheckedCreateNestedManyWithoutUserInput
+  timetableSettings?: Prisma.TimetableSettingUncheckedCreateNestedManyWithoutUserInput
+  sentConnectionRequests?: Prisma.MessageConnectionUncheckedCreateNestedManyWithoutRequesterInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUncheckedCreateNestedManyWithoutRecipientInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  aiDailyUsages?: Prisma.AiDailyUsageUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutEventsInput = {
@@ -1159,6 +1850,11 @@ export type UserUpdateWithoutEventsInput = {
   duties?: Prisma.DutyUpdateManyWithoutAssignedToNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   timetableLectures?: Prisma.TimetableLectureUpdateManyWithoutUserNestedInput
+  timetableSettings?: Prisma.TimetableSettingUpdateManyWithoutUserNestedInput
+  sentConnectionRequests?: Prisma.MessageConnectionUpdateManyWithoutRequesterNestedInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUpdateManyWithoutRecipientNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  aiDailyUsages?: Prisma.AiDailyUsageUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutEventsInput = {
@@ -1181,6 +1877,11 @@ export type UserUncheckedUpdateWithoutEventsInput = {
   duties?: Prisma.DutyUncheckedUpdateManyWithoutAssignedToNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   timetableLectures?: Prisma.TimetableLectureUncheckedUpdateManyWithoutUserNestedInput
+  timetableSettings?: Prisma.TimetableSettingUncheckedUpdateManyWithoutUserNestedInput
+  sentConnectionRequests?: Prisma.MessageConnectionUncheckedUpdateManyWithoutRequesterNestedInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUncheckedUpdateManyWithoutRecipientNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  aiDailyUsages?: Prisma.AiDailyUsageUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDutiesInput = {
@@ -1203,6 +1904,11 @@ export type UserCreateWithoutDutiesInput = {
   events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   timetableLectures?: Prisma.TimetableLectureCreateNestedManyWithoutUserInput
+  timetableSettings?: Prisma.TimetableSettingCreateNestedManyWithoutUserInput
+  sentConnectionRequests?: Prisma.MessageConnectionCreateNestedManyWithoutRequesterInput
+  receivedConnectionRequests?: Prisma.MessageConnectionCreateNestedManyWithoutRecipientInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  aiDailyUsages?: Prisma.AiDailyUsageCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDutiesInput = {
@@ -1225,6 +1931,11 @@ export type UserUncheckedCreateWithoutDutiesInput = {
   events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   timetableLectures?: Prisma.TimetableLectureUncheckedCreateNestedManyWithoutUserInput
+  timetableSettings?: Prisma.TimetableSettingUncheckedCreateNestedManyWithoutUserInput
+  sentConnectionRequests?: Prisma.MessageConnectionUncheckedCreateNestedManyWithoutRequesterInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUncheckedCreateNestedManyWithoutRecipientInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  aiDailyUsages?: Prisma.AiDailyUsageUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDutiesInput = {
@@ -1263,6 +1974,11 @@ export type UserUpdateWithoutDutiesInput = {
   events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   timetableLectures?: Prisma.TimetableLectureUpdateManyWithoutUserNestedInput
+  timetableSettings?: Prisma.TimetableSettingUpdateManyWithoutUserNestedInput
+  sentConnectionRequests?: Prisma.MessageConnectionUpdateManyWithoutRequesterNestedInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUpdateManyWithoutRecipientNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  aiDailyUsages?: Prisma.AiDailyUsageUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDutiesInput = {
@@ -1285,6 +2001,11 @@ export type UserUncheckedUpdateWithoutDutiesInput = {
   events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   timetableLectures?: Prisma.TimetableLectureUncheckedUpdateManyWithoutUserNestedInput
+  timetableSettings?: Prisma.TimetableSettingUncheckedUpdateManyWithoutUserNestedInput
+  sentConnectionRequests?: Prisma.MessageConnectionUncheckedUpdateManyWithoutRequesterNestedInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUncheckedUpdateManyWithoutRecipientNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  aiDailyUsages?: Prisma.AiDailyUsageUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNotificationsInput = {
@@ -1307,6 +2028,11 @@ export type UserCreateWithoutNotificationsInput = {
   duties?: Prisma.DutyCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
   timetableLectures?: Prisma.TimetableLectureCreateNestedManyWithoutUserInput
+  timetableSettings?: Prisma.TimetableSettingCreateNestedManyWithoutUserInput
+  sentConnectionRequests?: Prisma.MessageConnectionCreateNestedManyWithoutRequesterInput
+  receivedConnectionRequests?: Prisma.MessageConnectionCreateNestedManyWithoutRecipientInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  aiDailyUsages?: Prisma.AiDailyUsageCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -1329,6 +2055,11 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   duties?: Prisma.DutyUncheckedCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
   timetableLectures?: Prisma.TimetableLectureUncheckedCreateNestedManyWithoutUserInput
+  timetableSettings?: Prisma.TimetableSettingUncheckedCreateNestedManyWithoutUserInput
+  sentConnectionRequests?: Prisma.MessageConnectionUncheckedCreateNestedManyWithoutRequesterInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUncheckedCreateNestedManyWithoutRecipientInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  aiDailyUsages?: Prisma.AiDailyUsageUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -1367,6 +2098,11 @@ export type UserUpdateWithoutNotificationsInput = {
   duties?: Prisma.DutyUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
   timetableLectures?: Prisma.TimetableLectureUpdateManyWithoutUserNestedInput
+  timetableSettings?: Prisma.TimetableSettingUpdateManyWithoutUserNestedInput
+  sentConnectionRequests?: Prisma.MessageConnectionUpdateManyWithoutRequesterNestedInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUpdateManyWithoutRecipientNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  aiDailyUsages?: Prisma.AiDailyUsageUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -1389,6 +2125,11 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   duties?: Prisma.DutyUncheckedUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
   timetableLectures?: Prisma.TimetableLectureUncheckedUpdateManyWithoutUserNestedInput
+  timetableSettings?: Prisma.TimetableSettingUncheckedUpdateManyWithoutUserNestedInput
+  sentConnectionRequests?: Prisma.MessageConnectionUncheckedUpdateManyWithoutRequesterNestedInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUncheckedUpdateManyWithoutRecipientNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  aiDailyUsages?: Prisma.AiDailyUsageUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTimetableLecturesInput = {
@@ -1411,6 +2152,11 @@ export type UserCreateWithoutTimetableLecturesInput = {
   duties?: Prisma.DutyCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  timetableSettings?: Prisma.TimetableSettingCreateNestedManyWithoutUserInput
+  sentConnectionRequests?: Prisma.MessageConnectionCreateNestedManyWithoutRequesterInput
+  receivedConnectionRequests?: Prisma.MessageConnectionCreateNestedManyWithoutRecipientInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  aiDailyUsages?: Prisma.AiDailyUsageCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTimetableLecturesInput = {
@@ -1433,6 +2179,11 @@ export type UserUncheckedCreateWithoutTimetableLecturesInput = {
   duties?: Prisma.DutyUncheckedCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  timetableSettings?: Prisma.TimetableSettingUncheckedCreateNestedManyWithoutUserInput
+  sentConnectionRequests?: Prisma.MessageConnectionUncheckedCreateNestedManyWithoutRequesterInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUncheckedCreateNestedManyWithoutRecipientInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  aiDailyUsages?: Prisma.AiDailyUsageUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTimetableLecturesInput = {
@@ -1471,6 +2222,11 @@ export type UserUpdateWithoutTimetableLecturesInput = {
   duties?: Prisma.DutyUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  timetableSettings?: Prisma.TimetableSettingUpdateManyWithoutUserNestedInput
+  sentConnectionRequests?: Prisma.MessageConnectionUpdateManyWithoutRequesterNestedInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUpdateManyWithoutRecipientNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  aiDailyUsages?: Prisma.AiDailyUsageUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTimetableLecturesInput = {
@@ -1493,6 +2249,135 @@ export type UserUncheckedUpdateWithoutTimetableLecturesInput = {
   duties?: Prisma.DutyUncheckedUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  timetableSettings?: Prisma.TimetableSettingUncheckedUpdateManyWithoutUserNestedInput
+  sentConnectionRequests?: Prisma.MessageConnectionUncheckedUpdateManyWithoutRequesterNestedInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUncheckedUpdateManyWithoutRecipientNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  aiDailyUsages?: Prisma.AiDailyUsageUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutTimetableSettingsInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  department?: string | null
+  phone?: string | null
+  campus?: string | null
+  role?: $Enums.Role
+  isActive?: boolean
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutTeacherInput
+  reviewedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutReviewedByInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
+  duties?: Prisma.DutyCreateNestedManyWithoutAssignedToInput
+  events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  timetableLectures?: Prisma.TimetableLectureCreateNestedManyWithoutUserInput
+  sentConnectionRequests?: Prisma.MessageConnectionCreateNestedManyWithoutRequesterInput
+  receivedConnectionRequests?: Prisma.MessageConnectionCreateNestedManyWithoutRecipientInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  aiDailyUsages?: Prisma.AiDailyUsageCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutTimetableSettingsInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  department?: string | null
+  phone?: string | null
+  campus?: string | null
+  role?: $Enums.Role
+  isActive?: boolean
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTeacherInput
+  reviewedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
+  duties?: Prisma.DutyUncheckedCreateNestedManyWithoutAssignedToInput
+  events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  timetableLectures?: Prisma.TimetableLectureUncheckedCreateNestedManyWithoutUserInput
+  sentConnectionRequests?: Prisma.MessageConnectionUncheckedCreateNestedManyWithoutRequesterInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUncheckedCreateNestedManyWithoutRecipientInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  aiDailyUsages?: Prisma.AiDailyUsageUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutTimetableSettingsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutTimetableSettingsInput, Prisma.UserUncheckedCreateWithoutTimetableSettingsInput>
+}
+
+export type UserUpsertWithoutTimetableSettingsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutTimetableSettingsInput, Prisma.UserUncheckedUpdateWithoutTimetableSettingsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutTimetableSettingsInput, Prisma.UserUncheckedCreateWithoutTimetableSettingsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutTimetableSettingsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutTimetableSettingsInput, Prisma.UserUncheckedUpdateWithoutTimetableSettingsInput>
+}
+
+export type UserUpdateWithoutTimetableSettingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutTeacherNestedInput
+  reviewedLeaves?: Prisma.LeaveRequestUpdateManyWithoutReviewedByNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
+  duties?: Prisma.DutyUpdateManyWithoutAssignedToNestedInput
+  events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  timetableLectures?: Prisma.TimetableLectureUpdateManyWithoutUserNestedInput
+  sentConnectionRequests?: Prisma.MessageConnectionUpdateManyWithoutRequesterNestedInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUpdateManyWithoutRecipientNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  aiDailyUsages?: Prisma.AiDailyUsageUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutTimetableSettingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTeacherNestedInput
+  reviewedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
+  duties?: Prisma.DutyUncheckedUpdateManyWithoutAssignedToNestedInput
+  events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  timetableLectures?: Prisma.TimetableLectureUncheckedUpdateManyWithoutUserNestedInput
+  sentConnectionRequests?: Prisma.MessageConnectionUncheckedUpdateManyWithoutRequesterNestedInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUncheckedUpdateManyWithoutRecipientNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  aiDailyUsages?: Prisma.AiDailyUsageUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -1509,6 +2394,11 @@ export type UserCountOutputType = {
   events: number
   notifications: number
   timetableLectures: number
+  timetableSettings: number
+  sentConnectionRequests: number
+  receivedConnectionRequests: number
+  passwordResetTokens: number
+  aiDailyUsages: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1520,6 +2410,11 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   events?: boolean | UserCountOutputTypeCountEventsArgs
   notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
   timetableLectures?: boolean | UserCountOutputTypeCountTimetableLecturesArgs
+  timetableSettings?: boolean | UserCountOutputTypeCountTimetableSettingsArgs
+  sentConnectionRequests?: boolean | UserCountOutputTypeCountSentConnectionRequestsArgs
+  receivedConnectionRequests?: boolean | UserCountOutputTypeCountReceivedConnectionRequestsArgs
+  passwordResetTokens?: boolean | UserCountOutputTypeCountPasswordResetTokensArgs
+  aiDailyUsages?: boolean | UserCountOutputTypeCountAiDailyUsagesArgs
 }
 
 /**
@@ -1588,6 +2483,41 @@ export type UserCountOutputTypeCountTimetableLecturesArgs<ExtArgs extends runtim
   where?: Prisma.TimetableLectureWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountTimetableSettingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TimetableSettingWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSentConnectionRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MessageConnectionWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountReceivedConnectionRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MessageConnectionWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPasswordResetTokensArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PasswordResetTokenWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAiDailyUsagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AiDailyUsageWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1610,6 +2540,11 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   events?: boolean | Prisma.User$eventsArgs<ExtArgs>
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   timetableLectures?: boolean | Prisma.User$timetableLecturesArgs<ExtArgs>
+  timetableSettings?: boolean | Prisma.User$timetableSettingsArgs<ExtArgs>
+  sentConnectionRequests?: boolean | Prisma.User$sentConnectionRequestsArgs<ExtArgs>
+  receivedConnectionRequests?: boolean | Prisma.User$receivedConnectionRequestsArgs<ExtArgs>
+  passwordResetTokens?: boolean | Prisma.User$passwordResetTokensArgs<ExtArgs>
+  aiDailyUsages?: boolean | Prisma.User$aiDailyUsagesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1668,6 +2603,11 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   events?: boolean | Prisma.User$eventsArgs<ExtArgs>
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   timetableLectures?: boolean | Prisma.User$timetableLecturesArgs<ExtArgs>
+  timetableSettings?: boolean | Prisma.User$timetableSettingsArgs<ExtArgs>
+  sentConnectionRequests?: boolean | Prisma.User$sentConnectionRequestsArgs<ExtArgs>
+  receivedConnectionRequests?: boolean | Prisma.User$receivedConnectionRequestsArgs<ExtArgs>
+  passwordResetTokens?: boolean | Prisma.User$passwordResetTokensArgs<ExtArgs>
+  aiDailyUsages?: boolean | Prisma.User$aiDailyUsagesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1684,6 +2624,11 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     events: Prisma.$CalendarEventPayload<ExtArgs>[]
     notifications: Prisma.$NotificationPayload<ExtArgs>[]
     timetableLectures: Prisma.$TimetableLecturePayload<ExtArgs>[]
+    timetableSettings: Prisma.$TimetableSettingPayload<ExtArgs>[]
+    sentConnectionRequests: Prisma.$MessageConnectionPayload<ExtArgs>[]
+    receivedConnectionRequests: Prisma.$MessageConnectionPayload<ExtArgs>[]
+    passwordResetTokens: Prisma.$PasswordResetTokenPayload<ExtArgs>[]
+    aiDailyUsages: Prisma.$AiDailyUsagePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2100,6 +3045,11 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   events<T extends Prisma.User$eventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CalendarEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   notifications<T extends Prisma.User$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   timetableLectures<T extends Prisma.User$timetableLecturesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$timetableLecturesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TimetableLecturePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  timetableSettings<T extends Prisma.User$timetableSettingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$timetableSettingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TimetableSettingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  sentConnectionRequests<T extends Prisma.User$sentConnectionRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sentConnectionRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MessageConnectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  receivedConnectionRequests<T extends Prisma.User$receivedConnectionRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$receivedConnectionRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MessageConnectionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  passwordResetTokens<T extends Prisma.User$passwordResetTokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$passwordResetTokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PasswordResetTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  aiDailyUsages<T extends Prisma.User$aiDailyUsagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$aiDailyUsagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiDailyUsagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2723,6 +3673,126 @@ export type User$timetableLecturesArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   distinct?: Prisma.TimetableLectureScalarFieldEnum | Prisma.TimetableLectureScalarFieldEnum[]
+}
+
+/**
+ * User.timetableSettings
+ */
+export type User$timetableSettingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TimetableSetting
+   */
+  select?: Prisma.TimetableSettingSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TimetableSetting
+   */
+  omit?: Prisma.TimetableSettingOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TimetableSettingInclude<ExtArgs> | null
+  where?: Prisma.TimetableSettingWhereInput
+  orderBy?: Prisma.TimetableSettingOrderByWithRelationInput | Prisma.TimetableSettingOrderByWithRelationInput[]
+  cursor?: Prisma.TimetableSettingWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TimetableSettingScalarFieldEnum | Prisma.TimetableSettingScalarFieldEnum[]
+}
+
+/**
+ * User.sentConnectionRequests
+ */
+export type User$sentConnectionRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MessageConnection
+   */
+  select?: Prisma.MessageConnectionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MessageConnection
+   */
+  omit?: Prisma.MessageConnectionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MessageConnectionInclude<ExtArgs> | null
+  where?: Prisma.MessageConnectionWhereInput
+  orderBy?: Prisma.MessageConnectionOrderByWithRelationInput | Prisma.MessageConnectionOrderByWithRelationInput[]
+  cursor?: Prisma.MessageConnectionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MessageConnectionScalarFieldEnum | Prisma.MessageConnectionScalarFieldEnum[]
+}
+
+/**
+ * User.receivedConnectionRequests
+ */
+export type User$receivedConnectionRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MessageConnection
+   */
+  select?: Prisma.MessageConnectionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MessageConnection
+   */
+  omit?: Prisma.MessageConnectionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MessageConnectionInclude<ExtArgs> | null
+  where?: Prisma.MessageConnectionWhereInput
+  orderBy?: Prisma.MessageConnectionOrderByWithRelationInput | Prisma.MessageConnectionOrderByWithRelationInput[]
+  cursor?: Prisma.MessageConnectionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MessageConnectionScalarFieldEnum | Prisma.MessageConnectionScalarFieldEnum[]
+}
+
+/**
+ * User.passwordResetTokens
+ */
+export type User$passwordResetTokensArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PasswordResetToken
+   */
+  select?: Prisma.PasswordResetTokenSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PasswordResetToken
+   */
+  omit?: Prisma.PasswordResetTokenOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PasswordResetTokenInclude<ExtArgs> | null
+  where?: Prisma.PasswordResetTokenWhereInput
+  orderBy?: Prisma.PasswordResetTokenOrderByWithRelationInput | Prisma.PasswordResetTokenOrderByWithRelationInput[]
+  cursor?: Prisma.PasswordResetTokenWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PasswordResetTokenScalarFieldEnum | Prisma.PasswordResetTokenScalarFieldEnum[]
+}
+
+/**
+ * User.aiDailyUsages
+ */
+export type User$aiDailyUsagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AiDailyUsage
+   */
+  select?: Prisma.AiDailyUsageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AiDailyUsage
+   */
+  omit?: Prisma.AiDailyUsageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AiDailyUsageInclude<ExtArgs> | null
+  where?: Prisma.AiDailyUsageWhereInput
+  orderBy?: Prisma.AiDailyUsageOrderByWithRelationInput | Prisma.AiDailyUsageOrderByWithRelationInput[]
+  cursor?: Prisma.AiDailyUsageWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AiDailyUsageScalarFieldEnum | Prisma.AiDailyUsageScalarFieldEnum[]
 }
 
 /**
