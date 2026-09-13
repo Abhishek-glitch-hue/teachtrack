@@ -204,7 +204,7 @@
     <form id="calendarEventForm">
       <div class="tt-form-grid">
         <label>Title<input id="calendarEventName" required maxlength="120" placeholder="e.g. Submit lesson plan"></label>
-        <label>Type<select id="calendarEventType"><option value="REMINDER">Reminder</option><option value="MEETING">Meeting</option><option value="EXAM">Exam</option><option value="DUTY">Duty</option></select></label>
+        <label>Type<div class="tt-select"><select id="calendarEventType"><option value="REMINDER">Reminder</option><option value="MEETING">Meeting</option><option value="EXAM">Exam</option><option value="DUTY">Duty</option></select><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></div></label>
         <label>Date<input id="calendarEventDate" type="date" required></label>
         <label>Time<input id="calendarEventTime" type="time" value="09:00" required></label>
         <label>Reminder notification<input id="calendarEventReminder" type="datetime-local"></label>

@@ -43,6 +43,7 @@
     var root = document.documentElement;
     var btn = document.getElementById('themeToggle');
     var assistantFrame = document.querySelector('iframe[src="ai_assistant.html"]');
+    var messagesFrame = document.querySelector('iframe[src="message.html"]');
     var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
     var savedTheme = localStorage.getItem('teachtrack_theme');
     if (savedTheme === 'dark' || savedTheme === 'light') {
@@ -50,20 +51,25 @@
     } else if (prefersDark) {
       root.setAttribute('data-theme', 'dark');
     }
-    function syncAssistantTheme() {
-      if (assistantFrame && assistantFrame.contentDocument) {
-        assistantFrame.contentDocument.documentElement.setAttribute('data-theme', root.getAttribute('data-theme') || 'light');
+    function syncFrameTheme(frame) {
+      if (frame && frame.contentDocument) {
+        frame.contentDocument.documentElement.setAttribute('data-theme', root.getAttribute('data-theme') || 'light');
       }
     }
-    if (assistantFrame) assistantFrame.addEventListener('load', syncAssistantTheme);
-    syncAssistantTheme();
+    function syncFramesTheme() {
+      syncFrameTheme(assistantFrame);
+      syncFrameTheme(messagesFrame);
+    }
+    if (assistantFrame) assistantFrame.addEventListener('load', syncFramesTheme);
+    if (messagesFrame) messagesFrame.addEventListener('load', syncFramesTheme);
+    syncFramesTheme();
     if (btn) {
       btn.addEventListener('click', function () {
         var isDark = root.getAttribute('data-theme') === 'dark';
         var nextTheme = isDark ? 'light' : 'dark';
         root.setAttribute('data-theme', nextTheme);
         localStorage.setItem('teachtrack_theme', nextTheme);
-        syncAssistantTheme();
+        syncFramesTheme();
       });
     }
   })();
@@ -710,6 +716,7 @@
     enhanceTimetableSelect(document.getElementById('ttDay'));
     enhanceTimetableSelect(document.getElementById('ttPlanDay'));
     enhanceTimetableSelect(document.getElementById('ttPlanDuration'));
+    enhanceTimetableSelect(document.getElementById('calendarEventType'));
 
     function classCode(label) {
       var known = { 'FY-CS-A': 'fy', 'SY-IT-B': 'sy', 'TY-CS-A': 'ty' };
@@ -1213,6 +1220,7 @@
         cell.addEventListener('click', function () {
           selectedDate = this.getAttribute('data-date');
           renderGrid();
+          openEventModal(null);
         });
         cell.addEventListener('keydown', function (ev) {
           if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); this.click(); }
@@ -1384,6 +1392,23 @@
       var d = new Date(value);
       return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0') + 'T' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
     }
+    function clampNewEventDate(dateValue) {
+      var todayValue = fmt(TODAY);
+      if (!dateValue) return todayValue;
+      return new Date(dateValue + 'T00:00') < new Date(todayValue + 'T00:00') ? todayValue : dateValue;
+    }
+    function syncReminderBounds(dateValue) {
+      var reminderInput = document.getElementById('calendarEventReminder');
+      if (!reminderInput) return;
+
+      var minValue = dateValue ? dateValue + 'T00:00' : '';
+      reminderInput.min = minValue;
+
+      if (!reminderInput.value || !minValue) return;
+      if (reminderInput.value.slice(0, 10) < dateValue) {
+        reminderInput.value = '';
+      }
+    }
     function openEventModal(event) {
       editingEvent = event;
       var today = new Date();
@@ -1391,11 +1416,11 @@
       document.getElementById('calendarEventTitle').textContent = event ? 'Edit task or reminder' : 'Add task or reminder';
       document.getElementById('calendarEventName').value = event ? event.name : '';
       document.getElementById('calendarEventType').value = event ? event.category.toUpperCase() : 'REMINDER';
-      document.getElementById('calendarEventDate').value = event ? event.date : (selectedDate || fmt(TODAY));
+      document.getElementById('calendarEventDate').value = event ? event.date : clampNewEventDate(selectedDate || fmt(TODAY));
       document.getElementById('calendarEventDate').min = todayValue;
       document.getElementById('calendarEventTime').value = event && event.startsAt ? localDateTime(event.startsAt).slice(11) : '09:00';
       document.getElementById('calendarEventReminder').value = event ? localDateTime(event.reminderAt) : '';
-      document.getElementById('calendarEventReminder').min = event && event.startsAt ? localDateTime(event.startsAt) : document.getElementById('calendarEventDate').value + 'T00:00';
+      syncReminderBounds(document.getElementById('calendarEventDate').value);
       document.getElementById('calendarEventDescription').value = event ? event.description : '';
       document.getElementById('calendarEventDelete').style.display = event ? '' : 'none';
       document.getElementById('calendarEventError').textContent = '';
@@ -1404,6 +1429,18 @@
       document.getElementById('calendarEventName').focus();
     }
     function closeEventModal() { eventModal.hidden = true; document.body.classList.remove('tt-modal-open'); }
+    document.getElementById('calendarEventDate').addEventListener('change', function () {
+      if (this.value && new Date(this.value + 'T00:00') < new Date(fmt(TODAY) + 'T00:00')) {
+        this.value = fmt(TODAY);
+      }
+      syncReminderBounds(this.value);
+    });
+    document.getElementById('calendarEventReminder').addEventListener('input', function () {
+      var dateValue = document.getElementById('calendarEventDate').value;
+      if (this.value && dateValue && this.value.slice(0, 10) < dateValue) {
+        this.value = '';
+      }
+    });
     document.getElementById('calendarEventClose').addEventListener('click', closeEventModal);
     document.getElementById('calendarEventCancel').addEventListener('click', closeEventModal);
     eventModal.addEventListener('click', function (event) { if (event.target === eventModal) closeEventModal(); });
@@ -1425,6 +1462,11 @@
       };
       if (new Date(date + 'T00:00') < new Date(new Date().toDateString())) {
         document.getElementById('calendarEventError').textContent = 'Event date cannot be earlier than today.';
+        return;
+      }
+      var reminderValue = document.getElementById('calendarEventReminder').value;
+      if (reminderValue && reminderValue.slice(0, 10) < date) {
+        document.getElementById('calendarEventError').textContent = 'Reminder date cannot be earlier than the event date.';
         return;
       }
       if (payload.reminderAt && new Date(payload.reminderAt) < new Date(payload.startsAt)) {

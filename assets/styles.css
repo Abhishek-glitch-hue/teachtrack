@@ -48,6 +48,7 @@ html[data-theme="dark"] .cal-table tbody tr:hover{background:#263239}
 html[data-theme="dark"] .uitem,
 html[data-theme="dark"] .leave-row,
 html[data-theme="dark"] .leave-stat{background:var(--card);border-color:var(--line)}
+html[data-theme="dark"] .msg:hover{background:#263239}
 html[data-theme="dark"] .tt-slot.empty{background:#1c252b;border-color:#40515a}
 html[data-theme="dark"] .tt-slot.lecture{border-color:var(--line)}
 html[data-theme="dark"] .cal-day{background:var(--card);border-color:var(--line-soft)}
@@ -60,7 +61,9 @@ html[data-theme="dark"] .leave-cancel,
 html[data-theme="dark"] .leave-submit,
 html[data-theme="dark"] .leave-modal{background:var(--card);border-color:var(--line);color:var(--ink)}
 html[data-theme="dark"] .duty-status.pending{background:var(--amber-t);color:#f0b85a}
+html[data-theme="dark"] .duty-status.completed{background:var(--teal-t);color:#60d8c4;border-color:#34746d}
 html[data-theme="dark"] .duty-status-select.pending{background-color:var(--amber-t);color:#f0b85a}
+html[data-theme="dark"] .duty-status-select.completed{background-color:var(--teal-t);color:#60d8c4;border-color:#34746d}
 html[data-theme="dark"] .cal-status.pending{background:var(--amber-t);color:#f0b85a}
 html[data-theme="dark"] .cal-status.completed{background:var(--teal-t);color:#55d0bd}
 html[data-theme="dark"] .leave-status.approved{background:#194b39;color:#79d9a7;border-color:#286b52}
@@ -71,6 +74,7 @@ html[data-theme="dark"] .leave-actions-inline .reject{background:var(--rose-t);b
 html[data-theme="dark"] .leave-actions-inline .remove{background:var(--rose-t);border-color:#7b3a49;color:#f09aaa}
 html[data-theme="dark"] input[type="date"],
 html[data-theme="dark"] input[type="time"],
+html[data-theme="dark"] input[type="datetime-local"],
 html[data-theme="dark"] input[type="text"],
 html[data-theme="dark"] input[type="search"],
 html[data-theme="dark"] select,
@@ -360,7 +364,6 @@ html[data-theme="dark"] .ticon .sun{display:block}
   background:#13262e; color:#fff; font-size:11px; font-weight:600; padding:4px 9px; border-radius:6px;
   white-space:nowrap; opacity:0; pointer-events:none; transition:opacity .2s ease, translate .2s ease}
 .tcol:hover .tip, .tcol:focus-visible .tip{opacity:1; translate:-50% 0}
-.tcol.cur .tip{opacity:1; translate:-50% 0; background:var(--teal-d)}
 
 /* ---- duty breakdown ---- */
 .drow + .drow{margin-top:16px}

@@ -20,6 +20,111 @@
       --radius: 18px;
     }
 
+    html[data-theme="dark"] {
+      --bg: #0f1519;
+      --surface: #1a252d;
+      --surface-alt: #121c23;
+      --line: #2d3b44;
+      --line-strong: #3b4c57;
+      --text: #edf3f6;
+      --muted: #a8bdc7;
+      --primary: #22b9a4;
+      --primary-dark: #7fe8d7;
+      --primary-soft: #183b38;
+      --shadow: 0 18px 44px rgba(0, 0, 0, 0.38);
+    }
+
+    html[data-theme="dark"] body {
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    html[data-theme="dark"] .panel,
+    html[data-theme="dark"] .sidebar,
+    html[data-theme="dark"] .sidebar-top,
+    html[data-theme="dark"] .people-list,
+    html[data-theme="dark"] .chat,
+    html[data-theme="dark"] .chat-head,
+    html[data-theme="dark"] .search-box,
+    html[data-theme="dark"] .chat-search-wrap,
+    html[data-theme="dark"] .message-area,
+    html[data-theme="dark"] .composer,
+    html[data-theme="dark"] .dialog,
+    html[data-theme="dark"] .request-row,
+    html[data-theme="dark"] .dialog-search-wrap,
+    html[data-theme="dark"] .icon-button,
+    html[data-theme="dark"] .chat-tool-label,
+    html[data-theme="dark"] .chat-search,
+    html[data-theme="dark"] .composer textarea,
+    html[data-theme="dark"] .dialog-search {
+      background: var(--surface);
+      border-color: var(--line);
+      color: var(--text);
+    }
+
+    html[data-theme="dark"] .search-box,
+    html[data-theme="dark"] .chat-search,
+    html[data-theme="dark"] .composer textarea,
+    html[data-theme="dark"] .dialog-search-wrap {
+      background: var(--surface-alt);
+    }
+
+    html[data-theme="dark"] .person-name,
+    html[data-theme="dark"] .request-row .person-name,
+    html[data-theme="dark"] .chat-head h2,
+    html[data-theme="dark"] .dialog-head h2,
+    html[data-theme="dark"] .teacher-meta strong,
+    html[data-theme="dark"] .teacher-meta small,
+    html[data-theme="dark"] .bubble,
+    html[data-theme="dark"] .meta,
+    html[data-theme="dark"] .empty-state,
+    html[data-theme="dark"] .dialog-search,
+    html[data-theme="dark"] .chat-head p {
+      color: var(--text);
+    }
+
+    html[data-theme="dark"] .person-preview,
+    html[data-theme="dark"] .person-time,
+    html[data-theme="dark"] .request-row .person-preview,
+    html[data-theme="dark"] .request-row .person-meta,
+    html[data-theme="dark"] .teacher-meta small,
+    html[data-theme="dark"] .chat-head p,
+    html[data-theme="dark"] .dialog-search::placeholder {
+      color: var(--muted);
+    }
+
+    html[data-theme="dark"] .tab.active,
+    html[data-theme="dark"] .person:hover,
+    html[data-theme="dark"] .person.active,
+    html[data-theme="dark"] .request-row:hover,
+    html[data-theme="dark"] .teacher-row:hover {
+      background: var(--primary-soft);
+    }
+
+    html[data-theme="dark"] .bubble {
+      border-color: var(--line-strong);
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.18);
+    }
+
+    html[data-theme="dark"] .message.mine .bubble {
+      border-color: #2d5f5a;
+      background: #173e3a;
+      color: #effff8;
+    }
+
+    html[data-theme="dark"] .dialog-backdrop {
+      background: rgba(8, 13, 17, 0.72);
+    }
+
+    html[data-theme="dark"] .request-action.reject,
+    html[data-theme="dark"] .teacher-action.disabled,
+    html[data-theme="dark"] .request-action.pending,
+    html[data-theme="dark"] .chat-tool-label.clear {
+      background: var(--surface-alt);
+      color: var(--text);
+      border-color: var(--line);
+    }
+
     * { box-sizing: border-box; }
     html, body { height: 100%; }
     body {
@@ -478,6 +583,22 @@
     }
     .message-area::-webkit-scrollbar { width: 8px; }
     .message-area::-webkit-scrollbar-thumb { background: #c9d2d8; border-radius: 999px; }
+    html[data-theme="dark"] .message-area,
+    html[data-theme="dark"] .people-list,
+    html[data-theme="dark"] .dialog-list {
+      scrollbar-color: #4a5f6b transparent;
+    }
+    html[data-theme="dark"] .message-area::-webkit-scrollbar-thumb,
+    html[data-theme="dark"] .people-list::-webkit-scrollbar-thumb,
+    html[data-theme="dark"] .dialog-list::-webkit-scrollbar-thumb {
+      background: #4a5f6b;
+      border-radius: 999px;
+    }
+    html[data-theme="dark"] .message-area::-webkit-scrollbar-track,
+    html[data-theme="dark"] .people-list::-webkit-scrollbar-track,
+    html[data-theme="dark"] .dialog-list::-webkit-scrollbar-track {
+      background: transparent;
+    }
 
     .conversation-date {
       align-self: center;
@@ -510,6 +631,12 @@
       border-color: #96d7ba;
       background: #d8f3e6;
       border-radius: 14px 14px 5px 14px;
+    }
+    html[data-theme="dark"] .bubble {
+      background: var(--surface-alt);
+      border-color: var(--line-strong);
+      color: var(--text);
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.18);
     }
     .meta {
       display: flex;
@@ -770,6 +897,14 @@
       z-index: 2;
     }
     .remove-friend-button:hover { background: #fdecef; }
+    html[data-theme="dark"] .remove-friend-button {
+      background: rgba(198, 92, 120, 0.15);
+      border-color: #8f4d61;
+      color: #f7b4c2;
+    }
+    html[data-theme="dark"] .remove-friend-button:hover {
+      background: rgba(198, 92, 120, 0.22);
+    }
 
     @media (max-width: 760px) {
       .chat-app {
@@ -815,9 +950,7 @@
         </div>
         <div class="spacer"></div>
         <div class="chat-tools">
-          <button id="chatSearchToggle" class="chat-tool-label" type="button" aria-label="Search this chat" title="Search this chat">⌕ Search</button>
-          <button id="clearChatButton" class="chat-tool-label clear" type="button" aria-label="Clear chat" title="Clear chat">Clear chat</button>
-          <button id="removeFriendButton" class="remove-friend-button" type="button" aria-label="Remove friend" title="Remove friend">
+          <button id="removeFriendButton" class="remove-friend-button" type="button" aria-label="Delete friend" title="Delete friend">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="m19 6-1 14H6L5 6"></path><path d="M10 11v5"></path><path d="M14 11v5"></path></svg>
           </button>
         </div>
@@ -1189,18 +1322,6 @@
         });
       });
 
-      $('chatSearchToggle').addEventListener('click', () => {
-        const wrap = $('chatSearchWrap');
-        const visible = wrap.classList.toggle('show');
-        if (visible) {
-          $('chatSearch').focus();
-        } else {
-          $('chatSearch').value = '';
-          renderChatMessages();
-        }
-      });
-
-      $('chatSearch').addEventListener('input', renderChatMessages);
 
       $('messageInput').addEventListener('keydown', (event) => {
         if (event.key === 'Enter' && !event.shiftKey) {
@@ -1238,17 +1359,6 @@
         } finally {
           $('sendButton').disabled = false;
         }
-      });
-
-      $('clearChatButton').addEventListener('click', async () => {
-        if (!state.activeUser) return;
-        if (!window.confirm('Delete this chat permanently for your account?')) return;
-        const response = await api('/messages/' + encodeURIComponent(state.activeUser.id), { method: 'DELETE' });
-        if (!response.ok) { setStatus('Unable to delete chat.', false); return; }
-        state.messages = [];
-        renderChatMessages();
-        await loadData();
-        setStatus('Chat deleted for your account.', true);
       });
 
       async function removeFriend(friend) {
