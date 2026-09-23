@@ -5,7 +5,7 @@ import { requireAuth } from "../middleware/auth.ts";
 const notificationRouter = Router();
 
 notificationRouter.get("/", requireAuth, async (request, response) => {
-  const [notifications, completedDuties, expiredReminders, approvedLeaves] = await Promise.all([
+  const [notifications, completedDuties, expiredReminders] = await Promise.all([
     prisma.notification.findMany({
       where: { userId: request.user!.id },
       orderBy: { createdAt: "desc" },
@@ -19,22 +19,15 @@ notificationRouter.get("/", requireAuth, async (request, response) => {
       where: { userId: request.user!.id, reminderAt: { lt: new Date() } },
       select: { title: true },
     }),
-    prisma.leaveRequest.findMany({
-      where: { teacherId: request.user!.id, status: "APPROVED" },
-      select: { leaveType: true },
-    }),
   ]);
 
   const completedDutyMessages = new Set(completedDuties.map((duty) => `${duty.title} was assigned to you.`));
   const expiredReminderTitles = new Set(expiredReminders.map((event) => `Reminder: ${event.title}`));
-  const approvedLeaveMessages = new Set(approvedLeaves.map((leave) => `Your ${leave.leaveType} request has been approved.`));
   const staleNotificationIds = notifications
     .filter((notification) => (
       notification.type === "DUTY" && completedDutyMessages.has(notification.message)
     ) || (
       notification.type === "REMINDER" && expiredReminderTitles.has(notification.title)
-    ) || (
-      notification.type === "LEAVE_APPROVED" && approvedLeaveMessages.has(notification.message)
     ))
     .map((notification) => notification.id);
 

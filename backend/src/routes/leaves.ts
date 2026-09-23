@@ -83,6 +83,16 @@ leaveRouter.post("/", requireAuth, async (request, response) => {
     },
   });
 
+  const teacherNotification = await prisma.notification.create({
+    data: {
+      userId: request.user!.id,
+      type: "LEAVE_REQUEST",
+      title: "Leave request submitted",
+      message: `Your ${leave.leaveType} leave request has been submitted.`,
+    },
+  });
+  emitToUser(request.user!.id, "notification:new", teacherNotification);
+
   const admins = await prisma.user.findMany({
     where: {
       role: "ADMIN",

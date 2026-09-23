@@ -1981,6 +1981,33 @@
       }
     }
 
+    function removeViewedLeaveNotifications() {
+      var viewedLeaveNotifications = notifications.filter(function (notification) {
+        return notification.isRead && (
+          notification.type === 'LEAVE_APPROVED' ||
+          notification.type === 'LEAVE_REJECTED'
+        );
+      });
+
+      viewedLeaveNotifications.forEach(function (notification) {
+        window.setTimeout(async function () {
+          try {
+            var response = await fetch(apiBase + '/notifications/' + encodeURIComponent(notification.id), {
+              method: 'DELETE',
+              headers: { Authorization: 'Bearer ' + authToken },
+            });
+            if (!response.ok && response.status !== 404) return;
+            notifications = notifications.filter(function (item) {
+              return item.id !== notification.id;
+            });
+            renderNotifications();
+          } catch {
+            /* A later refresh will retry notification cleanup. */
+          }
+        }, 5000);
+      });
+    }
+
     function connectSocket() {
       if (!window.io) {
         var script = document.createElement('script');
@@ -2050,10 +2077,11 @@
     }
 
     notificationButton.addEventListener('click', function () {
-      window.setTimeout(function () {
+      window.setTimeout(async function () {
         if (notificationPopup.classList.contains('open')) {
-          loadNotifications();
+          await loadNotifications();
           markNotificationsRead();
+          removeViewedLeaveNotifications();
         }
       }, 0);
     });
