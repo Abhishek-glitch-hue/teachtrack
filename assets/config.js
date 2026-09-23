@@ -1,6 +1,6 @@
 (() => {
   const configuredOrigin = window.TEACHTRACK_API_ORIGIN;
-  const localOrigin = 'http://localhost:4000';
+  const localOrigin = 'https://teachtrack-1lp2.onrender.com';
   const origin = typeof configuredOrigin === 'string' && configuredOrigin.trim()
     ? configuredOrigin.trim()
     : localOrigin;
