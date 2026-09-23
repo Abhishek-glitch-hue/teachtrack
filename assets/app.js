@@ -408,7 +408,14 @@
           var breakdownData = data.breakdown || [];
           breakdownRows.forEach(function (row, index) { if (index < breakdownData.length) { row.style.display = ''; var item = breakdownData[index]; var dhead = row.querySelector('.dhead'); if (dhead) { var b = dhead.querySelector('b'); if (b) b.textContent = item.percentage + '%'; var label = dhead.textContent.split(/\d+%/)[0].trim(); dhead.textContent = ''; var dsw = document.createElement('span'); dsw.className = 'dsw c' + (index + 1); dhead.appendChild(dsw); dhead.appendChild(document.createTextNode(item.type + ' ')); var bb = document.createElement('b'); bb.textContent = item.percentage + '%'; dhead.appendChild(bb); } var dfill = row.querySelector('.dfill'); if (dfill) { dfill.style.setProperty('--w', item.percentage + '%'); dfill.style.setProperty('--d', (index * 120 + 100) + 'ms'); } } else { row.style.display = 'none'; } });
           var refreshed = document.getElementById('dashboardRefreshText'); if (refreshed) refreshed.textContent = 'TeachTrack · dashboard updated ' + new Date().toLocaleTimeString();
-        }).catch(function () { var notice = document.getElementById('dashboardNotice'); if (notice) notice.textContent = 'Dashboard data is unavailable while the server is offline.'; });
+        }).catch(function () {
+          var notice = document.getElementById('dashboardNotice');
+          if (notice) notice.textContent = 'Dashboard data is unavailable while the server is offline.';
+          var upcomingList = document.getElementById('dashboardUpcomingList');
+          if (upcomingList) upcomingList.innerHTML = '<li class="empty-state">No dashboard items available.</li>';
+          var messages = document.getElementById('dashboardMessagesList');
+          if (messages) messages.innerHTML = '<p class="empty-state">No messages available.</p>';
+        });
       }
       var review = document.getElementById('dashboardReviewDuties'); if (review) review.addEventListener('click', function () { window.location.href = 'duties.html'; });
       document.addEventListener('teachtrack:dashboard-refresh', loadDashboard);
@@ -1082,15 +1089,7 @@
       leave:   { label: 'Leave',   cls: 'leave',    icon: 'M8 2v4M16 2v4M3 9h18M3 4h18v17H3z' }
     };
 
-    var events = [
-      { date: '2026-08-11', name: 'Parent-Teacher Conference', time: '10:00 AM â€“ 01:00 PM', location: 'Auditorium',        category: 'meeting', status: 'completed' },
-      { date: '2026-08-11', name: 'Staff Briefing',            time: '08:30 AM â€“ 09:00 AM', location: 'Staff Room 1',      category: 'meeting', status: 'completed' },
-      { date: '2026-08-12', name: 'Hall Monitoring Duty',      time: '12:30 PM â€“ 01:30 PM', location: 'North Wing',        category: 'duty',    status: 'upcoming' },
-      { date: '2026-08-14', name: 'Maths Exam Invigilation',   time: '09:00 AM â€“ 11:00 AM', location: 'Main Hall',         category: 'exam',    status: 'upcoming' },
-      { date: '2026-08-15', name: 'Curriculum Committee',      time: '02:00 PM â€“ 04:00 PM', location: 'Conference Room B', category: 'meeting', status: 'pending' },
-      { date: '2026-08-18', name: 'Science Fair Duty',         time: '09:00 AM â€“ 04:00 PM', location: 'North Wing',        category: 'duty',    status: 'upcoming' },
-      { date: '2026-08-20', name: 'Casual Leave',              time: 'All day',             location: 'â€”',                category: 'leave',   status: 'pending' }
-    ];
+    var events = [];
     var calendarApi = window.TEACHTRACK_API_ORIGIN + '/api/calendar';
     var editingEvent = null;
 
@@ -1123,7 +1122,10 @@
         var data = await response.json();
         events = (data.events || []).map(eventFromApi);
         renderAll();
-      } catch (_) { /* Keep the calendar usable if the API is unavailable. */ }
+      } catch (_) {
+        events = [];
+        renderAll();
+      }
     }
     function startOfWeek(d) { var x = new Date(d); x.setDate(x.getDate() - x.getDay()); x.setHours(0,0,0,0); return x; }
     function endOfWeek(d) { var x = startOfWeek(d); x.setDate(x.getDate() + 6); x.setHours(23,59,59,999); return x; }
