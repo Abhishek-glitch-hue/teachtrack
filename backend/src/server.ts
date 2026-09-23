@@ -68,6 +68,15 @@ app.get("/api/health", async (_request, response) => {
   }
 });
 
+app.use((error: unknown, _request: express.Request, response: express.Response, next: express.NextFunction) => {
+  if (response.headersSent) {
+    return next(error);
+  }
+
+  console.error("Unhandled API error:", error);
+  return response.status(500).json({ message: "An unexpected server error occurred." });
+});
+
 const io = new Server(server, {
   cors: {
     origin: allowedOrigins,

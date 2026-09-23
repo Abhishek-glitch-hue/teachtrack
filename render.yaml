@@ -16,7 +16,11 @@ services:
       - key: FRONTEND_URL
         value: https://teachtrack-mepk.onrender.com
       - key: FRONTEND_URLS
-        value: http://localhost:5500,http://127.0.0.1:5500
+        value: https://teachtrack-mepk.onrender.com
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GROQ_MODEL
+        value: openai/gpt-oss-20b
       - key: SMTP_HOST
         sync: false
       - key: SMTP_PORT
