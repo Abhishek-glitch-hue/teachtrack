@@ -54,3 +54,23 @@ export function monthsCoveredByLeave(startDate: Date, endDate: Date) {
 
   return months;
 }
+
+export function exceedsMonthlyLeaveAllowance(
+  leaves: Array<{ startDate: Date; endDate: Date }>,
+  allowance = MONTHLY_LEAVE_ALLOWANCE,
+) {
+  if (leaves.length === 0) return false;
+
+  const firstDate = leaves.reduce(
+    (earliest, leave) => (leave.startDate < earliest ? leave.startDate : earliest),
+    leaves[0].startDate,
+  );
+  const lastDate = leaves.reduce(
+    (latest, leave) => (leave.endDate > latest ? leave.endDate : latest),
+    leaves[0].endDate,
+  );
+
+  return monthsCoveredByLeave(firstDate, lastDate).some(
+    (month) => uniqueLeaveDaysInCurrentMonth(leaves, month) > allowance,
+  );
+}

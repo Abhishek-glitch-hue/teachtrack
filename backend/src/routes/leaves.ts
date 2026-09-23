@@ -2,7 +2,11 @@ import { Router } from "express";
 import { z } from "zod";
 import { prisma } from "../lib/prisma.ts";
 import { emitToUser } from "../lib/socket.ts";
-import { uniqueLeaveDaysInCurrentMonth, MONTHLY_LEAVE_ALLOWANCE } from "../lib/leaveBalance.ts";
+import {
+  exceedsMonthlyLeaveAllowance,
+  uniqueLeaveDaysInCurrentMonth,
+  MONTHLY_LEAVE_ALLOWANCE,
+} from "../lib/leaveBalance.ts";
 import { requireAuth, requireRole } from "../middleware/auth.ts";
 
 const leaveRouter = Router();
@@ -41,6 +45,31 @@ leaveRouter.post("/", requireAuth, async (request, response) => {
     return response.status(400).json({
       message: "Please provide valid leave details.",
       errors: parsed.error.issues,
+    });
+  }
+
+  const existingLeaves = await prisma.leaveRequest.findMany({
+    where: {
+      teacherId: request.user!.id,
+      status: { in: ["PENDING", "APPROVED"] },
+    },
+    select: {
+      startDate: true,
+      endDate: true,
+    },
+  });
+
+  if (
+    exceedsMonthlyLeaveAllowance([
+      ...existingLeaves,
+      {
+        startDate: parsed.data.startDate,
+        endDate: parsed.data.endDate,
+      },
+    ])
+  ) {
+    return response.status(409).json({
+      message: `You can take a maximum of ${MONTHLY_LEAVE_ALLOWANCE} leave days per month.`,
     });
   }
 
@@ -173,6 +202,33 @@ leaveRouter.patch(
     if (existingLeave.status !== "PENDING") {
       return response.status(409).json({
         message: "This leave request has already been reviewed.",
+      });
+    }
+
+    const teacherLeaves = await prisma.leaveRequest.findMany({
+      where: {
+        teacherId: existingLeave.teacherId,
+        status: { in: ["PENDING", "APPROVED"] },
+        id: { not: existingLeave.id },
+      },
+      select: {
+        startDate: true,
+        endDate: true,
+      },
+    });
+
+    if (
+      parsed.data.status === "APPROVED" &&
+      exceedsMonthlyLeaveAllowance([
+        ...teacherLeaves,
+        {
+          startDate: existingLeave.startDate,
+          endDate: existingLeave.endDate,
+        },
+      ])
+    ) {
+      return response.status(409).json({
+        message: `Approving this request would exceed the ${MONTHLY_LEAVE_ALLOWANCE}-day monthly leave allowance.`,
       });
     }
 
