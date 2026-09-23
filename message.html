@@ -1400,6 +1400,18 @@
           api('/messages/conversations')
         ]);
 
+        if (!meRes.ok || !usersRes.ok || !convRes.ok) {
+          const failedResponse = [meRes, usersRes, convRes].find(response => !response.ok);
+          let message = 'Unable to load messages.';
+          if (failedResponse) {
+            try {
+              const errorJson = await failedResponse.json();
+              if (typeof errorJson.message === 'string' && errorJson.message) message = errorJson.message;
+            } catch (_) {}
+          }
+          throw new Error(message);
+        }
+
         const meJson = await meRes.json();
         const usersJson = await usersRes.json();
         const convJson = await convRes.json();

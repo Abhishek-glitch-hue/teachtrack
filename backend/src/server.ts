@@ -31,7 +31,7 @@ const configuredOrigins = [
 const allowedOrigins = configuredOrigins.length
   ? configuredOrigins
   : process.env.NODE_ENV === "production"
-    ? []
+    ? ["http://127.0.0.1:5500", "http://localhost:5500"]
     : ["http://127.0.0.1:5500", "http://localhost:5500"];
 
 app.use(cors({
