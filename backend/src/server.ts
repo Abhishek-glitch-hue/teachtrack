@@ -21,10 +21,18 @@ const server = http.createServer(app);
 
 const port = Number(process.env.PORT ?? 4000);
 
-const allowedOrigins = [
-  process.env.FRONTEND_URL ?? "http://127.0.0.1:5500",
-  "http://localhost:5500",
-];
+const configuredOrigins = [
+  process.env.FRONTEND_URL,
+  ...(process.env.FRONTEND_URLS?.split(",") ?? []),
+]
+  .map((origin) => origin?.trim())
+  .filter((origin): origin is string => Boolean(origin));
+
+const allowedOrigins = configuredOrigins.length
+  ? configuredOrigins
+  : process.env.NODE_ENV === "production"
+    ? []
+    : ["http://127.0.0.1:5500", "http://localhost:5500"];
 
 app.use(cors({
   origin: allowedOrigins,

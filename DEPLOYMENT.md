@@ -15,7 +15,9 @@ frontend build framework is required.
 3. Render automatically publishes the root-level `index.html` and its linked
    files through the `teachtrack-frontend` static site. It must include
    the scheme, for example `https://teachtrack-frontend.onrender.com`.
-4. Set `FRONTEND_URL` on the API service to that same frontend URL.
+4. `FRONTEND_URL` is configured in `render.yaml` as
+   `https://teachtrack-mepk.onrender.com`. If the frontend service URL changes,
+   update that value in Render and redeploy the API.
 5. Set the SMTP variables if password-reset email is required:
    `SMTP_HOST`, `SMTP_USER`, `SMTP_PASS`, and `SMTP_FROM`.
 6. Deploy. The API runs `prisma migrate deploy` before starting, so all checked-in
