@@ -985,7 +985,7 @@
     </div>
   </div>
 
-  <script src="http://localhost:4000/socket.io/socket.io.js"></script>
+  <script src="assets/config.js" data-load-socket="true"></script>
 
   <script>
     (() => {
@@ -1007,7 +1007,7 @@
 
       const api = (path, options = {}) => {
         options.headers = Object.assign({ Authorization: 'Bearer ' + token }, options.headers || {});
-        return fetch('http://localhost:4000/api' + path, options);
+        return fetch(window.TEACHTRACK_API_ORIGIN + '/api' + path, options);
       };
 
       const $ = (id) => document.getElementById(id);
@@ -1442,7 +1442,7 @@
       });
 
       if (window.io) {
-        const socket = window.io('http://localhost:4000', { auth: { token } });
+        const socket = window.io(window.TEACHTRACK_API_ORIGIN, { auth: { token } });
         socket.on('message:new', async payload => {
           await loadData();
           if (state.activeUser && payload.sender && payload.sender.id === state.activeUser.id) {

@@ -293,6 +293,7 @@
   </div>
 </div>
 
+<script src="assets/config.js"></script>
 <script>
   const chatScroll  = document.getElementById('chatScroll');
   const emptyState  = document.getElementById('emptyState');
@@ -303,7 +304,7 @@
   const csvPreview  = document.getElementById('csvPreview');
   const newChatBtn  = document.getElementById('newChatBtn');
 
-  const apiBase = 'http://localhost:4000/api';
+  const apiBase = window.TEACHTRACK_API_ORIGIN + '/api';
   const authToken = sessionStorage.getItem('teachtrack_token');
   const chatHistory = [];
 
@@ -455,5 +456,3 @@
 </script>
 </body>
 </html>
-
-

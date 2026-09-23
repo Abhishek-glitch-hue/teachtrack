@@ -350,7 +350,7 @@
     (function () {
       var dashboard = document.getElementById('dashboardPage');
       if (!dashboard) return;
-      var api = 'http://localhost:4000/api/dashboard';
+      var api = window.TEACHTRACK_API_ORIGIN + '/api/dashboard';
       function when(value) { return value ? new Date(value).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : 'No due date'; }
       function loadDashboard() {
         fetch(api, { headers: { Authorization: 'Bearer ' + authToken } }).then(function (response) { if (!response.ok) throw new Error(); return response.json(); }).then(function (data) {
@@ -430,7 +430,7 @@
       var summaryDuties = [];
       var dutyPage = 1;
       var dutyPageSize = 4;
-      var dutyApi = 'http://localhost:4000/api/duties';
+      var dutyApi = window.TEACHTRACK_API_ORIGIN + '/api/duties';
       var isAdmin = false;
       try { isAdmin = String(JSON.parse(sessionStorage.getItem('teachtrack_user') || '{}').role || '').toUpperCase() === 'ADMIN'; } catch (_) {}
 
@@ -725,7 +725,7 @@
     function timetableApi(path, options) {
       options = options || {};
       options.headers = Object.assign({ Authorization: 'Bearer ' + authToken }, options.headers || {});
-      return fetch('http://localhost:4000/api/timetable' + path, options);
+      return fetch(window.TEACHTRACK_API_ORIGIN + '/api/timetable' + path, options);
     }
     function renderSlot(slot, entry, index) {
       var info = slotInfo(index);
@@ -946,7 +946,7 @@
       function profileApi(path, options) {
         options = options || {};
         options.headers = Object.assign({ Authorization: 'Bearer ' + authToken }, options.headers || {});
-        return fetch('http://localhost:4000/api/auth' + path, options);
+        return fetch(window.TEACHTRACK_API_ORIGIN + '/api/auth' + path, options);
       }
       function initials(name) {
         return name.split(/\s+/).filter(Boolean).slice(0, 2).map(function (part) { return part[0]; }).join('').toUpperCase() || '?';
@@ -1091,7 +1091,7 @@
       { date: '2026-08-18', name: 'Science Fair Duty',         time: '09:00 AM â€“ 04:00 PM', location: 'North Wing',        category: 'duty',    status: 'upcoming' },
       { date: '2026-08-20', name: 'Casual Leave',              time: 'All day',             location: 'â€”',                category: 'leave',   status: 'pending' }
     ];
-    var calendarApi = 'http://localhost:4000/api/calendar';
+    var calendarApi = window.TEACHTRACK_API_ORIGIN + '/api/calendar';
     var editingEvent = null;
 
     var current = new Date(TODAY.getFullYear(), TODAY.getMonth(), 1);
@@ -1505,7 +1505,7 @@
     var user = {};
     try { user = JSON.parse(sessionStorage.getItem('teachtrack_user') || '{}'); } catch (e) {}
     var isAdmin = String(user.role || '').toUpperCase() === 'ADMIN';
-    var apiBase = 'http://localhost:4000/api';
+    var apiBase = window.TEACHTRACK_API_ORIGIN + '/api';
 
     if (isAdmin) {
       if (applyButton) applyButton.style.display = 'none';
@@ -1773,7 +1773,7 @@
     if (!notificationButton || !notificationPopup) return;
 
     var notifications = [];
-    var apiBase = 'http://localhost:4000/api';
+    var apiBase = window.TEACHTRACK_API_ORIGIN + '/api';
     var notificationHead = notificationPopup.querySelector('.notification-head');
     var removeAll = document.createElement('button');
     removeAll.type = 'button';
@@ -1958,13 +1958,13 @@
     function connectSocket() {
       if (!window.io) {
         var script = document.createElement('script');
-        script.src = 'http://localhost:4000/socket.io/socket.io.js';
+        script.src = window.TEACHTRACK_API_ORIGIN + '/socket.io/socket.io.js';
         script.onload = connectSocket;
         document.head.appendChild(script);
         return;
       }
 
-      var socket = window.io('http://localhost:4000', {
+      var socket = window.io(window.TEACHTRACK_API_ORIGIN, {
         auth: { token: authToken },
       });
 

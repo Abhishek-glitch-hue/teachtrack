@@ -3,7 +3,7 @@
   if (!token) return;
   const api = (path, options = {}) => {
     options.headers = Object.assign({ Authorization: 'Bearer ' + token }, options.headers || {});
-    return fetch('http://localhost:4000/api' + path, options);
+    return fetch(window.TEACHTRACK_API_ORIGIN + '/api' + path, options);
   };
   const people = document.getElementById('peopleList');
   const area = document.getElementById('messageArea');
@@ -130,5 +130,5 @@
   }
   people.addEventListener('click', event => { const button = event.target.closest('.person'); if (!button) return; const name = button.querySelector('b')?.textContent; selected = users.find(user => user.name === name); if (selected) setTimeout(() => { renderRequestButton(); showAccess(selected); }, 80); }, true);
   load().catch(() => {});
-  if (window.io) { const socket = window.io('http://localhost:4000', { auth: { token } }); socket.on('message:connection-request', load); socket.on('message:connection-updated', load); }
+  if (window.io) { const socket = window.io(window.TEACHTRACK_API_ORIGIN, { auth: { token } }); socket.on('message:connection-request', load); socket.on('message:connection-updated', load); }
 })();
