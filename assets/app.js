@@ -555,7 +555,31 @@
         if (secondaryEl) secondaryEl.innerHTML = (isAdmin ? active : completed) + ' <small>' + (isAdmin ? 'active' : 'completed') + '</small>';
       }
       async function loadDuties() {
-        try { var response = await fetch(dutyApi, { headers: { Authorization: 'Bearer ' + authToken } }); if (!response.ok) return; var data = await response.json(); duties = data.duties || []; summaryDuties = data.summaryDuties || duties; renderDuties(); renderDutyStats(); } catch (_) {}
+        var cacheKey = 'teachtrack_duties_cache';
+        try {
+          var cached = JSON.parse(sessionStorage.getItem(cacheKey) || 'null');
+          if (cached && Array.isArray(cached.duties)) {
+            duties = cached.duties;
+            summaryDuties = Array.isArray(cached.summaryDuties) ? cached.summaryDuties : duties;
+            renderDuties();
+            renderDutyStats();
+          }
+        } catch (_) {}
+        try {
+          var response = await fetch(dutyApi, { headers: { Authorization: 'Bearer ' + authToken } });
+          if (!response.ok) throw new Error('The duties service returned ' + response.status + '.');
+          var data = await response.json();
+          duties = data.duties || [];
+          summaryDuties = data.summaryDuties || duties;
+          sessionStorage.setItem(cacheKey, JSON.stringify({ duties: duties, summaryDuties: summaryDuties }));
+          renderDuties();
+          renderDutyStats();
+        } catch (error) {
+          if (!duties.length) {
+            body.innerHTML = '<tr><td colspan="6" class="empty-state">Unable to load duties. Please try again.</td></tr>';
+          }
+          console.error('Unable to load duties:', error);
+        }
       }
 
       function applyDutyFilter() {
