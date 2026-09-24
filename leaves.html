@@ -162,6 +162,16 @@
       </div>
     </div>
 
+    <section class="duty-confirm-modal" id="leaveApprovalModal" hidden role="dialog" aria-modal="true" aria-labelledby="leaveApprovalTitle" aria-describedby="leaveApprovalMessage">
+      <div class="duty-confirm-card">
+        <span class="kick">Review request</span>
+        <h2 id="leaveApprovalTitle">Approve this leave?</h2>
+        <p id="leaveApprovalMessage">Add an optional approval note.</p>
+        <label class="leave-approval-label" for="leaveApprovalNote">Approval note <span>(optional)</span></label>
+        <textarea class="leave-approval-note" id="leaveApprovalNote" rows="3" maxlength="1000" placeholder="Write a note for the teacher..."></textarea>
+        <div class="duty-confirm-actions"><button class="duty-confirm-no" type="button">Cancel</button><button class="leave-approve-yes" type="button">Yes, approve</button></div>
+      </div>
+    </section>
     <section class="duty-confirm-modal" id="leaveConfirmModal" hidden role="dialog" aria-modal="true" aria-labelledby="leaveConfirmTitle" aria-describedby="leaveConfirmMessage">
       <div class="duty-confirm-card">
         <span class="kick">Confirm removal</span>

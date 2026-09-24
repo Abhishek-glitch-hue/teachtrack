@@ -465,6 +465,12 @@ html[data-theme="dark"] .ticon .sun{display:block}
 .duty-confirm-actions button:hover{transform:translateY(-1px);box-shadow:0 8px 16px -12px rgba(24,38,48,.45)}
 .duty-confirm-no{border:1px solid var(--line);background:var(--card);color:var(--mut)}
 .duty-confirm-yes{border:1px solid var(--rose);background:var(--rose);color:#fff}
+.leave-approval-label{display:block;margin:0 0 6px;color:var(--mut);font-size:11px;font-weight:700}
+.leave-approval-label span{font-weight:500;color:var(--faint)}
+.leave-approval-note{display:block;width:100%;min-height:84px;margin-bottom:20px;padding:10px 11px;resize:vertical;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:12px var(--fb);outline:none}
+.leave-approval-note:focus{border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-t)}
+.leave-approve-yes{border:1px solid var(--teal-d);background:var(--teal);color:#fff;border-radius:8px;padding:9px 14px;font:700 12px var(--fb);cursor:pointer;transition:transform .18s ease,box-shadow .18s ease}
+.leave-approve-yes:hover{transform:translateY(-1px);box-shadow:0 8px 16px -12px rgba(24,38,48,.45)}
 .duties-table-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;color:var(--mut);font-size:10.5px}
 .duty-pages{display:flex;align-items:center;gap:5px}
 .duty-page-btn{min-width:27px;height:27px;padding:0 7px;border:1px solid var(--line);border-radius:7px;background:var(--card);color:var(--mut);font-size:11px;cursor:pointer;transition:background .18s ease,color .18s ease,border-color .18s ease,transform .18s ease}

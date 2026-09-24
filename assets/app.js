@@ -1634,10 +1634,41 @@
     }
 
     async function reviewLeave(leave, status) {
-      var note = window.prompt(
-        status === 'APPROVED' ? 'Optional approval note:' : 'Reason for rejection:',
-        ''
-      );
+      var note;
+      if (status === 'APPROVED') {
+        var approvalModal = document.getElementById('leaveApprovalModal');
+        var noteInput = document.getElementById('leaveApprovalNote');
+        var approveButton = approvalModal && approvalModal.querySelector('.leave-approve-yes');
+        var cancelButton = approvalModal && approvalModal.querySelector('.duty-confirm-no');
+        if (!approvalModal || !noteInput || !approveButton || !cancelButton) return;
+        noteInput.value = '';
+        approvalModal.hidden = false;
+        document.body.classList.add('tt-modal-open');
+        noteInput.focus();
+        var approval = await new Promise(function (resolve) {
+          function finish(result) {
+            approvalModal.hidden = true;
+            document.body.classList.remove('tt-modal-open');
+            approveButton.removeEventListener('click', accept);
+            cancelButton.removeEventListener('click', decline);
+            approvalModal.removeEventListener('click', outside);
+            document.removeEventListener('keydown', escape);
+            resolve(result);
+          }
+          function accept() { finish({ confirmed: true, note: noteInput.value }); }
+          function decline() { finish(null); }
+          function outside(event) { if (event.target === approvalModal) finish(null); }
+          function escape(event) { if (event.key === 'Escape') finish(null); }
+          approveButton.addEventListener('click', accept);
+          cancelButton.addEventListener('click', decline);
+          approvalModal.addEventListener('click', outside);
+          document.addEventListener('keydown', escape);
+        });
+        if (!approval) return;
+        note = approval.note;
+      } else {
+        note = window.prompt('Reason for rejection:', '');
+      }
       if (note === null) return;
 
       try {
