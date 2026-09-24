@@ -233,10 +233,10 @@ button{font:inherit; color:inherit}
 html[data-theme="dark"] .ticon .moon{display:none}
 html[data-theme="dark"] .ticon .sun{display:block}
 /* ---- notifications popup ---- */
-.notification-popup{position:absolute;right:78px;top:58px;width:min(360px,calc(100vw - 32px));max-height:min(560px,calc(100vh - 84px));overflow-y:auto;padding:12px;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 20px 42px -22px rgba(24,38,48,.55);display:none;z-index:20;overscroll-behavior:contain;scrollbar-gutter:stable;scrollbar-width:thin;scrollbar-color:var(--faint) transparent}
-.notification-popup::-webkit-scrollbar{width:8px}
+.notification-popup{position:absolute;right:78px;top:58px;width:min(360px,calc(100vw - 32px));max-height:min(560px,calc(100vh - 84px));overflow-y:scroll;padding:12px;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 20px 42px -22px rgba(24,38,48,.55);display:none;z-index:20;overscroll-behavior:contain;scrollbar-gutter:stable;scrollbar-width:auto;scrollbar-color:var(--mut) var(--line-soft)}
+.notification-popup::-webkit-scrollbar{width:10px}
 .notification-popup::-webkit-scrollbar-track{background:transparent}
-.notification-popup::-webkit-scrollbar-thumb{background:var(--faint);border-radius:8px;border:2px solid transparent;background-clip:padding-box}
+.notification-popup::-webkit-scrollbar-thumb{background:var(--mut);border-radius:8px;border:2px solid transparent;background-clip:padding-box}
 .notification-popup::-webkit-scrollbar-thumb:hover{background:var(--mut);border-width:1px}
 .notification-popup.open{display:block;animation:modalIn .2s ease both}
 .notification-head{display:flex;align-items:center;justify-content:space-between;padding:3px 4px 10px;border-bottom:1px solid var(--line-soft)}
