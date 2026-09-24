@@ -1632,7 +1632,35 @@
       var label = isAdmin && leave.teacher
         ? leave.teacher.name + "'s " + leave.leaveType + ' request'
         : 'this ' + leave.leaveType + ' request';
-      if (!window.confirm('Remove ' + label + ' from this history? Leave totals and balances will not change.')) return;
+      var confirmModal = document.getElementById('leaveConfirmModal');
+      var confirmMessage = document.getElementById('leaveConfirmMessage');
+      var confirmYes = confirmModal && confirmModal.querySelector('.duty-confirm-yes');
+      var confirmNo = confirmModal && confirmModal.querySelector('.duty-confirm-no');
+      if (!confirmModal || !confirmMessage || !confirmYes || !confirmNo) return;
+      confirmMessage.textContent = 'Remove ' + label + ' from this history? Leave totals and balances will not change.';
+      confirmModal.hidden = false;
+      document.body.classList.add('tt-modal-open');
+      confirmYes.focus();
+      var confirmed = await new Promise(function (resolve) {
+        function finish(result) {
+          confirmModal.hidden = true;
+          document.body.classList.remove('tt-modal-open');
+          confirmYes.removeEventListener('click', accept);
+          confirmNo.removeEventListener('click', decline);
+          confirmModal.removeEventListener('click', outside);
+          document.removeEventListener('keydown', escape);
+          resolve(result);
+        }
+        function accept() { finish(true); }
+        function decline() { finish(false); }
+        function outside(event) { if (event.target === confirmModal) finish(false); }
+        function escape(event) { if (event.key === 'Escape') finish(false); }
+        confirmYes.addEventListener('click', accept);
+        confirmNo.addEventListener('click', decline);
+        confirmModal.addEventListener('click', outside);
+        document.addEventListener('keydown', escape);
+      });
+      if (!confirmed) return;
 
       try {
         var response = await api('/leaves/' + leave.id, { method: 'DELETE' });
