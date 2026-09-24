@@ -1594,6 +1594,32 @@
       return Math.max(1, Math.round((end - start) / 86400000) + 1);
     }
 
+    function showLeaveNotice(message) {
+      var notice = document.getElementById('leaveNoticeModal');
+      var text = document.getElementById('leaveNoticeMessage');
+      var ok = notice && notice.querySelector('.duty-confirm-yes');
+      if (!notice || !text || !ok) return Promise.resolve();
+      text.textContent = message;
+      notice.hidden = false;
+      document.body.classList.add('tt-modal-open');
+      ok.focus();
+      return new Promise(function (resolve) {
+        function close() {
+          notice.hidden = true;
+          document.body.classList.remove('tt-modal-open');
+          ok.removeEventListener('click', close);
+          notice.removeEventListener('click', outside);
+          document.removeEventListener('keydown', escape);
+          resolve();
+        }
+        function outside(event) { if (event.target === notice) close(); }
+        function escape(event) { if (event.key === 'Escape') close(); }
+        ok.addEventListener('click', close);
+        notice.addEventListener('click', outside);
+        document.addEventListener('keydown', escape);
+      });
+    }
+
     function clearHistory() {
       while (history.firstChild) history.removeChild(history.firstChild);
     }
@@ -1837,7 +1863,7 @@
         if (modal) modal.classList.remove('open');
         loadLeaves();
       } catch (error) {
-        window.alert(error.message || 'Unable to submit leave request.');
+        await showLeaveNotice(error.message || 'Unable to submit leave request.');
       } finally {
         if (submit) submit.disabled = false;
       }
