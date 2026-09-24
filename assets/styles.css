@@ -455,6 +455,16 @@ html[data-theme="dark"] .ticon .sun{display:block}
 .duty-remove{display:inline-flex;align-items:center;justify-content:center;padding:6px 10px;border:1px solid #f0c9ce;border-radius:7px;background:transparent;color:#b4232b;font:700 10px var(--fb);cursor:pointer;transition:background .18s ease,border-color .18s ease,transform .18s ease}
 .duty-remove:hover{background:#fde8ea;border-color:#e9aeb5;transform:translateY(-1px)}
 .duty-remove:active{transform:translateY(0)}
+.duty-confirm-modal[hidden]{display:none}
+.duty-confirm-modal{position:fixed;inset:0;z-index:300;display:grid;place-items:center;padding:20px;background:rgba(17,31,39,.5);backdrop-filter:blur(4px)}
+.duty-confirm-card{width:min(420px,100%);padding:24px;border:1px solid var(--line);border-radius:16px;background:var(--card);color:var(--ink);box-shadow:0 28px 70px -28px rgba(0,0,0,.55);animation:dutyMenuIn .18s ease-out both}
+.duty-confirm-card h2{margin-top:5px;font:700 20px var(--fd);color:var(--ink)}
+.duty-confirm-card p{margin:10px 0 22px;color:var(--mut);font-size:13px;line-height:1.6}
+.duty-confirm-actions{display:flex;justify-content:flex-end;gap:9px}
+.duty-confirm-actions button{border-radius:8px;padding:9px 14px;font:700 12px var(--fb);cursor:pointer;transition:transform .18s ease,box-shadow .18s ease}
+.duty-confirm-actions button:hover{transform:translateY(-1px);box-shadow:0 8px 16px -12px rgba(24,38,48,.45)}
+.duty-confirm-no{border:1px solid var(--line);background:var(--card);color:var(--mut)}
+.duty-confirm-yes{border:1px solid var(--rose);background:var(--rose);color:#fff}
 .duties-table-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;color:var(--mut);font-size:10.5px}
 .duty-pages{display:flex;align-items:center;gap:5px}
 .duty-page-btn{min-width:27px;height:27px;padding:0 7px;border:1px solid var(--line);border-radius:7px;background:var(--card);color:var(--mut);font-size:11px;cursor:pointer;transition:background .18s ease,color .18s ease,border-color .18s ease,transform .18s ease}

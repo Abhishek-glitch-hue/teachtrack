@@ -441,6 +441,37 @@
       var isAdmin = false;
       try { isAdmin = String(JSON.parse(sessionStorage.getItem('teachtrack_user') || '{}').role || '').toUpperCase() === 'ADMIN'; } catch (_) {}
 
+      function confirmDutyRemoval(message) {
+        var modal = document.getElementById('dutyConfirmModal');
+        var messageEl = document.getElementById('dutyConfirmMessage');
+        var yes = modal && modal.querySelector('.duty-confirm-yes');
+        var no = modal && modal.querySelector('.duty-confirm-no');
+        if (!modal || !yes || !no) return Promise.resolve(false);
+        messageEl.textContent = message;
+        modal.hidden = false;
+        document.body.classList.add('tt-modal-open');
+        yes.focus();
+        return new Promise(function (resolve) {
+          function finish(result) {
+            modal.hidden = true;
+            document.body.classList.remove('tt-modal-open');
+            yes.removeEventListener('click', accept);
+            no.removeEventListener('click', decline);
+            modal.removeEventListener('click', outside);
+            document.removeEventListener('keydown', escape);
+            resolve(result);
+          }
+          function accept() { finish(true); }
+          function decline() { finish(false); }
+          function outside(event) { if (event.target === modal) finish(false); }
+          function escape(event) { if (event.key === 'Escape') finish(false); }
+          yes.addEventListener('click', accept);
+          no.addEventListener('click', decline);
+          modal.addEventListener('click', outside);
+          document.addEventListener('keydown', escape);
+        });
+      }
+
       if (addDuty && !isAdmin) addDuty.style.display = 'none';
       var primaryLabel = document.getElementById('dutyPrimaryLabel');
       var secondaryLabel = document.getElementById('dutySecondaryLabel');
@@ -492,7 +523,7 @@
             var actionCell = document.createElement('td');
             var remove = document.createElement('button'); remove.type = 'button'; remove.className = 'duty-remove'; remove.textContent = 'Remove';
             remove.addEventListener('click', async function () {
-              if (!window.confirm('Remove this assigned duty?')) return;
+              if (!await confirmDutyRemoval('This will remove the assigned duty.')) return;
               var response = await fetch(dutyApi + '/' + duty.id, { method: 'DELETE', headers: { Authorization: 'Bearer ' + authToken } });
               if (response.ok) { duties = duties.filter(function (item) { return item.id !== duty.id; }); renderDuties(); renderDutyStats(); }
             });
@@ -501,7 +532,7 @@
             var historyCell = document.createElement('td');
             var hideHistory = document.createElement('button'); hideHistory.type = 'button'; hideHistory.className = 'duty-remove'; hideHistory.textContent = 'Remove';
             hideHistory.addEventListener('click', async function () {
-              if (!window.confirm('Remove this duty from your history? Its status and totals will not change.')) return;
+              if (!await confirmDutyRemoval('Remove this duty from your history? Its status and totals will not change.')) return;
               var response = await fetch(dutyApi + '/' + duty.id + '/history', { method: 'DELETE', headers: { Authorization: 'Bearer ' + authToken } });
               if (response.ok) { duties = duties.filter(function (item) { return item.id !== duty.id; }); renderDuties(); }
             });
