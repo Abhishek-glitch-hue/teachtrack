@@ -47,7 +47,9 @@ dashboardRouter.get("/", requireAuth, async (request, response) => {
   const weekEnd = new Date(now);
   weekEnd.setDate(now.getDate() + (6 - now.getDay()));
   weekEnd.setHours(23, 59, 59, 999);
-  const dutyWhere = request.user!.role === "ADMIN" ? {} : { assignedToId: userId };
+  // The dashboard workload card is personal, including for administrators.
+  // Admins can review all assignments on the Duties page.
+  const dutyWhere = { assignedToId: userId };
   // A leave balance always belongs to the signed-in user. Administrators can
   // still review all requests on the Leaves page, but their dashboard must not
   // combine every teacher's allowance into one number.
