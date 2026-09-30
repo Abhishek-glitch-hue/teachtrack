@@ -31,6 +31,35 @@
   document.head.appendChild(style);
   style.textContent += '.connection-reject{margin-left:6px!important;border-color:#efc5cc!important;background:transparent!important;color:#b42336!important}#pendingList .connection-item{justify-content:flex-start}#pendingList .connection-person{flex:1}html[data-theme="dark"] .connection-reject{border-color:#7b3a49!important;color:#f09aaa!important}.header-connection-action{margin-left:12px;white-space:nowrap}.header-connection-action:disabled{cursor:default;opacity:.7}';
 
+  const removeModal = document.createElement('div');
+  removeModal.className = 'dialog-backdrop';
+  removeModal.setAttribute('aria-hidden', 'true');
+  removeModal.innerHTML = '<div class="connection-confirm" role="dialog" aria-modal="true" aria-labelledby="connectionConfirmTitle"><h2 id="connectionConfirmTitle">Remove friend?</h2><p class="connection-confirm-message"></p><div class="connection-confirm-actions"><button type="button" class="connection-confirm-cancel">Cancel</button><button type="button" class="connection-confirm-yes">Yes, remove</button></div></div>';
+  document.body.appendChild(removeModal);
+  style.textContent += '.connection-confirm{width:min(420px,calc(100vw - 36px));padding:24px;border:1px solid #dfe9e3;border-radius:16px;background:#fff;color:#17212a;box-shadow:0 24px 60px rgba(0,0,0,.24)}.connection-confirm h2{margin:0 0 10px;font-size:20px}.connection-confirm p{margin:0;color:#667785;line-height:1.5}.connection-confirm-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:24px}.connection-confirm-actions button{border:1px solid #cfe1d9;border-radius:9px;padding:9px 16px;background:#fff;color:#17212a;font:inherit;font-weight:700;cursor:pointer}.connection-confirm-actions .connection-confirm-yes{border-color:#b83f56;background:#b83f56;color:#fff}html[data-theme="dark"] .connection-confirm{background:#1a252d;color:#edf3f6;border-color:#2d3b44}html[data-theme="dark"] .connection-confirm p{color:#a8bdc7}html[data-theme="dark"] .connection-confirm-actions button{background:#1a252d;color:#edf3f6;border-color:#3b4c57}html[data-theme="dark"] .connection-confirm-actions .connection-confirm-yes{background:#b83f56;color:#fff}';
+  let pendingRemoval = null;
+  function confirmRemove(user) {
+    return new Promise(resolve => {
+      pendingRemoval = resolve;
+      removeModal.querySelector('.connection-confirm-message').textContent = 'Are you sure you want to remove ' + nameFor(user) + ' from your friends?';
+      removeModal.classList.add('show');
+      removeModal.setAttribute('aria-hidden', 'false');
+      removeModal.querySelector('.connection-confirm-cancel').focus();
+    });
+  }
+  function closeRemoveConfirmation(answer) {
+    if (!pendingRemoval) return;
+    removeModal.classList.remove('show');
+    removeModal.setAttribute('aria-hidden', 'true');
+    const resolve = pendingRemoval;
+    pendingRemoval = null;
+    resolve(answer);
+  }
+  removeModal.querySelector('.connection-confirm-cancel').onclick = () => closeRemoveConfirmation(false);
+  removeModal.querySelector('.connection-confirm-yes').onclick = () => closeRemoveConfirmation(true);
+  removeModal.addEventListener('click', event => { if (event.target === removeModal) closeRemoveConfirmation(false); });
+  document.addEventListener('keydown', event => { if (event.key === 'Escape') closeRemoveConfirmation(false); });
+
   const nameFor = item => item.name || item.email;
   const initials = name => name.split(/\s+/).filter(Boolean).slice(0, 2).map(part => part[0]).join('').toUpperCase();
   function renderRequestButton() {
@@ -108,7 +137,7 @@
     }
   }
   async function removeFriend(user) {
-    if (!window.confirm('Remove ' + nameFor(user) + ' from your friends?')) return;
+    if (!(await confirmRemove(user))) return;
     const response = await api('/messages/requests/' + user.connectionId, { method: 'DELETE' });
     if (!response.ok) { status.textContent = (await response.json()).message || 'Unable to remove friend.'; return; }
     if (selected && selected.id === user.id) { input.disabled = true; send.disabled = true; status.textContent = 'Friend removed. Send a new request to message again.'; }
