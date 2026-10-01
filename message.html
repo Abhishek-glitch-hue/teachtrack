@@ -903,6 +903,16 @@
       z-index: 2;
     }
     .remove-friend-button:hover { background: #fdecef; }
+    .remove-friend-error {
+      margin: 12px 0 0;
+      padding: 7px 10px;
+      border: 1px solid #efc5cc;
+      border-radius: 8px;
+      background: #fff7f8;
+      color: #b42336;
+      font-size: 12px;
+    }
+    .remove-friend-error[hidden] { display: none; }
     html[data-theme="dark"] .remove-friend-button {
       background: rgba(198, 92, 120, 0.15);
       border-color: #8f4d61;
@@ -995,6 +1005,7 @@
     <div class="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="removeFriendTitle" aria-describedby="removeFriendMessage">
       <h2 id="removeFriendTitle">Remove friend?</h2>
       <p id="removeFriendMessage">Are you sure you want to remove this friend?</p>
+      <p id="removeFriendError" class="remove-friend-error" role="alert" hidden></p>
       <div class="confirm-actions">
         <button id="cancelRemoveFriend" type="button">Cancel</button>
         <button id="confirmRemoveFriend" class="confirm-remove" type="button">Yes, remove</button>
@@ -1387,6 +1398,8 @@
       function askRemoveFriend(friend) {
         if (!friend) return;
         friendPendingRemoval = friend;
+        $('removeFriendError').hidden = true;
+        $('removeFriendError').textContent = '';
         $('removeFriendMessage').textContent = 'Are you sure you want to remove ' + friend.name + ' from your friends?';
         $('removeFriendModal').classList.add('show');
         $('removeFriendModal').setAttribute('aria-hidden', 'false');
@@ -1394,15 +1407,17 @@
       }
       async function removeFriend(friend) {
         if (!friend) return;
-        closeRemoveFriendModal();
+        $('removeFriendError').hidden = true;
         $('removeFriendButton').disabled = true;
         try {
           const response = await api('/messages/connections/' + encodeURIComponent(friend.id), { method: 'DELETE' });
           const data = await response.json().catch(() => ({}));
           if (!response.ok) {
-            setStatus(data.message || 'Unable to remove friend.', true);
+            $('removeFriendError').textContent = data.message || 'Unable to remove friend.';
+            $('removeFriendError').hidden = false;
             return;
           }
+          closeRemoveFriendModal();
           state.activeUser = null;
           state.messages = [];
           $('chatName').textContent = 'Select a conversation';
@@ -1416,13 +1431,16 @@
           await loadData();
           setStatus('Friend removed.', true);
         } catch (error) {
-          setStatus('Unable to remove friend.', true);
+          $('removeFriendError').textContent = 'Unable to remove friend.';
+          $('removeFriendError').hidden = false;
         } finally {
           $('removeFriendButton').disabled = false;
         }
       }
 
-      $('removeFriendButton').addEventListener('click', () => askRemoveFriend(state.activeUser));
+      $('removeFriendButton').addEventListener('click', () => {
+        askRemoveFriend(state.activeUser);
+      });
       $('cancelRemoveFriend').addEventListener('click', closeRemoveFriendModal);
       $('confirmRemoveFriend').addEventListener('click', () => { if (friendPendingRemoval) removeFriend(friendPendingRemoval); });
       $('removeFriendModal').addEventListener('click', event => { if (event.target === $('removeFriendModal')) closeRemoveFriendModal(); });

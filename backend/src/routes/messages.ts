@@ -95,14 +95,18 @@ messageRouter.delete("/requests/:id", requireAuth, async (request, response) => 
     AND: [{ OR: [{ requesterId: request.user!.id }, { recipientId: request.user!.id }] }],
   } });
   if (!connection) return response.status(404).json({ message: "Connection not found." });
-  await prisma.messageConnection.delete({ where: { id: connection.id } });
   const otherUserId = connection.requesterId === request.user!.id ? connection.recipientId : connection.requesterId;
+  const otherUser = await prisma.user.findUnique({ where: { id: otherUserId }, select: { role: true } });
+  if (otherUser?.role === "ADMIN") return response.status(403).json({ message: "You cannot remove an admin." });
+  await prisma.messageConnection.delete({ where: { id: connection.id } });
   emitToUser(otherUserId, "message:connection-updated", { connectionId: connection.id, status: "REMOVED" });
   return response.status(204).end();
 });
 
 messageRouter.delete("/connections/:userId", requireAuth, async (request, response) => {
   const otherUserId = String(request.params.userId);
+  const otherUser = await prisma.user.findUnique({ where: { id: otherUserId }, select: { role: true } });
+  if (otherUser?.role === "ADMIN") return response.status(403).json({ message: "You cannot remove an admin." });
   const connection = await prisma.messageConnection.findFirst({
     where: {
       OR: [
