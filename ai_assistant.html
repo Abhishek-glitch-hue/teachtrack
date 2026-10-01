@@ -318,7 +318,9 @@
         Authorization: 'Bearer ' + authToken,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ message: text, history: chatHistory.slice(-12) })
+      // The API accepts at most six history messages (three user/assistant turns).
+      // Sending twelve made every request after the third exchange fail validation.
+      body: JSON.stringify({ message: text, history: chatHistory.slice(-6) })
     });
     const data = await response.json();
     if (!response.ok) throw new Error(data.message || 'AI service is temporarily unavailable.');
