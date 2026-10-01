@@ -1410,7 +1410,6 @@
           }
           $('messageInput').value = '';
           await openChat(receiver);
-          setStatus('Message sent.', false);
         } catch (error) {
           setStatus('Could not send this message right now.', true);
         } finally {
