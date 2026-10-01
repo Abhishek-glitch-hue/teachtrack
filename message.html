@@ -904,13 +904,42 @@
     }
     .remove-friend-button:hover { background: #fdecef; }
     .remove-friend-error {
-      margin: 12px 0 0;
-      padding: 7px 10px;
-      border: 1px solid #efc5cc;
-      border-radius: 8px;
-      background: #fff7f8;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 16px 0 0;
+      padding: 12px 14px;
+      border: 1px solid #f2bac4;
+      border-left: 4px solid #c43e56;
+      border-radius: 10px;
+      background: linear-gradient(110deg, #fff1f3, #fff8f9);
       color: #b42336;
-      font-size: 12px;
+      font-size: 13px;
+      font-weight: 650;
+      line-height: 1.45;
+    }
+    .remove-friend-error::before {
+      content: '!';
+      display: inline-grid;
+      flex: 0 0 22px;
+      width: 22px;
+      height: 22px;
+      place-items: center;
+      border-radius: 50%;
+      background: #c43e56;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 800;
+      line-height: 1;
+    }
+    html[data-theme="dark"] .remove-friend-error {
+      border-color: #713d49;
+      border-left-color: #ef8295;
+      background: linear-gradient(110deg, #38242b, #30232a);
+      color: #ffc2cc;
+    }
+    html[data-theme="dark"] .remove-friend-error::before {
+      background: #b83f56;
     }
     .remove-friend-error[hidden] { display: none; }
     html[data-theme="dark"] .remove-friend-button {
