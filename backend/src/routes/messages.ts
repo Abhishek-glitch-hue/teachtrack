@@ -20,8 +20,35 @@ async function canMessage(sender: { id: string; role: "ADMIN" | "TEACHER" }, rec
 }
 
 messageRouter.get("/unread-count", requireAuth, async (request, response) => {
+  // The sidebar badge must follow the same visibility rules as /conversations.
+  // Teacher-to-teacher messages are only visible after their connection is accepted.
+  let visibleSenderIds: string[] | undefined;
+  if (request.user!.role !== "ADMIN") {
+    const [connections, admins] = await Promise.all([
+      prisma.messageConnection.findMany({
+        where: {
+          status: "ACCEPTED",
+          OR: [{ requesterId: request.user!.id }, { recipientId: request.user!.id }],
+        },
+        select: { requesterId: true, recipientId: true },
+      }),
+      prisma.user.findMany({ where: { role: "ADMIN", isActive: true }, select: { id: true } }),
+    ]);
+    visibleSenderIds = [
+      ...admins.map((admin) => admin.id),
+      ...connections.map((connection) => connection.requesterId === request.user!.id
+        ? connection.recipientId
+        : connection.requesterId),
+    ];
+  }
+
   const count = await prisma.message.count({
-    where: { receiverId: request.user!.id, readAt: null, hiddenFromReceiver: false },
+    where: {
+      receiverId: request.user!.id,
+      readAt: null,
+      hiddenFromReceiver: false,
+      ...(visibleSenderIds ? { senderId: { in: visibleSenderIds } } : {}),
+    },
   });
   return response.json({ count });
 });
