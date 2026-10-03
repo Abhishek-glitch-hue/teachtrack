@@ -1929,6 +1929,13 @@
         badge.textContent = count > 99 ? '99+' : String(count);
         badge.style.display = count ? '' : 'none';
       });
+      var assistantFrame = document.querySelector('iframe[src="ai_assistant.html"]');
+      if (assistantFrame && assistantFrame.contentWindow) {
+        assistantFrame.contentWindow.postMessage({
+          type: 'teachtrack:unread-message-count',
+          count: count,
+        }, window.location.origin);
+      }
     }
 
     async function loadUnreadMessageCount() {
