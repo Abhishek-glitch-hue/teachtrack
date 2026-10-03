@@ -18,8 +18,9 @@ frontend build framework is required.
 4. `FRONTEND_URL` is configured in `render.yaml` as
    `https://teachtrack-mepk.onrender.com`. If the frontend service URL changes,
    update that value in Render and redeploy the API.
-5. Set the SMTP variables if password-reset email is required:
-   `SMTP_HOST`, `SMTP_USER`, `SMTP_PASS`, and `SMTP_FROM`.
+5. Set `BREVO_API_KEY` and `BREVO_SENDER_EMAIL` on the API service for
+   password-reset email. In Brevo, create a transactional API key and verify
+   the sender email address first. `BREVO_SENDER_NAME` defaults to `TeachTrack`.
 6. Deploy. The API runs `prisma migrate deploy` before starting, so all checked-in
    migrations are applied to the Render database.
 

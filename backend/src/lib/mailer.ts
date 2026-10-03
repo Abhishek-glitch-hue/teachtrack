@@ -1,33 +1,36 @@
-import nodemailer from "nodemailer";
+function brevoConfig() {
+  const apiKey = process.env.BREVO_API_KEY;
+  const senderEmail = process.env.BREVO_SENDER_EMAIL;
+  const senderName = process.env.BREVO_SENDER_NAME ?? "TeachTrack";
 
-function smtpConfig() {
-  const host = process.env.SMTP_HOST;
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
-  const from = process.env.SMTP_FROM;
-
-  if (!host || !user || !pass || !from) {
-    throw new Error("Email delivery is not configured. Set SMTP_HOST, SMTP_USER, SMTP_PASS, and SMTP_FROM in backend/.env.");
+  if (!apiKey || !senderEmail) {
+    throw new Error("Email delivery is not configured. Set BREVO_API_KEY and BREVO_SENDER_EMAIL.");
   }
 
-  const port = Number(process.env.SMTP_PORT ?? 587);
-  return { host, port, secure: process.env.SMTP_SECURE === "true" || port === 465, auth: { user, pass }, from };
+  return { apiKey, senderEmail, senderName };
 }
 
 export async function sendPasswordResetEmail(to: string, resetUrl: string) {
-  const config = smtpConfig();
-  const transporter = nodemailer.createTransport({
-    host: config.host,
-    port: config.port,
-    secure: config.secure,
-    auth: config.auth,
+  const config = brevoConfig();
+  const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: {
+      accept: "application/json",
+      "api-key": config.apiKey,
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      sender: { name: config.senderName, email: config.senderEmail },
+      to: [{ email: to }],
+      subject: "Reset your TeachTrack password",
+      htmlContent: `<p>We received a request to reset your TeachTrack password.</p><p><a href="${resetUrl}">Reset your password</a></p><p>This link expires in one hour. If you did not request this, you can safely ignore this email.</p>`,
+    }),
+    signal: AbortSignal.timeout(15_000),
   });
 
-  await transporter.sendMail({
-    from: config.from,
-    to,
-    subject: "Reset your TeachTrack password",
-    text: `We received a request to reset your TeachTrack password. Use this link within one hour: ${resetUrl}\n\nIf you did not request this, you can safely ignore this email.`,
-    html: `<p>We received a request to reset your TeachTrack password.</p><p><a href="${resetUrl}">Reset your password</a></p><p>This link expires in one hour. If you did not request it, you can safely ignore this email.</p>`,
-  });
+  if (!response.ok) {
+    const details = await response.text();
+    // Keep provider responses useful for diagnosis without logging the API key.
+    throw new Error(`Brevo email API returned ${response.status}: ${details.slice(0, 500)}`);
+  }
 }
