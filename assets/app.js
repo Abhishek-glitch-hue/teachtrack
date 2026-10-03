@@ -1927,7 +1927,8 @@
     function renderMessageBadge(count) {
       Array.prototype.slice.call(document.querySelectorAll('.nbadge')).forEach(function (badge) {
         badge.textContent = count > 99 ? '99+' : String(count);
-        badge.style.display = count ? '' : 'none';
+        badge.hidden = count === 0;
+        badge.setAttribute('aria-label', count + ' unread messages');
       });
       var assistantFrame = document.querySelector('iframe[src="ai_assistant.html"]');
       if (assistantFrame && assistantFrame.contentWindow) {
