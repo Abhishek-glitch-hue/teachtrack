@@ -495,6 +495,8 @@ html[data-theme="dark"] .dashboard-empty b{color:var(--ink)}
 .leave-approval-note:focus{border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-t)}
 .leave-approve-yes{border:1px solid var(--teal-d);background:var(--teal);color:#fff;border-radius:8px;padding:9px 14px;font:700 12px var(--fb);cursor:pointer;transition:transform .18s ease,box-shadow .18s ease}
 .leave-approve-yes:hover{transform:translateY(-1px);box-shadow:0 8px 16px -12px rgba(24,38,48,.45)}
+.leave-reject-yes{border:1px solid #b4232b;background:#b4232b;color:#fff;border-radius:8px;padding:9px 14px;font:700 12px var(--fb);cursor:pointer;transition:transform .18s ease,box-shadow .18s ease}
+.leave-reject-yes:hover{transform:translateY(-1px);box-shadow:0 8px 16px -12px rgba(180,35,43,.55)}
 .duties-table-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;color:var(--mut);font-size:10.5px}
 .duty-pages{display:flex;align-items:center;gap:5px}
 .duty-page-btn{min-width:27px;height:27px;padding:0 7px;border:1px solid var(--line);border-radius:7px;background:var(--card);color:var(--mut);font-size:11px;cursor:pointer;transition:background .18s ease,color .18s ease,border-color .18s ease,transform .18s ease}
