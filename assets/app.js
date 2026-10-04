@@ -1832,6 +1832,15 @@
         reason.textContent = leave.reason;
         details.appendChild(dates);
         details.appendChild(reason);
+        if (!isAdmin && leave.reviewerNote && leave.reviewerNote.trim()) {
+          var reviewerNote = document.createElement('div');
+          reviewerNote.className = 'leave-reviewer-note';
+          var noteLabel = document.createElement('strong');
+          noteLabel.textContent = 'Approver note: ';
+          reviewerNote.appendChild(noteLabel);
+          reviewerNote.appendChild(document.createTextNode(leave.reviewerNote));
+          details.appendChild(reviewerNote);
+        }
         main.appendChild(summaryBlock);
         main.appendChild(details);
 
