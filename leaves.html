@@ -172,6 +172,16 @@
         <div class="duty-confirm-actions"><button class="duty-confirm-no" type="button">Cancel</button><button class="leave-approve-yes" type="button">Yes, approve</button></div>
       </div>
     </section>
+    <section class="duty-confirm-modal" id="leaveRejectionModal" hidden role="dialog" aria-modal="true" aria-labelledby="leaveRejectionTitle" aria-describedby="leaveRejectionMessage">
+      <div class="duty-confirm-card">
+        <span class="kick">Review request</span>
+        <h2 id="leaveRejectionTitle">Reject this leave?</h2>
+        <p id="leaveRejectionMessage">Add a reason for rejecting this request.</p>
+        <label class="leave-approval-label" for="leaveRejectionNote">Reason for rejection <span>(required)</span></label>
+        <textarea class="leave-approval-note" id="leaveRejectionNote" rows="3" maxlength="500" placeholder="Write a reason for the teacher..."></textarea>
+        <div class="duty-confirm-actions"><button class="duty-confirm-no" type="button">Cancel</button><button class="leave-reject-yes" type="button">Reject</button></div>
+      </div>
+    </section>
     <section class="duty-confirm-modal" id="leaveConfirmModal" hidden role="dialog" aria-modal="true" aria-labelledby="leaveConfirmTitle" aria-describedby="leaveConfirmMessage">
       <div class="duty-confirm-card">
         <span class="kick">Confirm removal</span>

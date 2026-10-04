@@ -1666,8 +1666,49 @@
         });
         if (!approval) return;
         note = approval.note;
-      } else {
-        note = window.prompt('Reason for rejection:', '');
+      } else if (status === 'REJECTED') {
+        var rejectionModal = document.getElementById('leaveRejectionModal');
+        var rejectionInput = document.getElementById('leaveRejectionNote');
+        var rejectButton = rejectionModal && rejectionModal.querySelector('.leave-reject-yes');
+        var rejectCancelButton = rejectionModal && rejectionModal.querySelector('.duty-confirm-no');
+        if (!rejectionModal || !rejectionInput || !rejectButton || !rejectCancelButton) return;
+        rejectionInput.value = '';
+        rejectionModal.hidden = false;
+        document.body.classList.add('tt-modal-open');
+        rejectionInput.focus();
+        var rejection = await new Promise(function (resolve) {
+          function finish(result) {
+            rejectionModal.hidden = true;
+            document.body.classList.remove('tt-modal-open');
+            rejectButton.removeEventListener('click', accept);
+            rejectCancelButton.removeEventListener('click', decline);
+            rejectionModal.removeEventListener('click', outside);
+            document.removeEventListener('keydown', escape);
+            resolve(result);
+          }
+          function accept() {
+            var reason = rejectionInput.value.trim();
+            if (!reason) {
+              rejectionInput.setCustomValidity('Enter a reason for rejection.');
+              rejectionInput.reportValidity();
+              rejectionInput.addEventListener('input', function clearReasonError() {
+                rejectionInput.setCustomValidity('');
+                rejectionInput.removeEventListener('input', clearReasonError);
+              });
+              return;
+            }
+            finish({ note: reason });
+          }
+          function decline() { finish(null); }
+          function outside(event) { if (event.target === rejectionModal) finish(null); }
+          function escape(event) { if (event.key === 'Escape') finish(null); }
+          rejectButton.addEventListener('click', accept);
+          rejectCancelButton.addEventListener('click', decline);
+          rejectionModal.addEventListener('click', outside);
+          document.addEventListener('keydown', escape);
+        });
+        if (!rejection) return;
+        note = rejection.note;
       }
       if (note === null) return;
 
