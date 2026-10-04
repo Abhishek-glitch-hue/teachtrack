@@ -1635,6 +1635,32 @@
       return button;
     }
 
+    function showAdminNote(note) {
+      var noteModal = document.getElementById('leaveNoteModal');
+      var noteMessage = document.getElementById('leaveNoteMessage');
+      var closeButton = noteModal && noteModal.querySelector('.leave-note-close');
+      var doneButton = noteModal && noteModal.querySelector('.leave-note-done');
+      if (!noteModal || !noteMessage || !closeButton || !doneButton) return;
+      noteMessage.textContent = note;
+      noteModal.hidden = false;
+      document.body.classList.add('tt-modal-open');
+      closeButton.focus();
+      function close() {
+        noteModal.hidden = true;
+        document.body.classList.remove('tt-modal-open');
+        closeButton.removeEventListener('click', close);
+        doneButton.removeEventListener('click', close);
+        noteModal.removeEventListener('click', outside);
+        document.removeEventListener('keydown', escape);
+      }
+      function outside(event) { if (event.target === noteModal) close(); }
+      function escape(event) { if (event.key === 'Escape') close(); }
+      closeButton.addEventListener('click', close);
+      doneButton.addEventListener('click', close);
+      noteModal.addEventListener('click', outside);
+      document.addEventListener('keydown', escape);
+    }
+
     async function reviewLeave(leave, status) {
       var note;
       if (status === 'APPROVED') {
@@ -1827,20 +1853,21 @@
         var dates = document.createElement('div');
         dates.className = 'leave-date';
         dates.textContent = formatDate(leave.startDate) + ' – ' + formatDate(leave.endDate);
+        if (!isAdmin && leave.reviewerNote && leave.reviewerNote.trim()) {
+          var dateLine = document.createElement('div');
+          dateLine.className = 'leave-date-line';
+          dateLine.appendChild(dates);
+          var noteButton = actionButton('Note', 'leave-note-trigger', function () { showAdminNote(leave.reviewerNote); });
+          noteButton.setAttribute('aria-label', 'Read admin note for leave from ' + formatDate(leave.startDate));
+          dateLine.appendChild(noteButton);
+          details.appendChild(dateLine);
+        } else {
+          details.appendChild(dates);
+        }
         var reason = document.createElement('div');
         reason.className = 'leave-reason';
         reason.textContent = leave.reason;
-        details.appendChild(dates);
         details.appendChild(reason);
-        if (!isAdmin && leave.reviewerNote && leave.reviewerNote.trim()) {
-          var reviewerNote = document.createElement('div');
-          reviewerNote.className = 'leave-reviewer-note';
-          var noteLabel = document.createElement('strong');
-          noteLabel.textContent = 'Approver note: ';
-          reviewerNote.appendChild(noteLabel);
-          reviewerNote.appendChild(document.createTextNode(leave.reviewerNote));
-          details.appendChild(reviewerNote);
-        }
         main.appendChild(summaryBlock);
         main.appendChild(details);
 
