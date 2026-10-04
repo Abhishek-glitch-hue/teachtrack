@@ -4,6 +4,7 @@ import { prisma } from "../lib/prisma.ts";
 import { emitToUser } from "../lib/socket.ts";
 import {
   exceedsMonthlyLeaveAllowance,
+  leaveDaysInRange,
   uniqueLeaveDaysInCurrentMonth,
   MONTHLY_LEAVE_ALLOWANCE,
 } from "../lib/leaveBalance.ts";
@@ -70,6 +71,12 @@ leaveRouter.post("/", requireAuth, async (request, response) => {
   ) {
     return response.status(409).json({
       message: `You can take a maximum of ${MONTHLY_LEAVE_ALLOWANCE} leave days per month.`,
+    });
+  }
+
+  if (leaveDaysInRange(parsed.data.startDate, parsed.data.endDate) > MONTHLY_LEAVE_ALLOWANCE) {
+    return response.status(409).json({
+      message: `A single leave request cannot exceed ${MONTHLY_LEAVE_ALLOWANCE} days.`,
     });
   }
 
@@ -239,6 +246,15 @@ leaveRouter.patch(
     ) {
       return response.status(409).json({
         message: `Approving this request would exceed the ${MONTHLY_LEAVE_ALLOWANCE}-day monthly leave allowance.`,
+      });
+    }
+
+    if (
+      parsed.data.status === "APPROVED" &&
+      leaveDaysInRange(existingLeave.startDate, existingLeave.endDate) > MONTHLY_LEAVE_ALLOWANCE
+    ) {
+      return response.status(409).json({
+        message: `This request exceeds the ${MONTHLY_LEAVE_ALLOWANCE}-day leave allowance and cannot be approved.`,
       });
     }
 

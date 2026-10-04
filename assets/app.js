@@ -1591,6 +1591,8 @@
     function leaveDays(leave) {
       var start = new Date(leave.startDate);
       var end = new Date(leave.endDate);
+      start.setHours(0, 0, 0, 0);
+      end.setHours(0, 0, 0, 0);
       return Math.max(1, Math.round((end - start) / 86400000) + 1);
     }
 
@@ -1913,10 +1915,20 @@
 
       try {
         var startDate = document.getElementById('leaveFrom').value;
+        var endDate = document.getElementById('leaveTo').value;
+        var startDay = new Date(startDate + 'T00:00:00');
+        var endDay = new Date(endDate + 'T00:00:00');
+        var requestedDays = Math.round((endDay - startDay) / 86400000) + 1;
         var today = new Date();
         today.setHours(0, 0, 0, 0);
         if (startDate && new Date(startDate + 'T00:00') < today) {
           throw new Error('Leave cannot start before today.');
+        }
+        if (!startDate || !endDate || requestedDays < 1) {
+          throw new Error('End date cannot be earlier than the start date.');
+        }
+        if (requestedDays > 6) {
+          throw new Error('A single leave request cannot exceed 6 days. Your monthly allowance is 6 days.');
         }
 
         var response = await api('/leaves', {
@@ -1925,7 +1937,7 @@
           body: JSON.stringify({
             leaveType: document.getElementById('leaveType').value,
             startDate: startDate,
-            endDate: document.getElementById('leaveTo').value,
+            endDate: endDate,
             reason: document.getElementById('leaveReason').value
           })
         });

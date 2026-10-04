@@ -1,5 +1,13 @@
 export const MONTHLY_LEAVE_ALLOWANCE = 6;
 
+export function leaveDaysInRange(startDate: Date, endDate: Date) {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  start.setUTCHours(0, 0, 0, 0);
+  end.setUTCHours(0, 0, 0, 0);
+  return Math.max(0, Math.floor((end.getTime() - start.getTime()) / 86400000) + 1);
+}
+
 export function leaveDaysInCurrentMonth(
   startDate: Date,
   endDate: Date,
@@ -10,7 +18,7 @@ export function leaveDaysInCurrentMonth(
   const start = new Date(Math.max(startDate.getTime(), monthStart.getTime()));
   const end = new Date(Math.min(endDate.getTime(), monthEnd.getTime()));
 
-  return end >= start ? Math.floor((end.getTime() - start.getTime()) / 86400000) + 1 : 0;
+  return end >= start ? leaveDaysInRange(start, end) : 0;
 }
 
 export function uniqueLeaveDaysInCurrentMonth(
