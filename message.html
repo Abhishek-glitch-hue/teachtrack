@@ -621,6 +621,7 @@
     }
 
     .message {
+      position: relative;
       display: flex;
       flex-direction: column;
       gap: 6px;
@@ -656,9 +657,12 @@
       font-size: 11px;
     }
     .message.mine .meta { justify-content: flex-end; }
-    .message-actions { display: flex; gap: 8px; margin-top: 2px; }
-    .message-action { border: 0; background: transparent; color: var(--muted); font-family: inherit; font-size: 11px; font-weight: 600; cursor: pointer; padding: 2px 4px; }
-    .message-action:hover { color: #087f5b; text-decoration: underline; }
+    .message-menu-trigger { position: absolute; z-index: 6; top: -10px; right: -8px; width: 27px; height: 25px; border: 0; border-radius: 7px; background: var(--surface); color: var(--muted); font-size: 19px; line-height: 1; cursor: pointer; opacity: .65; }
+    .message-menu-trigger:hover, .message-menu-trigger[aria-expanded="true"] { background: var(--surface-alt); opacity: 1; }
+    .message-actions { display: none; position: absolute; z-index: 5; top: 27px; right: 0; min-width: 150px; padding: 5px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); box-shadow: 0 8px 24px rgba(25,35,45,.18); }
+    .message-actions.show { display: grid; }
+    .message-action { width: 100%; border: 0; border-radius: 6px; background: transparent; color: var(--text); font-family: inherit; font-size: 13px; text-align: left; cursor: pointer; padding: 9px 10px; }
+    .message-action:hover { background: var(--surface-alt); color: #087f5b; }
     .reply-quote { display: block; margin-bottom: 7px; padding: 5px 8px; border-left: 3px solid #10a875; border-radius: 4px; background: rgba(16,168,117,.08); color: var(--muted); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; }
     .reply-composer { display: none; align-items: center; gap: 10px; padding: 8px 16px; border-top: 1px solid var(--line); background: var(--surface); }
     .reply-composer.show { display: flex; }
@@ -1248,6 +1252,14 @@
           meta.innerHTML = `${formatTime(message.createdAt)}${message.senderId === state.me.id ? '<span class="tick">✓✓</span>' : ''}`;
           wrap.appendChild(bubble);
           wrap.appendChild(meta);
+          const menuTrigger = document.createElement('button');
+          menuTrigger.className = 'message-menu-trigger';
+          menuTrigger.type = 'button';
+          menuTrigger.dataset.messageMenu = 'true';
+          menuTrigger.setAttribute('aria-label', 'Message options');
+          menuTrigger.setAttribute('aria-expanded', 'false');
+          menuTrigger.textContent = '⋮';
+          wrap.appendChild(menuTrigger);
           const actions = document.createElement('div');
           actions.className = 'message-actions';
           const replyButton = document.createElement('button');
@@ -1440,6 +1452,16 @@
       }
       $('cancelReply').addEventListener('click', clearReply);
       $('messageArea').addEventListener('click', async (event) => {
+        const menuTrigger = event.target.closest('[data-message-menu]');
+        if (menuTrigger) {
+          const menu = menuTrigger.nextElementSibling;
+          const opening = !menu.classList.contains('show');
+          $('messageArea').querySelectorAll('.message-actions.show').forEach(item => item.classList.remove('show'));
+          $('messageArea').querySelectorAll('[data-message-menu][aria-expanded="true"]').forEach(item => item.setAttribute('aria-expanded', 'false'));
+          menu.classList.toggle('show', opening);
+          menuTrigger.setAttribute('aria-expanded', String(opening));
+          return;
+        }
         const button = event.target.closest('[data-message-action]');
         if (!button) return;
         const message = state.messages.find(item => item.id === button.dataset.messageId);
@@ -1459,6 +1481,11 @@
             renderChatMessages();
           } catch (error) { setStatus(error.message || 'Unable to delete this message.', true); }
         }
+      });
+      document.addEventListener('click', (event) => {
+        if (event.target.closest('#messageArea .message-menu-trigger, #messageArea .message-actions')) return;
+        $('messageArea').querySelectorAll('.message-actions.show').forEach(item => item.classList.remove('show'));
+        $('messageArea').querySelectorAll('[data-message-menu][aria-expanded="true"]').forEach(item => item.setAttribute('aria-expanded', 'false'));
       });
 
       $('composer').addEventListener('submit', async (event) => {
