@@ -661,7 +661,8 @@
     .message.mine .message-hover-actions { right: 0; left: auto; }
     .message-reaction-trigger, .message-reply-trigger, .message-menu-trigger { display: grid; place-items: center; width: 27px; height: 27px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--text); cursor: pointer; }
     .message-reaction-trigger { font-size: 17px; line-height: 1; }
-    .message-reaction-picker { display: none; position: absolute; z-index: 8; top: -42px; right: 0; align-items: center; gap: 3px; padding: 5px 8px; border: 1px solid var(--line); border-radius: 24px; background: var(--surface); box-shadow: 0 3px 12px rgba(25,35,45,.14); white-space: nowrap; }
+    .message-reaction-picker { display: none; position: absolute; z-index: 8; top: -42px; right: -96px; align-items: center; gap: 3px; padding: 5px 8px; border: 1px solid var(--line); border-radius: 24px; background: var(--surface); box-shadow: 0 3px 12px rgba(25,35,45,.14); white-space: nowrap; }
+    .message.mine .message-reaction-picker { right: 0; }
     .message-reaction-picker.show { display: flex; }
     .message-row.reaction-picker-open { margin-top: 44px; }
     .message-reaction-choice { display: grid; place-items: center; width: 30px; height: 30px; padding: 0; border: 0; border-radius: 50%; background: transparent; font-size: 21px; cursor: pointer; }
