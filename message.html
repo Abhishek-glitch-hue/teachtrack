@@ -657,13 +657,11 @@
       font-size: 11px;
     }
     .message.mine .meta { justify-content: flex-end; }
-    .message-hover-actions { position: absolute; z-index: 6; top: -42px; right: -24px; display: flex; flex-wrap: nowrap; align-items: center; gap: 2px; padding: 5px 8px; border: 1px solid var(--line); border-radius: 24px; background: var(--surface); box-shadow: 0 3px 12px rgba(25,35,45,.14); opacity: 0; pointer-events: none; transition: opacity .12s ease; white-space: nowrap; }
+    .message-hover-actions { position: absolute; z-index: 6; top: 2px; right: -96px; display: flex; align-items: center; gap: 2px; padding: 2px 4px; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); box-shadow: 0 2px 8px rgba(25,35,45,.14); opacity: 0; pointer-events: none; transition: opacity .12s ease; }
     .message.mine .message-hover-actions { right: 0; left: auto; }
-    .message-reaction-trigger, .message-reply-trigger, .message-menu-trigger { display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--text); cursor: pointer; }
-    .message-reaction-trigger { font-size: 19px; line-height: 1; }
-    .message-reactions { display: flex; flex: 0 0 auto; align-items: center; gap: 2px; }
-    .message-reaction-emoji { width: 30px; height: 30px; padding: 0; border: 0; border-radius: 50%; background: transparent; font-size: 21px; line-height: 1; cursor: pointer; }
-    .message-reaction-emoji:hover, .message-reaction-trigger:hover, .message-reply-trigger:hover, .message-menu-trigger:hover, .message-menu-trigger[aria-expanded="true"] { background: var(--surface-alt); transform: scale(1.08); }
+    .message-reaction-trigger, .message-reply-trigger, .message-menu-trigger { display: grid; place-items: center; width: 27px; height: 27px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--text); cursor: pointer; }
+    .message-reaction-trigger { font-size: 17px; line-height: 1; }
+    .message-reaction-trigger:hover, .message-reply-trigger:hover, .message-menu-trigger:hover, .message-menu-trigger[aria-expanded="true"] { background: var(--surface-alt); }
     .message-reply-trigger { font-size: 19px; line-height: 1; }
     .message-menu-trigger { font-size: 18px; line-height: 1; }
     .message:hover .message-hover-actions, .message:focus-within .message-hover-actions, .message-menu-trigger[aria-expanded="true"] { opacity: 1; pointer-events: auto; }
@@ -1283,25 +1281,13 @@
           wrap.appendChild(meta);
           const hoverActions = document.createElement('div');
           hoverActions.className = 'message-hover-actions';
-          const reactions = document.createElement('span');
-          reactions.className = 'message-reactions';
-          ['👍', '❤️', '😂', '😮', '😢', '🙏'].forEach(emoji => {
-            const reaction = document.createElement('button');
-            reaction.className = 'message-reaction-emoji';
-            reaction.type = 'button';
-            reaction.textContent = emoji;
-            reaction.setAttribute('aria-label', 'React with ' + emoji);
-            reaction.title = emoji;
-            reactions.appendChild(reaction);
-          });
-          const moreReactions = document.createElement('button');
-          moreReactions.className = 'message-reaction-trigger';
-          moreReactions.type = 'button';
-          moreReactions.setAttribute('aria-label', 'More reactions');
-          moreReactions.title = 'More reactions';
-          moreReactions.textContent = '+';
-          reactions.appendChild(moreReactions);
-          hoverActions.appendChild(reactions);
+          const reactionTrigger = document.createElement('button');
+          reactionTrigger.className = 'message-reaction-trigger';
+          reactionTrigger.type = 'button';
+          reactionTrigger.setAttribute('aria-label', 'React to message');
+          reactionTrigger.title = 'React to message';
+          reactionTrigger.textContent = '☺';
+          hoverActions.appendChild(reactionTrigger);
           const replyTrigger = document.createElement('button');
           replyTrigger.className = 'message-reply-trigger';
           replyTrigger.type = 'button';
