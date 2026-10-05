@@ -685,8 +685,7 @@
     .message.mine .message-hover-actions { right: auto; left: -92px; }
     .message-reaction-trigger, .message-reply-trigger, .message-menu-trigger { position: relative; z-index: 1; display: grid; place-items: center; width: 27px; height: 27px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--text); cursor: pointer; }
     .message-reaction-trigger { font-size: 17px; line-height: 1; }
-    .message-reaction-picker { display: none; position: absolute; z-index: 8; top: -42px; right: -92px; align-items: center; gap: 3px; padding: 5px 8px; border: 1px solid var(--line); border-radius: 24px; background: var(--surface); box-shadow: 0 3px 12px rgba(25,35,45,.14); white-space: nowrap; }
-    .message.mine .message-reaction-picker { right: auto; left: -92px; }
+    .message-reaction-picker { display: none; position: absolute; z-index: 8; top: -42px; left: 0; align-items: center; gap: 3px; padding: 5px 8px; border: 1px solid var(--line); border-radius: 24px; background: var(--surface); box-shadow: 0 3px 12px rgba(25,35,45,.14); white-space: nowrap; }
     .message-reaction-picker.show { display: flex; }
     .message-row.reaction-picker-open { margin-top: 50px; }
     .message-row.message-menu-open { margin-bottom: 58px; }
@@ -1565,6 +1564,23 @@
         $('replyComposer').classList.remove('show');
         $('replyComposerText').textContent = '';
       }
+      function positionReactionPicker(messageWrap, picker) {
+        const areaRect = $('messageArea').getBoundingClientRect();
+        const wrapRect = messageWrap.getBoundingClientRect();
+        const controls = messageWrap.querySelector('.message-hover-actions');
+        const controlsRect = controls.getBoundingClientRect();
+        const pickerRect = picker.getBoundingClientRect();
+        const inset = 8;
+        const leftEdge = areaRect.left + inset;
+        const rightEdge = areaRect.right - inset;
+        const desiredLeft = controlsRect.right - pickerRect.width;
+        const clampedLeft = Math.max(leftEdge, Math.min(desiredLeft, rightEdge - pickerRect.width));
+        let top = controlsRect.top - pickerRect.height - 6;
+        if (top < areaRect.top + inset) top = controlsRect.bottom + 6;
+        picker.style.left = `${clampedLeft - wrapRect.left}px`;
+        picker.style.right = 'auto';
+        picker.style.top = `${top - wrapRect.top}px`;
+      }
       function openDeleteMessageDialog(message) {
         state.pendingMessageDelete = message;
         $('deleteForEveryone').hidden = message.senderId !== state.me.id;
@@ -1669,6 +1685,7 @@
           $('messageArea').querySelectorAll('[data-message-menu][aria-expanded="true"]').forEach(item => item.setAttribute('aria-expanded', 'false'));
           picker.classList.toggle('show', !wasOpen);
           messageWrap.closest('.message-row').classList.toggle('reaction-picker-open', !wasOpen);
+          if (!wasOpen) positionReactionPicker(messageWrap, picker);
           return;
         }
         const reactionChoice = event.target.closest('[data-reaction-choice]');
