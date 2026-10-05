@@ -657,7 +657,8 @@
       font-size: 11px;
     }
     .message.mine .meta { justify-content: flex-end; }
-    .message-menu-trigger { position: absolute; z-index: 6; top: -10px; right: -8px; width: 27px; height: 25px; border: 0; border-radius: 7px; background: var(--surface); color: var(--muted); font-size: 19px; line-height: 1; cursor: pointer; opacity: .65; }
+    .message-menu-trigger { position: absolute; z-index: 6; top: 2px; right: 2px; width: 27px; height: 25px; border: 0; border-radius: 7px; background: var(--surface); color: var(--muted); font-size: 17px; line-height: 1; cursor: pointer; opacity: 0; pointer-events: none; transition: opacity .12s ease; }
+    .message:hover .message-menu-trigger, .message:focus-within .message-menu-trigger, .message-menu-trigger[aria-expanded="true"] { opacity: .85; pointer-events: auto; }
     .message-menu-trigger:hover, .message-menu-trigger[aria-expanded="true"] { background: var(--surface-alt); opacity: 1; }
     .message-actions { display: none; position: absolute; z-index: 5; top: 27px; right: 0; min-width: 150px; padding: 5px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); box-shadow: 0 8px 24px rgba(25,35,45,.18); }
     .message-actions.show { display: grid; }
@@ -1258,7 +1259,7 @@
           menuTrigger.dataset.messageMenu = 'true';
           menuTrigger.setAttribute('aria-label', 'Message options');
           menuTrigger.setAttribute('aria-expanded', 'false');
-          menuTrigger.textContent = '⋮';
+          menuTrigger.textContent = '⌄';
           wrap.appendChild(menuTrigger);
           const actions = document.createElement('div');
           actions.className = 'message-actions';
