@@ -8,6 +8,7 @@ const messageRouter = Router();
 const sendMessageSchema = z.object({
   receiverId: z.string().min(1),
   content: z.string().trim().min(1).max(2_000),
+  replyToId: z.string().min(1).optional(),
 });
 const connectionSchema = z.object({ recipientId: z.string().min(1) });
 
@@ -202,6 +203,14 @@ messageRouter.delete("/:userId", requireAuth, async (request, response) => {
   return response.json({ hiddenCount: sent.count + received.count });
 });
 
+messageRouter.delete("/item/:messageId", requireAuth, async (request, response) => {
+  const messageId = Array.isArray(request.params.messageId) ? request.params.messageId[0] : request.params.messageId;
+  const message = await prisma.message.findFirst({ where: { id: messageId, senderId: request.user!.id, hiddenFromSender: false } });
+  if (!message) return response.status(404).json({ message: "Message not found." });
+  await prisma.message.update({ where: { id: message.id }, data: { hiddenFromSender: true } });
+  return response.status(204).end();
+});
+
 messageRouter.get("/:userId", requireAuth, async (request, response) => {
   const userId = Array.isArray(request.params.userId) ? request.params.userId[0] : request.params.userId;
   const user = await prisma.user.findFirst({ where: { id: userId, isActive: true }, select: { id: true, name: true, email: true, department: true, role: true } });
@@ -224,6 +233,7 @@ messageRouter.get("/:userId", requireAuth, async (request, response) => {
       { senderId: request.user!.id, receiverId: user.id, hiddenFromSender: false },
       { senderId: user.id, receiverId: request.user!.id, hiddenFromReceiver: false },
     ] },
+    include: { replyTo: { select: { id: true, content: true, senderId: true } } },
     orderBy: { createdAt: "asc" },
   });
   return response.json({ user, messages, canMessage: true });
@@ -238,8 +248,18 @@ messageRouter.post("/", requireAuth, async (request, response) => {
   if (!receiver) return response.status(404).json({ message: "Recipient not found." });
   if (!(await canMessage(request.user!, receiver))) return response.status(403).json({ message: "This teacher must accept a connection request before messaging." });
 
+  let replyToId: string | undefined;
+  if (parsed.data.replyToId) {
+    const replyTo = await prisma.message.findFirst({ where: { id: parsed.data.replyToId, OR: [
+      { senderId: request.user!.id, receiverId: receiver.id, hiddenFromSender: false },
+      { senderId: receiver.id, receiverId: request.user!.id, hiddenFromReceiver: false },
+    ] } });
+    if (!replyTo) return response.status(404).json({ message: "The message you are replying to is unavailable." });
+    replyToId = replyTo.id;
+  }
   const message = await prisma.message.create({
-    data: { senderId: request.user!.id, receiverId: receiver.id, content: parsed.data.content },
+    data: { senderId: request.user!.id, receiverId: receiver.id, content: parsed.data.content, replyToId },
+    include: { replyTo: { select: { id: true, content: true, senderId: true } } },
   });
   emitToUser(receiver.id, "message:new", { message, sender: { id: request.user!.id, name: request.user!.name } });
   return response.status(201).json({ message });

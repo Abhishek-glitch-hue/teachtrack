@@ -314,6 +314,10 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
+    .person-info {
+      flex: 1;
+      min-width: 0;
+    }
     .person-time {
       color: var(--muted);
       font-size: 11px;
@@ -652,6 +656,14 @@
       font-size: 11px;
     }
     .message.mine .meta { justify-content: flex-end; }
+    .message-actions { display: flex; gap: 8px; margin-top: 2px; }
+    .message-action { border: 0; background: transparent; color: var(--muted); font-family: inherit; font-size: 11px; font-weight: 600; cursor: pointer; padding: 2px 4px; }
+    .message-action:hover { color: #087f5b; text-decoration: underline; }
+    .reply-quote { display: block; margin-bottom: 7px; padding: 5px 8px; border-left: 3px solid #10a875; border-radius: 4px; background: rgba(16,168,117,.08); color: var(--muted); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; }
+    .reply-composer { display: none; align-items: center; gap: 10px; padding: 8px 16px; border-top: 1px solid var(--line); background: var(--surface); }
+    .reply-composer.show { display: flex; }
+    .reply-composer-text { flex: 1; min-width: 0; color: var(--muted); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .reply-composer button { border: 0; background: transparent; color: var(--muted); cursor: pointer; font-size: 18px; }
     .tick {
       font-weight: 700;
       letter-spacing: -3px;
@@ -1009,6 +1021,8 @@
         <p class="empty-state">Your conversations and messages are private to your account.</p>
       </div>
 
+      <div id="replyComposer" class="reply-composer" aria-live="polite"><span id="replyComposerText" class="reply-composer-text"></span><button id="cancelReply" type="button" aria-label="Cancel reply">×</button></div>
+
       <form id="composer" class="composer">
         <div class="composer-main">
           <textarea id="messageInput" maxlength="2000" placeholder="Type a message..." disabled></textarea>
@@ -1059,7 +1073,8 @@
         filter: 'all',
         peopleSearch: '',
         messages: [],
-        conversations: []
+        conversations: [],
+        replyTo: null
       };
 
       const api = (path, options = {}) => {
@@ -1218,12 +1233,40 @@
           wrap.dataset.searchText = String(message.content || '');
           const bubble = document.createElement('div');
           bubble.className = 'bubble';
-          bubble.textContent = message.content;
+          if (message.replyTo) {
+            const quote = document.createElement('span');
+            quote.className = 'reply-quote';
+            quote.textContent = message.replyTo.content;
+            quote.title = 'Reply to message';
+            bubble.appendChild(quote);
+          }
+          const body = document.createElement('span');
+          body.textContent = message.content;
+          bubble.appendChild(body);
           const meta = document.createElement('div');
           meta.className = 'meta';
           meta.innerHTML = `${formatTime(message.createdAt)}${message.senderId === state.me.id ? '<span class="tick">✓✓</span>' : ''}`;
           wrap.appendChild(bubble);
           wrap.appendChild(meta);
+          const actions = document.createElement('div');
+          actions.className = 'message-actions';
+          const replyButton = document.createElement('button');
+          replyButton.className = 'message-action';
+          replyButton.type = 'button';
+          replyButton.dataset.messageAction = 'reply';
+          replyButton.dataset.messageId = message.id;
+          replyButton.textContent = 'Reply';
+          actions.appendChild(replyButton);
+          if (mine) {
+            const deleteButton = document.createElement('button');
+            deleteButton.className = 'message-action';
+            deleteButton.type = 'button';
+            deleteButton.dataset.messageAction = 'delete';
+            deleteButton.dataset.messageId = message.id;
+            deleteButton.textContent = 'Delete for me';
+            actions.appendChild(deleteButton);
+          }
+          wrap.appendChild(actions);
           row.appendChild(wrap);
           container.appendChild(row);
         });
@@ -1336,6 +1379,7 @@
       }
 
       async function openChat(user) {
+        clearReply();
         try {
           const response = await api(`/messages/${user.id}`);
           const data = await response.json();
@@ -1389,6 +1433,34 @@
         }
       });
 
+      function clearReply() {
+        state.replyTo = null;
+        $('replyComposer').classList.remove('show');
+        $('replyComposerText').textContent = '';
+      }
+      $('cancelReply').addEventListener('click', clearReply);
+      $('messageArea').addEventListener('click', async (event) => {
+        const button = event.target.closest('[data-message-action]');
+        if (!button) return;
+        const message = state.messages.find(item => item.id === button.dataset.messageId);
+        if (!message) return;
+        if (button.dataset.messageAction === 'reply') {
+          state.replyTo = message;
+          $('replyComposerText').textContent = 'Replying to: ' + message.content;
+          $('replyComposer').classList.add('show');
+          $('messageInput').focus();
+          return;
+        }
+        if (button.dataset.messageAction === 'delete' && window.confirm('Delete this message for you?')) {
+          try {
+            const response = await api('/messages/item/' + encodeURIComponent(message.id), { method: 'DELETE' });
+            if (!response.ok) throw new Error('Unable to delete this message.');
+            state.messages = state.messages.filter(item => item.id !== message.id);
+            renderChatMessages();
+          } catch (error) { setStatus(error.message || 'Unable to delete this message.', true); }
+        }
+      });
+
       $('composer').addEventListener('submit', async (event) => {
         event.preventDefault();
         const receiver = state.activeUser;
@@ -1400,7 +1472,7 @@
           const response = await api('/messages', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ receiverId: receiver.id, content })
+            body: JSON.stringify({ receiverId: receiver.id, content, ...(state.replyTo ? { replyToId: state.replyTo.id } : {}) })
           });
           const data = await response.json();
           if (!response.ok) {
@@ -1409,6 +1481,7 @@
             return;
           }
           $('messageInput').value = '';
+          clearReply();
           await openChat(receiver);
         } catch (error) {
           setStatus('Could not send this message right now.', true);

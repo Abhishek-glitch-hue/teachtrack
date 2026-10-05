@@ -51,32 +51,32 @@ enum ConnectionStatus {
 }
 
 model User {
-  id             String          @id @default(cuid())
-  name           String
-  email          String          @unique
-  passwordHash   String
-  department     String?
-  phone          String?
-  campus         String?
-  role           Role            @default(TEACHER)
-  isActive       Boolean         @default(true)
-  lastLoginAt    DateTime?
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
+  id           String    @id @default(cuid())
+  name         String
+  email        String    @unique
+  passwordHash String
+  department   String?
+  phone        String?
+  campus       String?
+  role         Role      @default(TEACHER)
+  isActive     Boolean   @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 
-  leaveRequests  LeaveRequest[]  @relation("TeacherLeaves")
-  reviewedLeaves LeaveRequest[]  @relation("AdminReviews")
-  sentMessages   Message[]       @relation("SentMessages")
-  receivedMessages Message[]     @relation("ReceivedMessages")
-  duties         Duty[]          @relation("AssignedDuties")
-  events         CalendarEvent[] @relation("UserEvents")
-  notifications  Notification[]
-  timetableLectures TimetableLecture[]
-  timetableSettings TimetableSetting[]
-  sentConnectionRequests MessageConnection[] @relation("ConnectionRequester")
-  receivedConnectionRequests MessageConnection[] @relation("ConnectionRecipient")
-  passwordResetTokens PasswordResetToken[]
-  aiDailyUsages AiDailyUsage[]
+  leaveRequests              LeaveRequest[]       @relation("TeacherLeaves")
+  reviewedLeaves             LeaveRequest[]       @relation("AdminReviews")
+  sentMessages               Message[]            @relation("SentMessages")
+  receivedMessages           Message[]            @relation("ReceivedMessages")
+  duties                     Duty[]               @relation("AssignedDuties")
+  events                     CalendarEvent[]      @relation("UserEvents")
+  notifications              Notification[]
+  timetableLectures          TimetableLecture[]
+  timetableSettings          TimetableSetting[]
+  sentConnectionRequests     MessageConnection[]  @relation("ConnectionRequester")
+  receivedConnectionRequests MessageConnection[]  @relation("ConnectionRecipient")
+  passwordResetTokens        PasswordResetToken[]
+  aiDailyUsages              AiDailyUsage[]
 }
 
 model AiDailyUsage {
@@ -94,11 +94,11 @@ model AiDailyUsage {
 }
 
 model PasswordResetToken {
-  id        String   @id @default(cuid())
-  tokenHash String   @unique
+  id        String    @id @default(cuid())
+  tokenHash String    @unique
   expiresAt DateTime
   usedAt    DateTime?
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
   userId    String
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -107,43 +107,47 @@ model PasswordResetToken {
 }
 
 model LeaveRequest {
-  id             String      @id @default(cuid())
-  teacherId      String
-  leaveType      String
-  startDate      DateTime
-  endDate        DateTime
-  reason         String
-  status         LeaveStatus @default(PENDING)
-  reviewerNote   String?
-  reviewedById   String?
-  reviewedAt     DateTime?
-  hiddenFromTeacher Boolean @default(false)
-  hiddenFromAdmin   Boolean @default(false)
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @updatedAt
+  id                String      @id @default(cuid())
+  teacherId         String
+  leaveType         String
+  startDate         DateTime
+  endDate           DateTime
+  reason            String
+  status            LeaveStatus @default(PENDING)
+  reviewerNote      String?
+  reviewedById      String?
+  reviewedAt        DateTime?
+  hiddenFromTeacher Boolean     @default(false)
+  hiddenFromAdmin   Boolean     @default(false)
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
 
-  teacher        User        @relation("TeacherLeaves", fields: [teacherId], references: [id], onDelete: Cascade)
-  reviewedBy     User?       @relation("AdminReviews", fields: [reviewedById], references: [id])
+  teacher    User  @relation("TeacherLeaves", fields: [teacherId], references: [id], onDelete: Cascade)
+  reviewedBy User? @relation("AdminReviews", fields: [reviewedById], references: [id])
 
   @@index([teacherId, status])
   @@index([reviewedById])
 }
 
 model Message {
-  id           String   @id @default(cuid())
-  senderId     String
-  receiverId   String
-  content      String
-  readAt       DateTime?
-  hiddenFromSender   Boolean  @default(false)
-  hiddenFromReceiver Boolean  @default(false)
-  createdAt    DateTime @default(now())
+  id                 String    @id @default(cuid())
+  senderId           String
+  receiverId         String
+  content            String
+  readAt             DateTime?
+  hiddenFromSender   Boolean   @default(false)
+  hiddenFromReceiver Boolean   @default(false)
+  replyToId          String?
+  createdAt          DateTime  @default(now())
 
-  sender       User     @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
-  receiver     User     @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
+  sender   User      @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver User      @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
+  replyTo  Message?  @relation("MessageReplies", fields: [replyToId], references: [id], onDelete: SetNull)
+  replies  Message[] @relation("MessageReplies")
 
   @@index([senderId, receiverId, createdAt])
   @@index([receiverId, readAt])
+  @@index([replyToId])
 }
 
 model MessageConnection {
@@ -154,8 +158,8 @@ model MessageConnection {
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
 
-  requester   User @relation("ConnectionRequester", fields: [requesterId], references: [id], onDelete: Cascade)
-  recipient   User @relation("ConnectionRecipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  requester User @relation("ConnectionRequester", fields: [requesterId], references: [id], onDelete: Cascade)
+  recipient User @relation("ConnectionRecipient", fields: [recipientId], references: [id], onDelete: Cascade)
 
   @@unique([requesterId, recipientId])
   @@index([recipientId, status])
@@ -173,24 +177,24 @@ model CalendarEvent {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
-  user        User      @relation("UserEvents", fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation("UserEvents", fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, startsAt])
 }
 
 model Duty {
-  id          String     @id @default(cuid())
-  assignedToId String
-  title       String
-  dutyType    String?
-  description String?
-  dueAt       DateTime?
-  status      DutyStatus @default(PENDING)
-  hiddenFromTeacher Boolean @default(false)
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  id                String     @id @default(cuid())
+  assignedToId      String
+  title             String
+  dutyType          String?
+  description       String?
+  dueAt             DateTime?
+  status            DutyStatus @default(PENDING)
+  hiddenFromTeacher Boolean    @default(false)
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
 
-  assignedTo  User       @relation("AssignedDuties", fields: [assignedToId], references: [id], onDelete: Cascade)
+  assignedTo User @relation("AssignedDuties", fields: [assignedToId], references: [id], onDelete: Cascade)
 
   @@index([assignedToId, status])
   @@index([dueAt])
@@ -205,7 +209,7 @@ model Notification {
   isRead    Boolean          @default(false)
   createdAt DateTime         @default(now())
 
-  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, isRead, createdAt])
 }
@@ -222,24 +226,24 @@ model TimetableLecture {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, day, time])
   @@index([userId, day, time])
 }
 
 model TimetableSetting {
-  id            String   @id @default(cuid())
-  userId        String
-  day           String
-  startTime     String
-  endTime       String
-  lectureCount  Int
-  duration      Int
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id           String   @id @default(cuid())
+  userId       String
+  day          String
+  startTime    String
+  endTime      String
+  lectureCount Int
+  duration     Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, day])
   @@index([userId, day])
