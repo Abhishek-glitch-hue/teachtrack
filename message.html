@@ -661,6 +661,11 @@
     .message.mine .message-hover-actions { right: 0; left: auto; }
     .message-reaction-trigger, .message-reply-trigger, .message-menu-trigger { display: grid; place-items: center; width: 27px; height: 27px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--text); cursor: pointer; }
     .message-reaction-trigger { font-size: 17px; line-height: 1; }
+    .message-reaction-picker { display: none; position: absolute; z-index: 8; top: -42px; right: -24px; align-items: center; gap: 3px; padding: 5px 8px; border: 1px solid var(--line); border-radius: 24px; background: var(--surface); box-shadow: 0 3px 12px rgba(25,35,45,.14); }
+    .message-reaction-picker.show { display: flex; }
+    .message-reaction-choice { display: grid; place-items: center; width: 30px; height: 30px; padding: 0; border: 0; border-radius: 50%; background: transparent; font-size: 21px; cursor: pointer; }
+    .message-reaction-choice:hover { background: var(--surface-alt); transform: scale(1.1); }
+    .message-reaction-badge { align-self: flex-start; margin-top: -3px; padding: 2px 6px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); font-size: 15px; line-height: 1.2; }
     .message-reaction-trigger:hover, .message-reply-trigger:hover, .message-menu-trigger:hover, .message-menu-trigger[aria-expanded="true"] { background: var(--surface-alt); }
     .message-reply-trigger { font-size: 19px; line-height: 1; }
     .message-menu-trigger { font-size: 18px; line-height: 1; }
@@ -1104,7 +1109,8 @@
         messages: [],
         conversations: [],
         replyTo: null,
-        pendingMessageDelete: null
+        pendingMessageDelete: null,
+        messageReactions: {}
       };
 
       const api = (path, options = {}) => {
@@ -1278,6 +1284,14 @@
           meta.className = 'meta';
           meta.innerHTML = `${formatTime(message.createdAt)}${message.senderId === state.me.id ? '<span class="tick">✓✓</span>' : ''}`;
           wrap.appendChild(bubble);
+          const reactionValue = state.messageReactions[message.id];
+          if (reactionValue) {
+            const reactionBadge = document.createElement('span');
+            reactionBadge.className = 'message-reaction-badge';
+            reactionBadge.textContent = reactionValue;
+            reactionBadge.setAttribute('aria-label', 'Your reaction: ' + reactionValue);
+            wrap.appendChild(reactionBadge);
+          }
           wrap.appendChild(meta);
           const hoverActions = document.createElement('div');
           hoverActions.className = 'message-hover-actions';
@@ -1287,6 +1301,7 @@
           reactionTrigger.setAttribute('aria-label', 'React to message');
           reactionTrigger.title = 'React to message';
           reactionTrigger.textContent = '☺';
+          reactionTrigger.dataset.reactionToggle = message.id;
           hoverActions.appendChild(reactionTrigger);
           const replyTrigger = document.createElement('button');
           replyTrigger.className = 'message-reply-trigger';
@@ -1306,6 +1321,21 @@
           menuTrigger.textContent = '⋮';
           hoverActions.appendChild(menuTrigger);
           wrap.appendChild(hoverActions);
+          const reactionPicker = document.createElement('div');
+          reactionPicker.className = 'message-reaction-picker';
+          reactionPicker.dataset.reactionPicker = message.id;
+          ['👍', '❤️', '😂', '😮', '😢', '🙏'].forEach(emoji => {
+            const choice = document.createElement('button');
+            choice.className = 'message-reaction-choice';
+            choice.type = 'button';
+            choice.textContent = emoji;
+            choice.title = 'React with ' + emoji;
+            choice.setAttribute('aria-label', 'React with ' + emoji);
+            choice.dataset.reactionChoice = message.id;
+            choice.dataset.emoji = emoji;
+            reactionPicker.appendChild(choice);
+          });
+          wrap.appendChild(reactionPicker);
           const actions = document.createElement('div');
           actions.className = 'message-actions';
           const deleteButton = document.createElement('button');
@@ -1535,6 +1565,22 @@
       $('deleteForMe').addEventListener('click', () => deleteSelectedMessage('me'));
       $('cancelReply').addEventListener('click', clearReply);
       $('messageArea').addEventListener('click', async (event) => {
+        const reactionToggle = event.target.closest('[data-reaction-toggle]');
+        if (reactionToggle) {
+          const picker = reactionToggle.closest('.message').querySelector('.message-reaction-picker');
+          const wasOpen = picker.classList.contains('show');
+          $('messageArea').querySelectorAll('.message-reaction-picker.show').forEach(item => item.classList.remove('show'));
+          picker.classList.toggle('show', !wasOpen);
+          return;
+        }
+        const reactionChoice = event.target.closest('[data-reaction-choice]');
+        if (reactionChoice) {
+          const id = reactionChoice.dataset.reactionChoice;
+          state.messageReactions[id] = state.messageReactions[id] === reactionChoice.dataset.emoji ? '' : reactionChoice.dataset.emoji;
+          if (!state.messageReactions[id]) delete state.messageReactions[id];
+          renderChatMessages();
+          return;
+        }
         const menuTrigger = event.target.closest('[data-message-menu]');
         if (menuTrigger) {
           const menu = menuTrigger.closest('.message').querySelector('.message-actions');
@@ -1560,9 +1606,10 @@
         if (button.dataset.messageAction === 'delete') openDeleteMessageDialog(message);
       });
       document.addEventListener('click', (event) => {
-        if (event.target.closest('#messageArea .message-menu-trigger, #messageArea .message-actions')) return;
+        if (event.target.closest('#messageArea .message-menu-trigger, #messageArea .message-actions, #messageArea .message-reaction-trigger, #messageArea .message-reaction-picker')) return;
         $('messageArea').querySelectorAll('.message-actions.show').forEach(item => item.classList.remove('show'));
         $('messageArea').querySelectorAll('[data-message-menu][aria-expanded="true"]').forEach(item => item.setAttribute('aria-expanded', 'false'));
+        $('messageArea').querySelectorAll('.message-reaction-picker.show').forEach(item => item.classList.remove('show'));
       });
 
       $('composer').addEventListener('submit', async (event) => {
