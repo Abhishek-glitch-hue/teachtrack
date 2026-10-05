@@ -1321,12 +1321,9 @@
           if (reactions.length) {
             const reactionBadge = document.createElement('span');
             reactionBadge.className = 'message-reaction-badge';
-            const grouped = reactions.reduce((result, reaction) => {
-              result[reaction.emoji] = (result[reaction.emoji] || 0) + 1;
-              return result;
-            }, {});
-            reactionBadge.textContent = Object.entries(grouped).map(([emoji, count]) => emoji + (count > 1 ? ` ${count}` : '')).join(' ');
-            reactionBadge.setAttribute('aria-label', 'Message reactions');
+            const ownReaction = reactions.find(reaction => reaction.userId === state.me.id);
+            reactionBadge.textContent = (ownReaction || reactions[reactions.length - 1]).emoji;
+            reactionBadge.setAttribute('aria-label', 'Message reaction');
             wrap.appendChild(reactionBadge);
           }
           wrap.appendChild(meta);
