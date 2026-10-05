@@ -298,6 +298,7 @@
     .person-info {
       flex: 1;
       min-width: 0;
+      overflow: hidden;
     }
     .person-row {
       display: flex;
@@ -305,8 +306,10 @@
       justify-content: space-between;
       gap: 10px;
       margin-bottom: 6px;
+      min-width: 0;
     }
     .person-name {
+      display: block;
       color: var(--text);
       font-size: 15px;
       font-weight: 700;
@@ -314,6 +317,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
+    .person-row .person-name { flex: 1 1 auto; min-width: 0; }
     .person-info {
       flex: 1;
       min-width: 0;
@@ -324,11 +328,28 @@
       white-space: nowrap;
     }
     .person-preview {
+      display: block;
+      max-width: 100%;
+      min-width: 0;
       color: var(--muted);
       font-size: 12px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+    }
+    .conversation-unread {
+      display: inline-grid;
+      place-items: center;
+      flex: 0 0 auto;
+      min-width: 18px;
+      height: 18px;
+      padding: 0 5px;
+      border-radius: 999px;
+      background: #0f9d72;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 800;
+      line-height: 1;
     }
 
     .empty-state {
@@ -512,7 +533,7 @@
     .chat-tool-label:hover, .chat-tool-label.clear:hover { background: #f0f2f5; color: #465565; }
     .message-area { gap: 16px; padding: 24px 28px 22px; background: #f7f8fa; }
     .message-area:not(:has(.empty-state))::before { content: "Earlier Today"; align-self: center; padding: 5px 12px; border: 1px solid #e7ebef; border-radius: 999px; background: #fafbfc; color: #8995a4; font-size: 11px; }
-    .message { max-width: min(68%, 560px); gap: 5px; }
+    .message { min-width: 0; max-width: min(68%, 560px); gap: 5px; }
     .bubble { padding: 12px 15px; border-color: #e2e6eb; border-radius: 8px 14px 14px 14px; box-shadow: 0 2px 5px rgba(25,35,45,.06); font-size: 15px; }
     .message.mine .bubble { border-color: #dce4fb; border-radius: 14px 8px 14px 14px; background: #eef1ff; color: #29354a; }
     .meta { color: #8793a0; font-size: 11px; }
@@ -548,10 +569,10 @@
     .chat-avatar-wrap { position: relative; flex: 0 0 42px; }
     .chat-avatar-wrap .chat-avatar { width: 42px; }
     .chat-avatar-wrap .online-dot { position: absolute; right: -1px; bottom: 0; width: 10px; height: 10px; border: 2px solid #fff; border-radius: 50%; }
-    .message-row { display: flex; align-items: flex-end; gap: 10px; }
+    .message-row { position: relative; display: flex; align-items: flex-end; gap: 10px; min-width: 0; }
     .message-row.mine { justify-content: flex-end; }
     .message-row .person-avatar { width: 32px; height: 32px; flex-basis: 32px; font-size: 11px; }
-    .message-row .message { max-width: min(68%, 560px); }
+    .message-row .message { min-width: 0; max-width: min(68%, 560px); }
     .composer-main { display: flex; align-items: flex-end; gap: 12px; }
     .composer-main textarea { min-width: 0; }
     .composer { flex-wrap: wrap; }
@@ -629,6 +650,8 @@
     }
     .message.mine { align-self: flex-end; align-items: flex-end; }
     .bubble {
+      min-width: 0;
+      max-width: 100%;
       padding: 11px 14px;
       border: 1px solid var(--line-strong);
       border-radius: 14px 14px 14px 5px;
@@ -657,14 +680,14 @@
       font-size: 11px;
     }
     .message.mine .meta { justify-content: flex-end; }
-    .message-hover-actions { position: absolute; z-index: 6; top: 2px; right: -96px; display: flex; align-items: center; gap: 2px; padding: 2px 4px; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); box-shadow: 0 2px 8px rgba(25,35,45,.14); opacity: 0; pointer-events: none; transition: opacity .12s ease; }
-    .message.mine .message-hover-actions { right: 0; left: auto; }
+    .message-hover-actions { position: absolute; z-index: 6; top: -36px; right: 0; display: flex; align-items: center; gap: 2px; padding: 2px 4px; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); box-shadow: 0 2px 8px rgba(25,35,45,.14); opacity: 0; pointer-events: none; transition: opacity .12s ease; }
     .message-reaction-trigger, .message-reply-trigger, .message-menu-trigger { display: grid; place-items: center; width: 27px; height: 27px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--text); cursor: pointer; }
     .message-reaction-trigger { font-size: 17px; line-height: 1; }
-    .message-reaction-picker { display: none; position: absolute; z-index: 8; top: -42px; right: -96px; align-items: center; gap: 3px; padding: 5px 8px; border: 1px solid var(--line); border-radius: 24px; background: var(--surface); box-shadow: 0 3px 12px rgba(25,35,45,.14); white-space: nowrap; }
-    .message.mine .message-reaction-picker { right: 0; }
+    .message-reaction-picker { display: none; position: absolute; z-index: 8; top: -82px; right: 0; align-items: center; gap: 3px; padding: 5px 8px; border: 1px solid var(--line); border-radius: 24px; background: var(--surface); box-shadow: 0 3px 12px rgba(25,35,45,.14); white-space: nowrap; }
+    .message:not(.mine) .message-reaction-picker { right: auto; left: 0; }
     .message-reaction-picker.show { display: flex; }
-    .message-row.reaction-picker-open { margin-top: 44px; }
+    .message-row.reaction-picker-open,
+    .message-row.message-menu-open { margin-top: 88px; }
     .message-reaction-choice { display: grid; place-items: center; width: 30px; height: 30px; padding: 0; border: 0; border-radius: 50%; background: transparent; font-size: 21px; cursor: pointer; }
     .message-reaction-choice:hover { background: var(--surface-alt); transform: scale(1.1); }
     .message-reaction-badge { align-self: flex-start; margin-top: -3px; padding: 2px 6px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); font-size: 15px; line-height: 1.2; }
@@ -672,7 +695,7 @@
     .message-reply-trigger { font-size: 19px; line-height: 1; }
     .message-menu-trigger { font-size: 18px; line-height: 1; }
     .message:hover .message-hover-actions, .message:focus-within .message-hover-actions, .message-menu-trigger[aria-expanded="true"] { opacity: 1; pointer-events: auto; }
-    .message-actions { display: none; position: absolute; z-index: 5; top: 20px; right: -8px; min-width: 150px; padding: 5px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); box-shadow: 0 8px 24px rgba(25,35,45,.18); }
+    .message-actions { display: none; position: absolute; z-index: 8; top: -78px; right: 0; min-width: 148px; padding: 5px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); box-shadow: 0 8px 24px rgba(25,35,45,.18); }
     .message-actions.show { display: grid; }
     .message-action { width: 100%; border: 0; border-radius: 6px; background: transparent; color: var(--text); font-family: inherit; font-size: 13px; text-align: left; cursor: pointer; padding: 9px 10px; }
     .message-action:hover { background: var(--surface-alt); color: #087f5b; }
@@ -1121,6 +1144,7 @@
       };
 
       const $ = (id) => document.getElementById(id);
+      const escapeHtml = (value = '') => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
       const initials = (name = '') => (name.split(/\s+/).filter(Boolean).slice(0, 2).map(part => part[0]).join('') || 'T').toUpperCase();
       const formatTime = (value) => {
         if (!value) return '';
@@ -1187,21 +1211,25 @@
           if (user.id) {
             convMap.set(user.id, {
               preview: item.lastMessage && item.lastMessage.content ? item.lastMessage.content : 'No messages yet',
-              time: item.lastMessage && item.lastMessage.createdAt ? item.lastMessage.createdAt : ''
+              time: item.lastMessage && item.lastMessage.createdAt ? item.lastMessage.createdAt : '',
+              unreadCount: item.unreadCount || 0
             });
           }
         });
 
         list.innerHTML = users.map((user, index) => {
-          const conversation = convMap.get(user.id) || { preview: 'No messages yet', time: '' };
+          const conversation = convMap.get(user.id) || { preview: 'No messages yet', time: '', unreadCount: 0 };
           const whileReq = user.status === 'INCOMING' ? 'Sent you a request' : user.status === 'OUTGOING' ? 'Request sent' : conversation.preview;
           const time = user.status === 'ACCEPTED' ? formatTime(conversation.time) : '';
+          const displayName = escapeHtml(user.name || 'Unknown');
+          const displayInitials = escapeHtml(initials(user.name));
+          const displayPreview = escapeHtml(whileReq);
           if (state.filter === 'requests') return `
             <div class="request-row" data-user-id="${user.id}">
-              <span class="person-avatar c${(index % 6) + 1}">${initials(user.name)}</span>
+              <span class="person-avatar c${(index % 6) + 1}">${displayInitials}</span>
               <span class="person-info">
-                <span class="person-name">${user.name}</span>
-                <span class="person-meta">@${(user.email || 'teacher').split('@')[0]} • ${user.department || 'Teacher'}</span>
+                <span class="person-name">${displayName}</span>
+                <span class="person-meta">@${escapeHtml((user.email || 'teacher').split('@')[0])} • ${escapeHtml(user.department || 'Teacher')}</span>
                 <span class="person-preview">${user.status === 'INCOMING' ? 'I\'d like to connect with you on TeachTrack.' : 'Request sent'}</span>
               </span>
               <span class="request-actions">
@@ -1210,8 +1238,8 @@
             </div>`;
           return `
             <button class="person ${state.activeUser && state.activeUser.id === user.id ? 'active' : ''}" type="button" data-user-id="${user.id}">
-              <span class="person-avatar c${(index % 6) + 1}">${initials(user.name)}</span>
-              <span class="person-info"><span class="person-row"><span class="person-name">${user.name}</span>${time ? `<span class="person-time">${time}</span>` : ''}</span><span class="person-preview">${whileReq}</span></span>
+              <span class="person-avatar c${(index % 6) + 1}">${displayInitials}</span>
+              <span class="person-info"><span class="person-row"><span class="person-name">${displayName}</span>${time ? `<span class="person-time">${time}</span>` : ''}${conversation.unreadCount ? `<span class="conversation-unread" aria-label="${conversation.unreadCount} unread messages">${conversation.unreadCount > 99 ? '99+' : conversation.unreadCount}</span>` : ''}</span><span class="person-preview">${displayPreview}</span></span>
             </button>`;
         }).join('');
 
@@ -1574,6 +1602,9 @@
           const wasOpen = picker.classList.contains('show');
           $('messageArea').querySelectorAll('.message-reaction-picker.show').forEach(item => item.classList.remove('show'));
           $('messageArea').querySelectorAll('.message-row.reaction-picker-open').forEach(item => item.classList.remove('reaction-picker-open'));
+          $('messageArea').querySelectorAll('.message-actions.show').forEach(item => item.classList.remove('show'));
+          $('messageArea').querySelectorAll('.message-row.message-menu-open').forEach(item => item.classList.remove('message-menu-open'));
+          $('messageArea').querySelectorAll('[data-message-menu][aria-expanded="true"]').forEach(item => item.setAttribute('aria-expanded', 'false'));
           picker.classList.toggle('show', !wasOpen);
           messageWrap.closest('.message-row').classList.toggle('reaction-picker-open', !wasOpen);
           return;
@@ -1589,11 +1620,16 @@
         const menuTrigger = event.target.closest('[data-message-menu]');
         if (menuTrigger) {
           const menu = menuTrigger.closest('.message').querySelector('.message-actions');
+          const row = menuTrigger.closest('.message-row');
           const opening = !menu.classList.contains('show');
           $('messageArea').querySelectorAll('.message-actions.show').forEach(item => item.classList.remove('show'));
           $('messageArea').querySelectorAll('[data-message-menu][aria-expanded="true"]').forEach(item => item.setAttribute('aria-expanded', 'false'));
+          $('messageArea').querySelectorAll('.message-row.message-menu-open').forEach(item => item.classList.remove('message-menu-open'));
+          $('messageArea').querySelectorAll('.message-reaction-picker.show').forEach(item => item.classList.remove('show'));
+          $('messageArea').querySelectorAll('.message-row.reaction-picker-open').forEach(item => item.classList.remove('reaction-picker-open'));
           menu.classList.toggle('show', opening);
           menuTrigger.setAttribute('aria-expanded', String(opening));
+          row.classList.toggle('message-menu-open', opening);
           return;
         }
         const button = event.target.closest('[data-message-action]');
@@ -1606,6 +1642,7 @@
           $('replyComposer').classList.add('show');
           $('messageInput').focus();
           $('messageArea').querySelectorAll('.message-actions.show').forEach(item => item.classList.remove('show'));
+          $('messageArea').querySelectorAll('.message-row.message-menu-open').forEach(item => item.classList.remove('message-menu-open'));
           return;
         }
         if (button.dataset.messageAction === 'delete') openDeleteMessageDialog(message);
@@ -1616,6 +1653,7 @@
         $('messageArea').querySelectorAll('[data-message-menu][aria-expanded="true"]').forEach(item => item.setAttribute('aria-expanded', 'false'));
         $('messageArea').querySelectorAll('.message-reaction-picker.show').forEach(item => item.classList.remove('show'));
         $('messageArea').querySelectorAll('.message-row.reaction-picker-open').forEach(item => item.classList.remove('reaction-picker-open'));
+        $('messageArea').querySelectorAll('.message-row.message-menu-open').forEach(item => item.classList.remove('message-menu-open'));
       });
 
       $('composer').addEventListener('submit', async (event) => {
