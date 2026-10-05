@@ -137,6 +137,7 @@ model Message {
   readAt             DateTime?
   hiddenFromSender   Boolean   @default(false)
   hiddenFromReceiver Boolean   @default(false)
+  deletedForEveryone Boolean   @default(false)
   replyToId          String?
   createdAt          DateTime  @default(now())
 

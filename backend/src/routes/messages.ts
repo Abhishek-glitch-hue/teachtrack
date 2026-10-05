@@ -205,9 +205,21 @@ messageRouter.delete("/:userId", requireAuth, async (request, response) => {
 
 messageRouter.delete("/item/:messageId", requireAuth, async (request, response) => {
   const messageId = Array.isArray(request.params.messageId) ? request.params.messageId[0] : request.params.messageId;
-  const message = await prisma.message.findFirst({ where: { id: messageId, senderId: request.user!.id, hiddenFromSender: false } });
+  const scope = request.body?.scope === "everyone" ? "everyone" : "me";
+  const message = await prisma.message.findFirst({ where: { id: messageId, OR: [
+    { senderId: request.user!.id, hiddenFromSender: false },
+    { receiverId: request.user!.id, hiddenFromReceiver: false },
+  ] } });
   if (!message) return response.status(404).json({ message: "Message not found." });
-  await prisma.message.update({ where: { id: message.id }, data: { hiddenFromSender: true } });
+  if (scope === "everyone") {
+    if (message.senderId !== request.user!.id) return response.status(403).json({ message: "You can only delete your own messages for everyone." });
+    const updated = await prisma.message.update({ where: { id: message.id }, data: { content: "This message was deleted", deletedForEveryone: true } });
+    emitToUser(message.receiverId, "message:deleted", { message: updated });
+    emitToUser(message.senderId, "message:deleted", { message: updated });
+  } else {
+    await prisma.message.update({ where: { id: message.id }, data: message.senderId === request.user!.id ? { hiddenFromSender: true } : { hiddenFromReceiver: true } });
+    emitToUser(request.user!.id, "message:hidden", { messageId: message.id });
+  }
   return response.status(204).end();
 });
 
@@ -250,7 +262,7 @@ messageRouter.post("/", requireAuth, async (request, response) => {
 
   let replyToId: string | undefined;
   if (parsed.data.replyToId) {
-    const replyTo = await prisma.message.findFirst({ where: { id: parsed.data.replyToId, OR: [
+    const replyTo = await prisma.message.findFirst({ where: { id: parsed.data.replyToId, deletedForEveryone: false, OR: [
       { senderId: request.user!.id, receiverId: receiver.id, hiddenFromSender: false },
       { senderId: receiver.id, receiverId: request.user!.id, hiddenFromReceiver: false },
     ] } });
