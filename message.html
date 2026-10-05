@@ -1284,6 +1284,13 @@
           wrap.appendChild(menuTrigger);
           const actions = document.createElement('div');
           actions.className = 'message-actions';
+          const replyButton = document.createElement('button');
+          replyButton.className = 'message-action';
+          replyButton.type = 'button';
+          replyButton.dataset.messageAction = 'reply';
+          replyButton.dataset.messageId = message.id;
+          replyButton.textContent = 'Reply';
+          actions.appendChild(replyButton);
           const deleteButton = document.createElement('button');
           deleteButton.className = 'message-action';
           deleteButton.type = 'button';
@@ -1530,6 +1537,14 @@
           $('replyComposerText').textContent = 'Replying to: ' + message.content;
           $('replyComposer').classList.add('show');
           $('messageInput').focus();
+          return;
+        }
+        if (button.dataset.messageAction === 'reply') {
+          state.replyTo = message;
+          $('replyComposerText').textContent = 'Replying to: ' + message.content;
+          $('replyComposer').classList.add('show');
+          $('messageInput').focus();
+          $('messageArea').querySelectorAll('.message-actions.show').forEach(item => item.classList.remove('show'));
           return;
         }
         if (button.dataset.messageAction === 'delete') openDeleteMessageDialog(message);
