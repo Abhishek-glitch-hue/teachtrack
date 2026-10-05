@@ -663,7 +663,7 @@
     .message-reaction-trigger { font-size: 17px; line-height: 1; }
     .message-reaction-picker { display: none; position: absolute; z-index: 8; top: -42px; right: 0; align-items: center; gap: 3px; padding: 5px 8px; border: 1px solid var(--line); border-radius: 24px; background: var(--surface); box-shadow: 0 3px 12px rgba(25,35,45,.14); white-space: nowrap; }
     .message-reaction-picker.show { display: flex; }
-    .message-row:has(.message-reaction-picker.show) { margin-top: 44px; }
+    .message-row.reaction-picker-open { margin-top: 44px; }
     .message-reaction-choice { display: grid; place-items: center; width: 30px; height: 30px; padding: 0; border: 0; border-radius: 50%; background: transparent; font-size: 21px; cursor: pointer; }
     .message-reaction-choice:hover { background: var(--surface-alt); transform: scale(1.1); }
     .message-reaction-badge { align-self: flex-start; margin-top: -3px; padding: 2px 6px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); font-size: 15px; line-height: 1.2; }
@@ -1568,10 +1568,13 @@
       $('messageArea').addEventListener('click', async (event) => {
         const reactionToggle = event.target.closest('[data-reaction-toggle]');
         if (reactionToggle) {
-          const picker = reactionToggle.closest('.message').querySelector('.message-reaction-picker');
+          const messageWrap = reactionToggle.closest('.message');
+          const picker = messageWrap.querySelector('.message-reaction-picker');
           const wasOpen = picker.classList.contains('show');
           $('messageArea').querySelectorAll('.message-reaction-picker.show').forEach(item => item.classList.remove('show'));
+          $('messageArea').querySelectorAll('.message-row.reaction-picker-open').forEach(item => item.classList.remove('reaction-picker-open'));
           picker.classList.toggle('show', !wasOpen);
+          messageWrap.closest('.message-row').classList.toggle('reaction-picker-open', !wasOpen);
           return;
         }
         const reactionChoice = event.target.closest('[data-reaction-choice]');
@@ -1611,6 +1614,7 @@
         $('messageArea').querySelectorAll('.message-actions.show').forEach(item => item.classList.remove('show'));
         $('messageArea').querySelectorAll('[data-message-menu][aria-expanded="true"]').forEach(item => item.setAttribute('aria-expanded', 'false'));
         $('messageArea').querySelectorAll('.message-reaction-picker.show').forEach(item => item.classList.remove('show'));
+        $('messageArea').querySelectorAll('.message-row.reaction-picker-open').forEach(item => item.classList.remove('reaction-picker-open'));
       });
 
       $('composer').addEventListener('submit', async (event) => {
