@@ -1561,13 +1561,6 @@
           $('replyComposerText').textContent = 'Replying to: ' + message.content;
           $('replyComposer').classList.add('show');
           $('messageInput').focus();
-          return;
-        }
-        if (button.dataset.messageAction === 'reply') {
-          state.replyTo = message;
-          $('replyComposerText').textContent = 'Replying to: ' + message.content;
-          $('replyComposer').classList.add('show');
-          $('messageInput').focus();
           $('messageArea').querySelectorAll('.message-actions.show').forEach(item => item.classList.remove('show'));
           return;
         }
