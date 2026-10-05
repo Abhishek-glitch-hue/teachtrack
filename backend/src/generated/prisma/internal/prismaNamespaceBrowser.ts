@@ -56,6 +56,7 @@ export const ModelName = {
   PasswordResetToken: 'PasswordResetToken',
   LeaveRequest: 'LeaveRequest',
   Message: 'Message',
+  MessageReaction: 'MessageReaction',
   MessageConnection: 'MessageConnection',
   CalendarEvent: 'CalendarEvent',
   Duty: 'Duty',
@@ -150,10 +151,23 @@ export const MessageScalarFieldEnum = {
   readAt: 'readAt',
   hiddenFromSender: 'hiddenFromSender',
   hiddenFromReceiver: 'hiddenFromReceiver',
+  deletedForEveryone: 'deletedForEveryone',
+  replyToId: 'replyToId',
   createdAt: 'createdAt'
 } as const
 
 export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
+
+
+export const MessageReactionScalarFieldEnum = {
+  id: 'id',
+  messageId: 'messageId',
+  userId: 'userId',
+  emoji: 'emoji',
+  createdAt: 'createdAt'
+} as const
+
+export type MessageReactionScalarFieldEnum = (typeof MessageReactionScalarFieldEnum)[keyof typeof MessageReactionScalarFieldEnum]
 
 
 export const MessageConnectionScalarFieldEnum = {

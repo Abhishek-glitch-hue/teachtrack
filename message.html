@@ -1619,18 +1619,30 @@
         const reactionChoice = event.target.closest('[data-reaction-choice]');
         if (reactionChoice) {
           const id = reactionChoice.dataset.reactionChoice;
+          const emoji = reactionChoice.dataset.emoji;
+          const message = state.messages.find(item => item.id === id);
+          if (!message) return;
+          const previousReactions = Array.isArray(message.reactions) ? [...message.reactions] : [];
+          const myReaction = previousReactions.find(item => item.userId === state.me.id);
+          message.reactions = myReaction?.emoji === emoji
+            ? previousReactions.filter(item => item.userId !== state.me.id)
+            : [...previousReactions.filter(item => item.userId !== state.me.id), { userId: state.me.id, emoji }];
+          renderChatMessages();
           try {
             const response = await api('/messages/item/' + encodeURIComponent(id) + '/reaction', {
               method: 'PUT',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ emoji: reactionChoice.dataset.emoji })
+              body: JSON.stringify({ emoji })
             });
             const data = await response.json();
             if (!response.ok) throw new Error(data.message || 'Unable to send reaction.');
-            const message = state.messages.find(item => item.id === id);
-            if (message) message.reactions = data.reactions;
+            const currentMessage = state.messages.find(item => item.id === id);
+            if (currentMessage) currentMessage.reactions = data.reactions;
             renderChatMessages();
           } catch (error) {
+            const currentMessage = state.messages.find(item => item.id === id);
+            if (currentMessage) currentMessage.reactions = previousReactions;
+            renderChatMessages();
             setStatus(error.message || 'Unable to send reaction.', true);
           }
           return;

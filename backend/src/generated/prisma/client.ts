@@ -67,6 +67,11 @@ export type LeaveRequest = Prisma.LeaveRequestModel
  */
 export type Message = Prisma.MessageModel
 /**
+ * Model MessageReaction
+ * 
+ */
+export type MessageReaction = Prisma.MessageReactionModel
+/**
  * Model MessageConnection
  * 
  */

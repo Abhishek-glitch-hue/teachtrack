@@ -68,7 +68,7 @@ model User {
   reviewedLeaves             LeaveRequest[]       @relation("AdminReviews")
   sentMessages               Message[]            @relation("SentMessages")
   receivedMessages           Message[]            @relation("ReceivedMessages")
-  messageReactions          MessageReaction[]
+  messageReactions           MessageReaction[]
   duties                     Duty[]               @relation("AssignedDuties")
   events                     CalendarEvent[]      @relation("UserEvents")
   notifications              Notification[]
@@ -142,10 +142,10 @@ model Message {
   replyToId          String?
   createdAt          DateTime  @default(now())
 
-  sender   User      @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
-  receiver User      @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
-  replyTo  Message?  @relation("MessageReplies", fields: [replyToId], references: [id], onDelete: SetNull)
-  replies  Message[] @relation("MessageReplies")
+  sender    User              @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver  User              @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
+  replyTo   Message?          @relation("MessageReplies", fields: [replyToId], references: [id], onDelete: SetNull)
+  replies   Message[]         @relation("MessageReplies")
   reactions MessageReaction[]
 
   @@index([senderId, receiverId, createdAt])

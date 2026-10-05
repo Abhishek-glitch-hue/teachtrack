@@ -242,6 +242,7 @@ export type UserWhereInput = {
   reviewedLeaves?: Prisma.LeaveRequestListRelationFilter
   sentMessages?: Prisma.MessageListRelationFilter
   receivedMessages?: Prisma.MessageListRelationFilter
+  messageReactions?: Prisma.MessageReactionListRelationFilter
   duties?: Prisma.DutyListRelationFilter
   events?: Prisma.CalendarEventListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
@@ -270,6 +271,7 @@ export type UserOrderByWithRelationInput = {
   reviewedLeaves?: Prisma.LeaveRequestOrderByRelationAggregateInput
   sentMessages?: Prisma.MessageOrderByRelationAggregateInput
   receivedMessages?: Prisma.MessageOrderByRelationAggregateInput
+  messageReactions?: Prisma.MessageReactionOrderByRelationAggregateInput
   duties?: Prisma.DutyOrderByRelationAggregateInput
   events?: Prisma.CalendarEventOrderByRelationAggregateInput
   notifications?: Prisma.NotificationOrderByRelationAggregateInput
@@ -301,6 +303,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   reviewedLeaves?: Prisma.LeaveRequestListRelationFilter
   sentMessages?: Prisma.MessageListRelationFilter
   receivedMessages?: Prisma.MessageListRelationFilter
+  messageReactions?: Prisma.MessageReactionListRelationFilter
   duties?: Prisma.DutyListRelationFilter
   events?: Prisma.CalendarEventListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
@@ -365,6 +368,7 @@ export type UserCreateInput = {
   reviewedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutReviewedByInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
+  messageReactions?: Prisma.MessageReactionCreateNestedManyWithoutUserInput
   duties?: Prisma.DutyCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -393,6 +397,7 @@ export type UserUncheckedCreateInput = {
   reviewedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
+  messageReactions?: Prisma.MessageReactionUncheckedCreateNestedManyWithoutUserInput
   duties?: Prisma.DutyUncheckedCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -421,6 +426,7 @@ export type UserUpdateInput = {
   reviewedLeaves?: Prisma.LeaveRequestUpdateManyWithoutReviewedByNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
+  messageReactions?: Prisma.MessageReactionUpdateManyWithoutUserNestedInput
   duties?: Prisma.DutyUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -449,6 +455,7 @@ export type UserUncheckedUpdateInput = {
   reviewedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
+  messageReactions?: Prisma.MessageReactionUncheckedUpdateManyWithoutUserNestedInput
   duties?: Prisma.DutyUncheckedUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -670,6 +677,20 @@ export type UserUpdateOneRequiredWithoutReceivedMessagesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReceivedMessagesInput, Prisma.UserUpdateWithoutReceivedMessagesInput>, Prisma.UserUncheckedUpdateWithoutReceivedMessagesInput>
 }
 
+export type UserCreateNestedOneWithoutMessageReactionsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMessageReactionsInput, Prisma.UserUncheckedCreateWithoutMessageReactionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMessageReactionsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutMessageReactionsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMessageReactionsInput, Prisma.UserUncheckedCreateWithoutMessageReactionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMessageReactionsInput
+  upsert?: Prisma.UserUpsertWithoutMessageReactionsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutMessageReactionsInput, Prisma.UserUpdateWithoutMessageReactionsInput>, Prisma.UserUncheckedUpdateWithoutMessageReactionsInput>
+}
+
 export type UserCreateNestedOneWithoutSentConnectionRequestsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutSentConnectionRequestsInput, Prisma.UserUncheckedCreateWithoutSentConnectionRequestsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutSentConnectionRequestsInput
@@ -785,6 +806,7 @@ export type UserCreateWithoutAiDailyUsagesInput = {
   reviewedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutReviewedByInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
+  messageReactions?: Prisma.MessageReactionCreateNestedManyWithoutUserInput
   duties?: Prisma.DutyCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -812,6 +834,7 @@ export type UserUncheckedCreateWithoutAiDailyUsagesInput = {
   reviewedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
+  messageReactions?: Prisma.MessageReactionUncheckedCreateNestedManyWithoutUserInput
   duties?: Prisma.DutyUncheckedCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -855,6 +878,7 @@ export type UserUpdateWithoutAiDailyUsagesInput = {
   reviewedLeaves?: Prisma.LeaveRequestUpdateManyWithoutReviewedByNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
+  messageReactions?: Prisma.MessageReactionUpdateManyWithoutUserNestedInput
   duties?: Prisma.DutyUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -882,6 +906,7 @@ export type UserUncheckedUpdateWithoutAiDailyUsagesInput = {
   reviewedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
+  messageReactions?: Prisma.MessageReactionUncheckedUpdateManyWithoutUserNestedInput
   duties?: Prisma.DutyUncheckedUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -909,6 +934,7 @@ export type UserCreateWithoutPasswordResetTokensInput = {
   reviewedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutReviewedByInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
+  messageReactions?: Prisma.MessageReactionCreateNestedManyWithoutUserInput
   duties?: Prisma.DutyCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -936,6 +962,7 @@ export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
   reviewedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
+  messageReactions?: Prisma.MessageReactionUncheckedCreateNestedManyWithoutUserInput
   duties?: Prisma.DutyUncheckedCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -979,6 +1006,7 @@ export type UserUpdateWithoutPasswordResetTokensInput = {
   reviewedLeaves?: Prisma.LeaveRequestUpdateManyWithoutReviewedByNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
+  messageReactions?: Prisma.MessageReactionUpdateManyWithoutUserNestedInput
   duties?: Prisma.DutyUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -1006,6 +1034,7 @@ export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
   reviewedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
+  messageReactions?: Prisma.MessageReactionUncheckedUpdateManyWithoutUserNestedInput
   duties?: Prisma.DutyUncheckedUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -1032,6 +1061,7 @@ export type UserCreateWithoutLeaveRequestsInput = {
   reviewedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutReviewedByInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
+  messageReactions?: Prisma.MessageReactionCreateNestedManyWithoutUserInput
   duties?: Prisma.DutyCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -1059,6 +1089,7 @@ export type UserUncheckedCreateWithoutLeaveRequestsInput = {
   reviewedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
+  messageReactions?: Prisma.MessageReactionUncheckedCreateNestedManyWithoutUserInput
   duties?: Prisma.DutyUncheckedCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -1091,6 +1122,7 @@ export type UserCreateWithoutReviewedLeavesInput = {
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutTeacherInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
+  messageReactions?: Prisma.MessageReactionCreateNestedManyWithoutUserInput
   duties?: Prisma.DutyCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -1118,6 +1150,7 @@ export type UserUncheckedCreateWithoutReviewedLeavesInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTeacherInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
+  messageReactions?: Prisma.MessageReactionUncheckedCreateNestedManyWithoutUserInput
   duties?: Prisma.DutyUncheckedCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -1161,6 +1194,7 @@ export type UserUpdateWithoutLeaveRequestsInput = {
   reviewedLeaves?: Prisma.LeaveRequestUpdateManyWithoutReviewedByNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
+  messageReactions?: Prisma.MessageReactionUpdateManyWithoutUserNestedInput
   duties?: Prisma.DutyUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -1188,6 +1222,7 @@ export type UserUncheckedUpdateWithoutLeaveRequestsInput = {
   reviewedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
+  messageReactions?: Prisma.MessageReactionUncheckedUpdateManyWithoutUserNestedInput
   duties?: Prisma.DutyUncheckedUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -1226,6 +1261,7 @@ export type UserUpdateWithoutReviewedLeavesInput = {
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutTeacherNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
+  messageReactions?: Prisma.MessageReactionUpdateManyWithoutUserNestedInput
   duties?: Prisma.DutyUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -1253,6 +1289,7 @@ export type UserUncheckedUpdateWithoutReviewedLeavesInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTeacherNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
+  messageReactions?: Prisma.MessageReactionUncheckedUpdateManyWithoutUserNestedInput
   duties?: Prisma.DutyUncheckedUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -1280,6 +1317,7 @@ export type UserCreateWithoutSentMessagesInput = {
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutTeacherInput
   reviewedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutReviewedByInput
   receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
+  messageReactions?: Prisma.MessageReactionCreateNestedManyWithoutUserInput
   duties?: Prisma.DutyCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -1307,6 +1345,7 @@ export type UserUncheckedCreateWithoutSentMessagesInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTeacherInput
   reviewedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
   receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
+  messageReactions?: Prisma.MessageReactionUncheckedCreateNestedManyWithoutUserInput
   duties?: Prisma.DutyUncheckedCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -1339,6 +1378,7 @@ export type UserCreateWithoutReceivedMessagesInput = {
   leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutTeacherInput
   reviewedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutReviewedByInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  messageReactions?: Prisma.MessageReactionCreateNestedManyWithoutUserInput
   duties?: Prisma.DutyCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -1366,6 +1406,7 @@ export type UserUncheckedCreateWithoutReceivedMessagesInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTeacherInput
   reviewedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  messageReactions?: Prisma.MessageReactionUncheckedCreateNestedManyWithoutUserInput
   duties?: Prisma.DutyUncheckedCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -1409,6 +1450,7 @@ export type UserUpdateWithoutSentMessagesInput = {
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutTeacherNestedInput
   reviewedLeaves?: Prisma.LeaveRequestUpdateManyWithoutReviewedByNestedInput
   receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
+  messageReactions?: Prisma.MessageReactionUpdateManyWithoutUserNestedInput
   duties?: Prisma.DutyUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -1436,6 +1478,7 @@ export type UserUncheckedUpdateWithoutSentMessagesInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTeacherNestedInput
   reviewedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
+  messageReactions?: Prisma.MessageReactionUncheckedUpdateManyWithoutUserNestedInput
   duties?: Prisma.DutyUncheckedUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -1474,6 +1517,7 @@ export type UserUpdateWithoutReceivedMessagesInput = {
   leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutTeacherNestedInput
   reviewedLeaves?: Prisma.LeaveRequestUpdateManyWithoutReviewedByNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  messageReactions?: Prisma.MessageReactionUpdateManyWithoutUserNestedInput
   duties?: Prisma.DutyUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -1501,6 +1545,135 @@ export type UserUncheckedUpdateWithoutReceivedMessagesInput = {
   leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTeacherNestedInput
   reviewedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  messageReactions?: Prisma.MessageReactionUncheckedUpdateManyWithoutUserNestedInput
+  duties?: Prisma.DutyUncheckedUpdateManyWithoutAssignedToNestedInput
+  events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  timetableLectures?: Prisma.TimetableLectureUncheckedUpdateManyWithoutUserNestedInput
+  timetableSettings?: Prisma.TimetableSettingUncheckedUpdateManyWithoutUserNestedInput
+  sentConnectionRequests?: Prisma.MessageConnectionUncheckedUpdateManyWithoutRequesterNestedInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUncheckedUpdateManyWithoutRecipientNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  aiDailyUsages?: Prisma.AiDailyUsageUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutMessageReactionsInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  department?: string | null
+  phone?: string | null
+  campus?: string | null
+  role?: $Enums.Role
+  isActive?: boolean
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  leaveRequests?: Prisma.LeaveRequestCreateNestedManyWithoutTeacherInput
+  reviewedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutReviewedByInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
+  duties?: Prisma.DutyCreateNestedManyWithoutAssignedToInput
+  events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  timetableLectures?: Prisma.TimetableLectureCreateNestedManyWithoutUserInput
+  timetableSettings?: Prisma.TimetableSettingCreateNestedManyWithoutUserInput
+  sentConnectionRequests?: Prisma.MessageConnectionCreateNestedManyWithoutRequesterInput
+  receivedConnectionRequests?: Prisma.MessageConnectionCreateNestedManyWithoutRecipientInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  aiDailyUsages?: Prisma.AiDailyUsageCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutMessageReactionsInput = {
+  id?: string
+  name: string
+  email: string
+  passwordHash: string
+  department?: string | null
+  phone?: string | null
+  campus?: string | null
+  role?: $Enums.Role
+  isActive?: boolean
+  lastLoginAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  leaveRequests?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutTeacherInput
+  reviewedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
+  duties?: Prisma.DutyUncheckedCreateNestedManyWithoutAssignedToInput
+  events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  timetableLectures?: Prisma.TimetableLectureUncheckedCreateNestedManyWithoutUserInput
+  timetableSettings?: Prisma.TimetableSettingUncheckedCreateNestedManyWithoutUserInput
+  sentConnectionRequests?: Prisma.MessageConnectionUncheckedCreateNestedManyWithoutRequesterInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUncheckedCreateNestedManyWithoutRecipientInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  aiDailyUsages?: Prisma.AiDailyUsageUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutMessageReactionsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutMessageReactionsInput, Prisma.UserUncheckedCreateWithoutMessageReactionsInput>
+}
+
+export type UserUpsertWithoutMessageReactionsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutMessageReactionsInput, Prisma.UserUncheckedUpdateWithoutMessageReactionsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutMessageReactionsInput, Prisma.UserUncheckedCreateWithoutMessageReactionsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutMessageReactionsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutMessageReactionsInput, Prisma.UserUncheckedUpdateWithoutMessageReactionsInput>
+}
+
+export type UserUpdateWithoutMessageReactionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leaveRequests?: Prisma.LeaveRequestUpdateManyWithoutTeacherNestedInput
+  reviewedLeaves?: Prisma.LeaveRequestUpdateManyWithoutReviewedByNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
+  duties?: Prisma.DutyUpdateManyWithoutAssignedToNestedInput
+  events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  timetableLectures?: Prisma.TimetableLectureUpdateManyWithoutUserNestedInput
+  timetableSettings?: Prisma.TimetableSettingUpdateManyWithoutUserNestedInput
+  sentConnectionRequests?: Prisma.MessageConnectionUpdateManyWithoutRequesterNestedInput
+  receivedConnectionRequests?: Prisma.MessageConnectionUpdateManyWithoutRecipientNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  aiDailyUsages?: Prisma.AiDailyUsageUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutMessageReactionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  department?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  campus?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lastLoginAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  leaveRequests?: Prisma.LeaveRequestUncheckedUpdateManyWithoutTeacherNestedInput
+  reviewedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
   duties?: Prisma.DutyUncheckedUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -1529,6 +1702,7 @@ export type UserCreateWithoutSentConnectionRequestsInput = {
   reviewedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutReviewedByInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
+  messageReactions?: Prisma.MessageReactionCreateNestedManyWithoutUserInput
   duties?: Prisma.DutyCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -1556,6 +1730,7 @@ export type UserUncheckedCreateWithoutSentConnectionRequestsInput = {
   reviewedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
+  messageReactions?: Prisma.MessageReactionUncheckedCreateNestedManyWithoutUserInput
   duties?: Prisma.DutyUncheckedCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -1588,6 +1763,7 @@ export type UserCreateWithoutReceivedConnectionRequestsInput = {
   reviewedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutReviewedByInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
+  messageReactions?: Prisma.MessageReactionCreateNestedManyWithoutUserInput
   duties?: Prisma.DutyCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -1615,6 +1791,7 @@ export type UserUncheckedCreateWithoutReceivedConnectionRequestsInput = {
   reviewedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
+  messageReactions?: Prisma.MessageReactionUncheckedCreateNestedManyWithoutUserInput
   duties?: Prisma.DutyUncheckedCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -1658,6 +1835,7 @@ export type UserUpdateWithoutSentConnectionRequestsInput = {
   reviewedLeaves?: Prisma.LeaveRequestUpdateManyWithoutReviewedByNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
+  messageReactions?: Prisma.MessageReactionUpdateManyWithoutUserNestedInput
   duties?: Prisma.DutyUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -1685,6 +1863,7 @@ export type UserUncheckedUpdateWithoutSentConnectionRequestsInput = {
   reviewedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
+  messageReactions?: Prisma.MessageReactionUncheckedUpdateManyWithoutUserNestedInput
   duties?: Prisma.DutyUncheckedUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -1723,6 +1902,7 @@ export type UserUpdateWithoutReceivedConnectionRequestsInput = {
   reviewedLeaves?: Prisma.LeaveRequestUpdateManyWithoutReviewedByNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
+  messageReactions?: Prisma.MessageReactionUpdateManyWithoutUserNestedInput
   duties?: Prisma.DutyUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -1750,6 +1930,7 @@ export type UserUncheckedUpdateWithoutReceivedConnectionRequestsInput = {
   reviewedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
+  messageReactions?: Prisma.MessageReactionUncheckedUpdateManyWithoutUserNestedInput
   duties?: Prisma.DutyUncheckedUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -1777,6 +1958,7 @@ export type UserCreateWithoutEventsInput = {
   reviewedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutReviewedByInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
+  messageReactions?: Prisma.MessageReactionCreateNestedManyWithoutUserInput
   duties?: Prisma.DutyCreateNestedManyWithoutAssignedToInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   timetableLectures?: Prisma.TimetableLectureCreateNestedManyWithoutUserInput
@@ -1804,6 +1986,7 @@ export type UserUncheckedCreateWithoutEventsInput = {
   reviewedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
+  messageReactions?: Prisma.MessageReactionUncheckedCreateNestedManyWithoutUserInput
   duties?: Prisma.DutyUncheckedCreateNestedManyWithoutAssignedToInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   timetableLectures?: Prisma.TimetableLectureUncheckedCreateNestedManyWithoutUserInput
@@ -1847,6 +2030,7 @@ export type UserUpdateWithoutEventsInput = {
   reviewedLeaves?: Prisma.LeaveRequestUpdateManyWithoutReviewedByNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
+  messageReactions?: Prisma.MessageReactionUpdateManyWithoutUserNestedInput
   duties?: Prisma.DutyUpdateManyWithoutAssignedToNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   timetableLectures?: Prisma.TimetableLectureUpdateManyWithoutUserNestedInput
@@ -1874,6 +2058,7 @@ export type UserUncheckedUpdateWithoutEventsInput = {
   reviewedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
+  messageReactions?: Prisma.MessageReactionUncheckedUpdateManyWithoutUserNestedInput
   duties?: Prisma.DutyUncheckedUpdateManyWithoutAssignedToNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   timetableLectures?: Prisma.TimetableLectureUncheckedUpdateManyWithoutUserNestedInput
@@ -1901,6 +2086,7 @@ export type UserCreateWithoutDutiesInput = {
   reviewedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutReviewedByInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
+  messageReactions?: Prisma.MessageReactionCreateNestedManyWithoutUserInput
   events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   timetableLectures?: Prisma.TimetableLectureCreateNestedManyWithoutUserInput
@@ -1928,6 +2114,7 @@ export type UserUncheckedCreateWithoutDutiesInput = {
   reviewedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
+  messageReactions?: Prisma.MessageReactionUncheckedCreateNestedManyWithoutUserInput
   events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   timetableLectures?: Prisma.TimetableLectureUncheckedCreateNestedManyWithoutUserInput
@@ -1971,6 +2158,7 @@ export type UserUpdateWithoutDutiesInput = {
   reviewedLeaves?: Prisma.LeaveRequestUpdateManyWithoutReviewedByNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
+  messageReactions?: Prisma.MessageReactionUpdateManyWithoutUserNestedInput
   events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   timetableLectures?: Prisma.TimetableLectureUpdateManyWithoutUserNestedInput
@@ -1998,6 +2186,7 @@ export type UserUncheckedUpdateWithoutDutiesInput = {
   reviewedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
+  messageReactions?: Prisma.MessageReactionUncheckedUpdateManyWithoutUserNestedInput
   events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   timetableLectures?: Prisma.TimetableLectureUncheckedUpdateManyWithoutUserNestedInput
@@ -2025,6 +2214,7 @@ export type UserCreateWithoutNotificationsInput = {
   reviewedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutReviewedByInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
+  messageReactions?: Prisma.MessageReactionCreateNestedManyWithoutUserInput
   duties?: Prisma.DutyCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
   timetableLectures?: Prisma.TimetableLectureCreateNestedManyWithoutUserInput
@@ -2052,6 +2242,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   reviewedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
+  messageReactions?: Prisma.MessageReactionUncheckedCreateNestedManyWithoutUserInput
   duties?: Prisma.DutyUncheckedCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
   timetableLectures?: Prisma.TimetableLectureUncheckedCreateNestedManyWithoutUserInput
@@ -2095,6 +2286,7 @@ export type UserUpdateWithoutNotificationsInput = {
   reviewedLeaves?: Prisma.LeaveRequestUpdateManyWithoutReviewedByNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
+  messageReactions?: Prisma.MessageReactionUpdateManyWithoutUserNestedInput
   duties?: Prisma.DutyUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
   timetableLectures?: Prisma.TimetableLectureUpdateManyWithoutUserNestedInput
@@ -2122,6 +2314,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   reviewedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
+  messageReactions?: Prisma.MessageReactionUncheckedUpdateManyWithoutUserNestedInput
   duties?: Prisma.DutyUncheckedUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
   timetableLectures?: Prisma.TimetableLectureUncheckedUpdateManyWithoutUserNestedInput
@@ -2149,6 +2342,7 @@ export type UserCreateWithoutTimetableLecturesInput = {
   reviewedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutReviewedByInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
+  messageReactions?: Prisma.MessageReactionCreateNestedManyWithoutUserInput
   duties?: Prisma.DutyCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -2176,6 +2370,7 @@ export type UserUncheckedCreateWithoutTimetableLecturesInput = {
   reviewedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
+  messageReactions?: Prisma.MessageReactionUncheckedCreateNestedManyWithoutUserInput
   duties?: Prisma.DutyUncheckedCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -2219,6 +2414,7 @@ export type UserUpdateWithoutTimetableLecturesInput = {
   reviewedLeaves?: Prisma.LeaveRequestUpdateManyWithoutReviewedByNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
+  messageReactions?: Prisma.MessageReactionUpdateManyWithoutUserNestedInput
   duties?: Prisma.DutyUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -2246,6 +2442,7 @@ export type UserUncheckedUpdateWithoutTimetableLecturesInput = {
   reviewedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
+  messageReactions?: Prisma.MessageReactionUncheckedUpdateManyWithoutUserNestedInput
   duties?: Prisma.DutyUncheckedUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -2273,6 +2470,7 @@ export type UserCreateWithoutTimetableSettingsInput = {
   reviewedLeaves?: Prisma.LeaveRequestCreateNestedManyWithoutReviewedByInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
+  messageReactions?: Prisma.MessageReactionCreateNestedManyWithoutUserInput
   duties?: Prisma.DutyCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -2300,6 +2498,7 @@ export type UserUncheckedCreateWithoutTimetableSettingsInput = {
   reviewedLeaves?: Prisma.LeaveRequestUncheckedCreateNestedManyWithoutReviewedByInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
+  messageReactions?: Prisma.MessageReactionUncheckedCreateNestedManyWithoutUserInput
   duties?: Prisma.DutyUncheckedCreateNestedManyWithoutAssignedToInput
   events?: Prisma.CalendarEventUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -2343,6 +2542,7 @@ export type UserUpdateWithoutTimetableSettingsInput = {
   reviewedLeaves?: Prisma.LeaveRequestUpdateManyWithoutReviewedByNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
+  messageReactions?: Prisma.MessageReactionUpdateManyWithoutUserNestedInput
   duties?: Prisma.DutyUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -2370,6 +2570,7 @@ export type UserUncheckedUpdateWithoutTimetableSettingsInput = {
   reviewedLeaves?: Prisma.LeaveRequestUncheckedUpdateManyWithoutReviewedByNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
+  messageReactions?: Prisma.MessageReactionUncheckedUpdateManyWithoutUserNestedInput
   duties?: Prisma.DutyUncheckedUpdateManyWithoutAssignedToNestedInput
   events?: Prisma.CalendarEventUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -2390,6 +2591,7 @@ export type UserCountOutputType = {
   reviewedLeaves: number
   sentMessages: number
   receivedMessages: number
+  messageReactions: number
   duties: number
   events: number
   notifications: number
@@ -2406,6 +2608,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   reviewedLeaves?: boolean | UserCountOutputTypeCountReviewedLeavesArgs
   sentMessages?: boolean | UserCountOutputTypeCountSentMessagesArgs
   receivedMessages?: boolean | UserCountOutputTypeCountReceivedMessagesArgs
+  messageReactions?: boolean | UserCountOutputTypeCountMessageReactionsArgs
   duties?: boolean | UserCountOutputTypeCountDutiesArgs
   events?: boolean | UserCountOutputTypeCountEventsArgs
   notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
@@ -2453,6 +2656,13 @@ export type UserCountOutputTypeCountSentMessagesArgs<ExtArgs extends runtime.Typ
  */
 export type UserCountOutputTypeCountReceivedMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.MessageWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountMessageReactionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MessageReactionWhereInput
 }
 
 /**
@@ -2536,6 +2746,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   reviewedLeaves?: boolean | Prisma.User$reviewedLeavesArgs<ExtArgs>
   sentMessages?: boolean | Prisma.User$sentMessagesArgs<ExtArgs>
   receivedMessages?: boolean | Prisma.User$receivedMessagesArgs<ExtArgs>
+  messageReactions?: boolean | Prisma.User$messageReactionsArgs<ExtArgs>
   duties?: boolean | Prisma.User$dutiesArgs<ExtArgs>
   events?: boolean | Prisma.User$eventsArgs<ExtArgs>
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
@@ -2599,6 +2810,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   reviewedLeaves?: boolean | Prisma.User$reviewedLeavesArgs<ExtArgs>
   sentMessages?: boolean | Prisma.User$sentMessagesArgs<ExtArgs>
   receivedMessages?: boolean | Prisma.User$receivedMessagesArgs<ExtArgs>
+  messageReactions?: boolean | Prisma.User$messageReactionsArgs<ExtArgs>
   duties?: boolean | Prisma.User$dutiesArgs<ExtArgs>
   events?: boolean | Prisma.User$eventsArgs<ExtArgs>
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
@@ -2620,6 +2832,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     reviewedLeaves: Prisma.$LeaveRequestPayload<ExtArgs>[]
     sentMessages: Prisma.$MessagePayload<ExtArgs>[]
     receivedMessages: Prisma.$MessagePayload<ExtArgs>[]
+    messageReactions: Prisma.$MessageReactionPayload<ExtArgs>[]
     duties: Prisma.$DutyPayload<ExtArgs>[]
     events: Prisma.$CalendarEventPayload<ExtArgs>[]
     notifications: Prisma.$NotificationPayload<ExtArgs>[]
@@ -3041,6 +3254,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   reviewedLeaves<T extends Prisma.User$reviewedLeavesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reviewedLeavesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LeaveRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   sentMessages<T extends Prisma.User$sentMessagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sentMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   receivedMessages<T extends Prisma.User$receivedMessagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$receivedMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  messageReactions<T extends Prisma.User$messageReactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$messageReactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MessageReactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   duties<T extends Prisma.User$dutiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$dutiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DutyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   events<T extends Prisma.User$eventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CalendarEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   notifications<T extends Prisma.User$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3577,6 +3791,30 @@ export type User$receivedMessagesArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.MessageScalarFieldEnum | Prisma.MessageScalarFieldEnum[]
+}
+
+/**
+ * User.messageReactions
+ */
+export type User$messageReactionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MessageReaction
+   */
+  select?: Prisma.MessageReactionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MessageReaction
+   */
+  omit?: Prisma.MessageReactionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MessageReactionInclude<ExtArgs> | null
+  where?: Prisma.MessageReactionWhereInput
+  orderBy?: Prisma.MessageReactionOrderByWithRelationInput | Prisma.MessageReactionOrderByWithRelationInput[]
+  cursor?: Prisma.MessageReactionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MessageReactionScalarFieldEnum | Prisma.MessageReactionScalarFieldEnum[]
 }
 
 /**
