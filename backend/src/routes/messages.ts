@@ -11,6 +11,7 @@ const sendMessageSchema = z.object({
   replyToId: z.string().min(1).optional(),
 });
 const connectionSchema = z.object({ recipientId: z.string().min(1) });
+const reactionSchema = z.object({ emoji: z.enum(["👍", "❤️", "😂", "😮", "😢", "🙏"]) });
 
 async function teacherConnection(firstId: string, secondId: string) {
   return prisma.messageConnection.findFirst({ where: { OR: [{ requesterId: firstId, recipientId: secondId }, { requesterId: secondId, recipientId: firstId }] } });
@@ -223,6 +224,34 @@ messageRouter.delete("/item/:messageId", requireAuth, async (request, response) 
   return response.status(204).end();
 });
 
+messageRouter.put("/item/:messageId/reaction", requireAuth, async (request, response) => {
+  const parsed = reactionSchema.safeParse(request.body);
+  if (!parsed.success) return response.status(400).json({ message: "Choose a valid reaction." });
+  const messageId = Array.isArray(request.params.messageId) ? request.params.messageId[0] : request.params.messageId;
+  const message = await prisma.message.findFirst({ where: {
+    id: messageId,
+    deletedForEveryone: false,
+    OR: [{ senderId: request.user!.id }, { receiverId: request.user!.id }],
+  } });
+  if (!message) return response.status(404).json({ message: "Message not found." });
+
+  const existing = await prisma.messageReaction.findUnique({ where: { messageId_userId: { messageId: message.id, userId: request.user!.id } } });
+  if (existing?.emoji === parsed.data.emoji) {
+    await prisma.messageReaction.delete({ where: { id: existing.id } });
+  } else {
+    await prisma.messageReaction.upsert({
+      where: { messageId_userId: { messageId: message.id, userId: request.user!.id } },
+      update: { emoji: parsed.data.emoji },
+      create: { messageId: message.id, userId: request.user!.id, emoji: parsed.data.emoji },
+    });
+  }
+  const reactions = await prisma.messageReaction.findMany({ where: { messageId: message.id }, select: { userId: true, emoji: true } });
+  const payload = { messageId: message.id, reactions };
+  emitToUser(message.senderId, "message:reaction", payload);
+  emitToUser(message.receiverId, "message:reaction", payload);
+  return response.json(payload);
+});
+
 messageRouter.get("/:userId", requireAuth, async (request, response) => {
   const userId = Array.isArray(request.params.userId) ? request.params.userId[0] : request.params.userId;
   const user = await prisma.user.findFirst({ where: { id: userId, isActive: true }, select: { id: true, name: true, email: true, department: true, role: true } });
@@ -245,7 +274,10 @@ messageRouter.get("/:userId", requireAuth, async (request, response) => {
       { senderId: request.user!.id, receiverId: user.id, hiddenFromSender: false },
       { senderId: user.id, receiverId: request.user!.id, hiddenFromReceiver: false },
     ] },
-    include: { replyTo: { select: { id: true, content: true, senderId: true } } },
+    include: {
+      replyTo: { select: { id: true, content: true, senderId: true } },
+      reactions: { select: { userId: true, emoji: true } },
+    },
     orderBy: { createdAt: "asc" },
   });
   return response.json({ user, messages, canMessage: true });

@@ -68,6 +68,7 @@ model User {
   reviewedLeaves             LeaveRequest[]       @relation("AdminReviews")
   sentMessages               Message[]            @relation("SentMessages")
   receivedMessages           Message[]            @relation("ReceivedMessages")
+  messageReactions          MessageReaction[]
   duties                     Duty[]               @relation("AssignedDuties")
   events                     CalendarEvent[]      @relation("UserEvents")
   notifications              Notification[]
@@ -145,10 +146,25 @@ model Message {
   receiver User      @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
   replyTo  Message?  @relation("MessageReplies", fields: [replyToId], references: [id], onDelete: SetNull)
   replies  Message[] @relation("MessageReplies")
+  reactions MessageReaction[]
 
   @@index([senderId, receiverId, createdAt])
   @@index([receiverId, readAt])
   @@index([replyToId])
+}
+
+model MessageReaction {
+  id        String   @id @default(cuid())
+  messageId String
+  userId    String
+  emoji     String
+  createdAt DateTime @default(now())
+
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([messageId, userId])
+  @@index([messageId])
 }
 
 model MessageConnection {

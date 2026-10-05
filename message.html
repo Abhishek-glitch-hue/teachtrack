@@ -1148,12 +1148,6 @@
 
       const $ = (id) => document.getElementById(id);
       const escapeHtml = (value = '') => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
-      const reactionStorageKey = 'teachtrack_message_reactions';
-      const loadReactions = () => {
-        try { return JSON.parse(sessionStorage.getItem(reactionStorageKey) || '{}'); } catch (_) { return {}; }
-      };
-      const saveReactions = () => sessionStorage.setItem(reactionStorageKey, JSON.stringify(state.messageReactions));
-      state.messageReactions = loadReactions();
       const initials = (name = '') => (name.split(/\s+/).filter(Boolean).slice(0, 2).map(part => part[0]).join('') || 'T').toUpperCase();
       const formatTime = (value) => {
         if (!value) return '';
@@ -1323,12 +1317,16 @@
           meta.className = 'meta';
           meta.innerHTML = `${formatTime(message.createdAt)}${message.senderId === state.me.id ? '<span class="tick">✓✓</span>' : ''}`;
           wrap.appendChild(bubble);
-          const reactionValue = state.messageReactions[message.id];
-          if (reactionValue) {
+          const reactions = message.reactions || [];
+          if (reactions.length) {
             const reactionBadge = document.createElement('span');
             reactionBadge.className = 'message-reaction-badge';
-            reactionBadge.textContent = reactionValue;
-            reactionBadge.setAttribute('aria-label', 'Your reaction: ' + reactionValue);
+            const grouped = reactions.reduce((result, reaction) => {
+              result[reaction.emoji] = (result[reaction.emoji] || 0) + 1;
+              return result;
+            }, {});
+            reactionBadge.textContent = Object.entries(grouped).map(([emoji, count]) => emoji + (count > 1 ? ` ${count}` : '')).join(' ');
+            reactionBadge.setAttribute('aria-label', 'Message reactions');
             wrap.appendChild(reactionBadge);
           }
           wrap.appendChild(meta);
@@ -1621,10 +1619,20 @@
         const reactionChoice = event.target.closest('[data-reaction-choice]');
         if (reactionChoice) {
           const id = reactionChoice.dataset.reactionChoice;
-          state.messageReactions[id] = state.messageReactions[id] === reactionChoice.dataset.emoji ? '' : reactionChoice.dataset.emoji;
-          if (!state.messageReactions[id]) delete state.messageReactions[id];
-          saveReactions();
-          renderChatMessages();
+          try {
+            const response = await api('/messages/item/' + encodeURIComponent(id) + '/reaction', {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ emoji: reactionChoice.dataset.emoji })
+            });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.message || 'Unable to send reaction.');
+            const message = state.messages.find(item => item.id === id);
+            if (message) message.reactions = data.reactions;
+            renderChatMessages();
+          } catch (error) {
+            setStatus(error.message || 'Unable to send reaction.', true);
+          }
           return;
         }
         const menuTrigger = event.target.closest('[data-message-menu]');
@@ -1828,6 +1836,12 @@
             renderChatMessages();
           }
           await loadData();
+        });
+        socket.on('message:reaction', payload => {
+          const message = state.messages.find(item => item.id === payload.messageId);
+          if (!message) return;
+          message.reactions = payload.reactions || [];
+          renderChatMessages();
         });
         socket.on('message:hidden', payload => {
           state.messages = state.messages.filter(item => item.id !== payload.messageId);
