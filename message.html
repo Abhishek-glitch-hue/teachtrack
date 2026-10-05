@@ -693,6 +693,8 @@
     .message-reaction-choice { display: grid; place-items: center; width: 30px; height: 30px; padding: 0; border: 0; border-radius: 50%; background: transparent; font-size: 21px; cursor: pointer; }
     .message-reaction-choice:hover { background: var(--surface-alt); transform: scale(1.1); }
     .message-reaction-badge { align-self: flex-start; margin-top: -3px; padding: 2px 6px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); font-size: 15px; line-height: 1.2; }
+    .message-reaction-badge { border: 1px solid var(--line); cursor: pointer; }
+    .message-reaction-badge:hover { background: var(--surface-alt); }
     .message-reaction-trigger:hover, .message-reply-trigger:hover, .message-menu-trigger:hover, .message-menu-trigger[aria-expanded="true"] { background: var(--surface-alt); }
     .message-reply-trigger { font-size: 19px; line-height: 1; }
     .message-menu-trigger { font-size: 18px; line-height: 1; }
@@ -712,6 +714,7 @@
     .delete-message-backdrop.show { display: flex; }
     .delete-message-dialog { width: min(340px, 100%); padding: 20px 16px 14px; border: 1px solid #e7e7e7; border-radius: 24px; background: #fff; color: #161616; box-shadow: 0 18px 48px rgba(0,0,0,.2); text-align: center; }
     .delete-message-dialog h2 { margin: 2px 0 20px; font-size: 21px; font-weight: 500; }
+    .remove-reaction-copy { margin: -10px 8px 16px; color: var(--muted); font-size: 13px; line-height: 1.45; }
     .delete-message-option { display: block; width: 100%; margin: 7px 0; padding: 11px 12px; border: 1px solid #d1d1d1; border-radius: 999px; background: #fff; color: #168b55; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
     .delete-message-option[hidden] { display: none; }
     .delete-message-option.everyone { color: #d11b47; }
@@ -1118,6 +1121,15 @@
     </div>
   </div>
 
+  <div id="removeReactionModal" class="delete-message-backdrop" aria-hidden="true">
+    <div class="delete-message-dialog" role="dialog" aria-modal="true" aria-labelledby="removeReactionTitle">
+      <h2 id="removeReactionTitle">Remove reaction?</h2>
+      <p class="remove-reaction-copy">Do you want to remove your emoji reaction from this message?</p>
+      <button id="confirmRemoveReaction" class="delete-message-option everyone" type="button">Yes, remove</button>
+      <button id="cancelRemoveReaction" class="delete-message-cancel" type="button">Cancel</button>
+    </div>
+  </div>
+
   <script src="assets/config.js" data-load-socket="true"></script>
 
   <script>
@@ -1138,7 +1150,8 @@
         conversations: [],
         replyTo: null,
         pendingMessageDelete: null,
-        messageReactions: {}
+        messageReactions: {},
+        pendingReactionRemoval: null
       };
 
       const api = (path, options = {}) => {
@@ -1324,6 +1337,7 @@
             const ownReaction = reactions.find(reaction => reaction.userId === state.me.id);
             reactionBadge.textContent = (ownReaction || reactions[reactions.length - 1]).emoji;
             reactionBadge.setAttribute('aria-label', 'Message reaction');
+            reactionBadge.dataset.reactionBadge = message.id;
             wrap.appendChild(reactionBadge);
           }
           wrap.appendChild(meta);
@@ -1562,6 +1576,44 @@
         $('deleteMessageModal').setAttribute('aria-hidden', 'true');
         state.pendingMessageDelete = null;
       }
+      function openRemoveReactionDialog(message) {
+        const reaction = (message.reactions || []).find(item => item.userId === state.me.id);
+        if (!reaction) return;
+        state.pendingReactionRemoval = { messageId: message.id, emoji: reaction.emoji };
+        $('removeReactionModal').classList.add('show');
+        $('removeReactionModal').setAttribute('aria-hidden', 'false');
+      }
+      function closeRemoveReactionDialog() {
+        $('removeReactionModal').classList.remove('show');
+        $('removeReactionModal').setAttribute('aria-hidden', 'true');
+        state.pendingReactionRemoval = null;
+      }
+      $('cancelRemoveReaction').addEventListener('click', closeRemoveReactionDialog);
+      $('removeReactionModal').addEventListener('click', event => {
+        if (event.target === $('removeReactionModal')) closeRemoveReactionDialog();
+      });
+      $('confirmRemoveReaction').addEventListener('click', async () => {
+        const pending = state.pendingReactionRemoval;
+        if (!pending) return;
+        $('confirmRemoveReaction').disabled = true;
+        try {
+          const response = await api('/messages/item/' + encodeURIComponent(pending.messageId) + '/reaction', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ emoji: pending.emoji })
+          });
+          const data = await response.json();
+          if (!response.ok) throw new Error(data.message || 'Unable to remove reaction.');
+          const message = state.messages.find(item => item.id === pending.messageId);
+          if (message) message.reactions = data.reactions;
+          closeRemoveReactionDialog();
+          renderChatMessages();
+        } catch (error) {
+          setStatus(error.message || 'Unable to remove reaction.', true);
+        } finally {
+          $('confirmRemoveReaction').disabled = false;
+        }
+      });
       $('cancelDeleteMessage').addEventListener('click', closeDeleteMessageDialog);
       $('deleteMessageModal').addEventListener('click', event => {
         if (event.target === $('deleteMessageModal')) closeDeleteMessageDialog();
@@ -1599,6 +1651,12 @@
       $('deleteForMe').addEventListener('click', () => deleteSelectedMessage('me'));
       $('cancelReply').addEventListener('click', clearReply);
       $('messageArea').addEventListener('click', async (event) => {
+        const reactionBadge = event.target.closest('[data-reaction-badge]');
+        if (reactionBadge) {
+          const message = state.messages.find(item => item.id === reactionBadge.dataset.reactionBadge);
+          if (message) openRemoveReactionDialog(message);
+          return;
+        }
         const reactionToggle = event.target.closest('[data-reaction-toggle]');
         if (reactionToggle) {
           const messageWrap = reactionToggle.closest('.message');
