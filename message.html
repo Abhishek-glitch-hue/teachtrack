@@ -657,11 +657,11 @@
       font-size: 11px;
     }
     .message.mine .meta { justify-content: flex-end; }
-    .message-hover-actions { position: absolute; z-index: 6; top: -42px; right: -24px; display: flex; align-items: center; gap: 2px; padding: 5px 8px; border: 1px solid var(--line); border-radius: 24px; background: var(--surface); box-shadow: 0 3px 12px rgba(25,35,45,.14); opacity: 0; pointer-events: none; transition: opacity .12s ease; }
+    .message-hover-actions { position: absolute; z-index: 6; top: -42px; right: -24px; display: flex; flex-wrap: nowrap; align-items: center; gap: 2px; padding: 5px 8px; border: 1px solid var(--line); border-radius: 24px; background: var(--surface); box-shadow: 0 3px 12px rgba(25,35,45,.14); opacity: 0; pointer-events: none; transition: opacity .12s ease; white-space: nowrap; }
     .message.mine .message-hover-actions { right: 0; left: auto; }
     .message-reaction-trigger, .message-reply-trigger, .message-menu-trigger { display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--text); cursor: pointer; }
     .message-reaction-trigger { font-size: 19px; line-height: 1; }
-    .message-reactions { display: flex; align-items: center; gap: 2px; }
+    .message-reactions { display: flex; flex: 0 0 auto; align-items: center; gap: 2px; }
     .message-reaction-emoji { width: 30px; height: 30px; padding: 0; border: 0; border-radius: 50%; background: transparent; font-size: 21px; line-height: 1; cursor: pointer; }
     .message-reaction-emoji:hover, .message-reaction-trigger:hover, .message-reply-trigger:hover, .message-menu-trigger:hover, .message-menu-trigger[aria-expanded="true"] { background: var(--surface-alt); transform: scale(1.08); }
     .message-reply-trigger { font-size: 19px; line-height: 1; }
