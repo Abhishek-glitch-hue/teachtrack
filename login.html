@@ -88,10 +88,6 @@
     const API_URL = window.TEACHTRACK_API_ORIGIN + "/api";
     let mode = "login";
 
-    if (sessionStorage.getItem("teachtrack_token")) {
-      window.location.replace("main.html");
-    }
-
     const form = document.getElementById("authForm");
     const nameInput = document.getElementById("name");
     const emailInput = document.getElementById("email");
@@ -103,6 +99,30 @@
     const forgotButton = document.getElementById("forgotButton");
     const forgotWrap = document.getElementById("forgotWrap");
     const loginOptions = document.getElementById("loginOptions");
+    const rememberMeInput = document.getElementById("rememberMe");
+
+    function clearStoredAuth() {
+      sessionStorage.removeItem("teachtrack_token");
+      sessionStorage.removeItem("teachtrack_user");
+      localStorage.removeItem("teachtrack_token");
+      localStorage.removeItem("teachtrack_user");
+    }
+
+    function restoreRememberedAuth() {
+      const token = localStorage.getItem("teachtrack_token");
+      const user = localStorage.getItem("teachtrack_user");
+      if (!token || !user) {
+        clearStoredAuth();
+        return false;
+      }
+      sessionStorage.setItem("teachtrack_token", token);
+      sessionStorage.setItem("teachtrack_user", user);
+      return true;
+    }
+
+    if (restoreRememberedAuth() || sessionStorage.getItem("teachtrack_token")) {
+      window.location.replace("main.html");
+    }
 
     passwordToggle.addEventListener("click", () => {
       const showing = passwordInput.type === "text";
@@ -188,8 +208,16 @@
           throw new Error(data.message || "Unable to continue.");
         }
 
+        const userData = JSON.stringify(data.user);
         sessionStorage.setItem("teachtrack_token", data.token);
-        sessionStorage.setItem("teachtrack_user", JSON.stringify(data.user));
+        sessionStorage.setItem("teachtrack_user", userData);
+        if (rememberMeInput.checked && mode === "login") {
+          localStorage.setItem("teachtrack_token", data.token);
+          localStorage.setItem("teachtrack_user", userData);
+        } else if (mode === "login") {
+          localStorage.removeItem("teachtrack_token");
+          localStorage.removeItem("teachtrack_user");
+        }
 
         showMessage("Signed in successfully. Opening dashboard...", "success");
         window.setTimeout(() => window.location.replace("main.html"), 500);
