@@ -33,8 +33,12 @@
     .message.success { display:block; background:#e2f7ed; color:#087a47; }
     .name-field { display:none; }
     body.registering .name-field { display:block; }
-    .forgot { margin:14px 0 0; padding:10px 12px; border:1px solid #b9dedb; border-radius:9px; background:#f1fbfa; text-align:center; font-size:12px; }
-    .forgot button { width:auto; margin:0; padding:0; background:none; color:var(--teal); font:700 12px "Public Sans",sans-serif; text-decoration:underline; }
+    .login-options { display:flex; justify-content:space-between; align-items:center; margin:15px 0 -7px; font-size:12px; }
+    .remember { display:flex; align-items:center; gap:6px; margin:0; font-size:12px; font-weight:500; }
+    .remember input { width:14px; height:14px; margin:0; accent-color:var(--teal); }
+    .forgot { margin:0; padding:0; text-align:right; font-size:12px; }
+    .forgot button { width:auto; margin:0; padding:0; background:none; color:var(--teal); font:600 12px "Public Sans",sans-serif; text-decoration:none; }
+    .forgot button:hover, .switch button:hover { text-decoration:underline; }
   </style>
 </head>
 <body>
@@ -64,15 +68,18 @@
         </button>
       </div>
 
-      <p class="forgot" id="forgotWrap"><button id="forgotButton" type="button">Forgot password?</button></p>
+      <div class="login-options" id="loginOptions">
+        <label class="remember"><input id="rememberMe" type="checkbox"> Remember me</label>
+        <p class="forgot" id="forgotWrap"><button id="forgotButton" type="button">Forgot password?</button></p>
+      </div>
 
       <button id="submitButton" type="submit">Sign in</button>
       <div id="message" class="message" role="alert"></div>
     </form>
 
     <p class="switch">
-      <span id="switchText">New teacher?</span>
-      <button id="modeButton" type="button">Create an account</button>
+      <span id="switchText">Don't have an account?</span>
+      <button id="modeButton" type="button">Register</button>
     </p>
   </main>
 
@@ -95,6 +102,7 @@
     const message = document.getElementById("message");
     const forgotButton = document.getElementById("forgotButton");
     const forgotWrap = document.getElementById("forgotWrap");
+    const loginOptions = document.getElementById("loginOptions");
 
     passwordToggle.addEventListener("click", () => {
       const showing = passwordInput.type === "text";
@@ -117,11 +125,12 @@
         ? "Teacher accounts are created here. Administrator accounts are private."
         : "Sign in to manage your academic work.";
       submitButton.textContent = registering ? "Create teacher account" : "Sign in";
-      document.getElementById("switchText").textContent = registering ? "Already have an account?" : "New teacher?";
-      modeButton.textContent = registering ? "Sign in" : "Create an account";
+      document.getElementById("switchText").textContent = registering ? "Already have an account?" : "Don't have an account?";
+      modeButton.textContent = registering ? "Sign in" : "Register";
       nameInput.required = registering;
       passwordInput.autocomplete = registering ? "new-password" : "current-password";
       forgotWrap.hidden = registering;
+      loginOptions.hidden = registering;
       message.className = "message";
     }
 
