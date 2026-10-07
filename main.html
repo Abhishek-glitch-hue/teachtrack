@@ -8,6 +8,16 @@
 
 <!-- JS flag added BEFORE first paint: only JS users ever see hidden/reveal states -->
 <script>document.documentElement.classList.add('js');</script>
+<script>
+  (function () {
+    var theme = localStorage.getItem('teachtrack_theme');
+    if (theme === 'dark' || theme === 'light') {
+      document.documentElement.dataset.theme = theme;
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.dataset.theme = 'dark';
+    }
+  })();
+</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
