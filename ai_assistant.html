@@ -323,6 +323,55 @@
   const apiBase = window.TEACHTRACK_API_ORIGIN + '/api';
   const authToken = sessionStorage.getItem('teachtrack_token');
   const chatHistory = [];
+  let currentChatStorageKey = 'teachtrack_ai_chat';
+  try {
+    const user = JSON.parse(sessionStorage.getItem('teachtrack_user') || '{}');
+    if (user.id != null) currentChatStorageKey += '_' + user.id;
+  } catch (_) {}
+
+  function saveChat() {
+    const savedChat = {
+      history: chatHistory,
+      messages: Array.from(messagesEl.querySelectorAll('.msg:not(.typing)')).map(message => ({
+        role: message.classList.contains('user') ? 'user' : 'ai',
+        text: message.textContent,
+      })),
+      csv: csvResult.dataset.content || '',
+    };
+    try { sessionStorage.setItem(currentChatStorageKey, JSON.stringify(savedChat)); } catch (_) {}
+  }
+
+  function restoreChat() {
+    let savedChat;
+    try { savedChat = JSON.parse(sessionStorage.getItem(currentChatStorageKey) || 'null'); } catch (_) { return; }
+    if (!savedChat || typeof savedChat !== 'object') return;
+
+    if (Array.isArray(savedChat.history)) {
+      savedChat.history.forEach(message => {
+        if (message && (message.role === 'user' || message.role === 'assistant') && typeof message.content === 'string') {
+          chatHistory.push({ role: message.role, content: message.content });
+        }
+      });
+    }
+    if (Array.isArray(savedChat.messages) && savedChat.messages.length) {
+      emptyState.style.display = 'none';
+      savedChat.messages.forEach(message => {
+        if (!message || (message.role !== 'user' && message.role !== 'ai') || typeof message.text !== 'string') return;
+        const bubble = document.createElement('div');
+        bubble.className = 'msg ' + message.role;
+        bubble.textContent = message.text;
+        messagesEl.appendChild(bubble);
+      });
+      if (messagesEl.children.length) showNewChat();
+    }
+    if (typeof savedChat.csv === 'string' && savedChat.csv) {
+      csvPreview.textContent = savedChat.csv;
+      csvResult.dataset.content = savedChat.csv;
+      csvResult.classList.add('visible');
+      showNewChat();
+    }
+    scrollBottom();
+  }
 
   const unreadMessageBadge = document.getElementById('unreadMessageBadge');
   function renderUnreadMessageCount(count) {
@@ -410,6 +459,7 @@
       csvResult.classList.add('visible');
       csvResult.dataset.content = csvContent;
       emptyState.style.display = 'none';
+      saveChat();
       scrollBottom();
     } catch (error) {
       addMsg('ai', error.message || 'Unable to load your current summary.');
@@ -431,6 +481,7 @@
     d.className = 'msg ' + role;
     d.textContent = text;
     messagesEl.appendChild(d);
+    saveChat();
     scrollBottom();
   }
 
@@ -459,6 +510,8 @@
     }, 1100);
   }
 
+  restoreChat();
+
   form.addEventListener('submit', e => { e.preventDefault(); send(); });
   document.querySelectorAll('.chip').forEach(c =>
     c.addEventListener('click', () => {
@@ -485,6 +538,7 @@
 
   newChatBtn.addEventListener('click', () => {
     chatHistory.length = 0;
+    sessionStorage.removeItem(currentChatStorageKey);
     messagesEl.replaceChildren();
     csvResult.classList.remove('visible');
     csvResult.dataset.content = '';
