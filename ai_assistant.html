@@ -24,18 +24,25 @@
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
   body{font-family:'Public Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:14px}
+  body::before,body::after{content:"";position:fixed;inset:-60% 0;pointer-events:none}
   body::before{
-    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    z-index:0;inset:-60% 0;
     background-image:
       linear-gradient(to right,rgba(14,143,132,.9) 1px,transparent 1px),
-      linear-gradient(to bottom,rgba(14,143,132,.9) 1px,transparent 1px),
-      radial-gradient(ellipse 55% 75% at 8% 8%,rgba(16,179,163,.20),transparent 72%),
-      radial-gradient(ellipse 45% 65% at 95% 30%,rgba(59,118,240,.12),transparent 72%),
-      radial-gradient(ellipse 50% 65% at 50% 100%,rgba(138,99,232,.10),transparent 72%);
-    background-size:30px 30px,30px 30px,auto,auto,auto;
-    opacity:.8;
+      linear-gradient(to bottom,rgba(14,143,132,.9) 1px,transparent 1px);
+    background-size:30px 30px;opacity:.07;
   }
-  html[data-theme="dark"] body::before{opacity:.22}
+  body::after{
+    z-index:0;inset:-90% 0;
+    background:
+      radial-gradient(ellipse 56vw 56vw at 12vw 30%,rgba(16,179,163,.20),transparent 70%),
+      radial-gradient(ellipse 50vw 50vw at calc(100% - 14vw) 50%,rgba(59,118,240,.17),transparent 70%),
+      radial-gradient(ellipse 48vw 48vw at 42vw calc(100% + 8vh),rgba(138,99,232,.18),transparent 70%),
+      radial-gradient(ellipse 34vw 34vw at calc(100% - 6vw) calc(100% - 6vh),rgba(207,73,100,.14),transparent 70%);
+    filter:blur(42px);
+  }
+  html[data-theme="dark"] body::before{opacity:.035}
+  html[data-theme="dark"] body::after{opacity:.55}
 
   /* ============ SIDEBAR ============ */
   .sidebar{
