@@ -508,6 +508,21 @@
     .new-button:hover { background: #405ce0; }
     .search-box { padding: 11px 13px; border-color: #e0e5eb; border-radius: 12px; background: #fafbfc; }
     .search-box input { font-size: 14px; }
+    .sidebar-top {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      column-gap: 12px;
+      align-items: center;
+    }
+    .sidebar-top h1 { grid-column: 1 / -1; margin: 0 0 12px; }
+    .search-box { grid-column: 1; grid-row: 2; min-width: 0; }
+    .new-button {
+      position: static;
+      grid-column: 2;
+      grid-row: 2;
+      justify-self: end;
+      white-space: nowrap;
+    }
     .tabs { gap: 4px; padding: 10px 10px 8px; border-bottom: 0; }
     .tab { padding: 8px 12px; border-radius: 999px; font-size: 13px; }
     .tab.active { background: #eef1ff; color: #4054c4; }
