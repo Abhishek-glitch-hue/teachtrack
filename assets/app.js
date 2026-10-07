@@ -27,6 +27,8 @@
 
     sessionStorage.removeItem('teachtrack_token');
     sessionStorage.removeItem('teachtrack_user');
+    localStorage.removeItem('teachtrack_token');
+    localStorage.removeItem('teachtrack_user');
     window.location.replace('login.html');
   });
 

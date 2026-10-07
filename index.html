@@ -6,7 +6,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>TeachTrack</title>
   <script>
-    window.location.replace("login.html");
+    const sessionToken = sessionStorage.getItem("teachtrack_token");
+    const rememberedToken = localStorage.getItem("teachtrack_token");
+    const rememberedUser = localStorage.getItem("teachtrack_user");
+
+    if (!sessionToken && rememberedToken && rememberedUser) {
+      sessionStorage.setItem("teachtrack_token", rememberedToken);
+      sessionStorage.setItem("teachtrack_user", rememberedUser);
+    }
+
+    window.location.replace(
+      sessionToken || (rememberedToken && rememberedUser) ? "main.html" : "login.html"
+    );
   </script>
 </head>
 <body>
