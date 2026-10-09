@@ -50,8 +50,6 @@
     </div>
 
     <h1 id="title">Welcome back</h1>
-    <p id="subtitle">Sign in to manage your academic work.</p>
-
     <form id="authForm">
       <div class="name-field">
         <label for="name">Full name</label>
@@ -142,9 +140,6 @@
       const registering = mode === "register";
       document.body.classList.toggle("registering", registering);
       document.getElementById("title").textContent = registering ? "Create teacher account" : "Welcome back";
-      document.getElementById("subtitle").textContent = registering
-        ? "Teacher accounts are created here. Administrator accounts are private."
-        : "Sign in to manage your academic work.";
       submitButton.textContent = registering ? "Create teacher account" : "Sign in";
       document.getElementById("switchText").textContent = registering ? "Already have an account?" : "Don't have an account?";
       modeButton.textContent = registering ? "Sign in" : "Register";
