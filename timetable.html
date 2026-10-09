@@ -162,12 +162,6 @@
           <div class="tt-grid" role="grid" aria-label="Weekly timetable"></div>
         </div>
 
-        <div class="tt-foot">
-          <span><i class="tt-legend-dot teal"></i> Core lecture</span>
-          <span><i class="tt-legend-dot blue"></i> Lab / practical</span>
-          <span><i class="tt-legend-dot purple"></i> Data / theory</span>
-          <span class="tt-foot-note">Hover a slot to add or inspect a lecture</span>
-        </div>
       </section>
     </main></div></div>
 
@@ -182,7 +176,7 @@
           <label>Subject<input id="ttSubject" name="subject" required maxlength="60" placeholder="e.g. Mathematics"></label>
           <label>Class / section<input id="ttClass" name="className" required maxlength="40" placeholder="e.g. FY-CS-A"></label>
           <label>Room / location<input id="ttRoom" name="room" required maxlength="40" placeholder="e.g. Room 101"></label>
-          <label>Lecture type<div class="tt-select"><select id="ttType" name="type"><option value="teal">Core lecture</option><option value="blue">Lab / practical</option><option value="purple">Data / theory</option></select><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></div></label>
+          <label class="tt-type-field">Lecture type<div class="tt-select"><select id="ttType" name="type"><option value="teal">Core lecture</option><option value="blue">Lab / practical</option><option value="purple">Data / theory</option></select><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></div></label>
           <label>Day<div class="tt-select"><select id="ttDay" name="day"><option value="mon">Monday</option><option value="tue">Tuesday</option><option value="wed">Wednesday</option><option value="thu">Thursday</option><option value="fri">Friday</option><option value="sat">Saturday</option><option value="sun">Sunday</option></select><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></div></label>
           <label>Available slot<div class="tt-select"><select id="ttTime" name="time" required></select><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></div></label>
         </div>
