@@ -1503,8 +1503,36 @@
     document.getElementById('calendarEventClose').addEventListener('click', closeEventModal);
     document.getElementById('calendarEventCancel').addEventListener('click', closeEventModal);
     eventModal.addEventListener('click', function (event) { if (event.target === eventModal) closeEventModal(); });
+    function confirmCalendarRemoval() {
+      var modal = document.getElementById('calendarDeleteConfirm');
+      var yes = modal && modal.querySelector('.duty-confirm-yes');
+      var no = modal && modal.querySelector('.duty-confirm-no');
+      if (!modal || !yes || !no) return Promise.resolve(false);
+      modal.hidden = false;
+      document.body.classList.add('tt-modal-open');
+      yes.focus();
+      return new Promise(function (resolve) {
+        function finish(result) {
+          modal.hidden = true;
+          document.body.classList.remove('tt-modal-open');
+          yes.removeEventListener('click', accept);
+          no.removeEventListener('click', decline);
+          modal.removeEventListener('click', outside);
+          document.removeEventListener('keydown', escape);
+          resolve(result);
+        }
+        function accept() { finish(true); }
+        function decline() { finish(false); }
+        function outside(event) { if (event.target === modal) finish(false); }
+        function escape(event) { if (event.key === 'Escape') finish(false); }
+        yes.addEventListener('click', accept);
+        no.addEventListener('click', decline);
+        modal.addEventListener('click', outside);
+        document.addEventListener('keydown', escape);
+      });
+    }
     document.getElementById('calendarEventDelete').addEventListener('click', async function () {
-      if (!editingEvent || !window.confirm('Remove this calendar item?')) return;
+      if (!editingEvent || !await confirmCalendarRemoval()) return;
       var response = await fetch(calendarApi + '/' + editingEvent.id, { method: 'DELETE', headers: { Authorization: 'Bearer ' + authToken } });
       if (response.ok) { events = events.filter(function (item) { return item.id !== editingEvent.id; }); closeEventModal(); renderAll(); }
     });
