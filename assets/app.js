@@ -383,7 +383,6 @@
           if (isAdminDashboard) {
             var leaveLabel = document.getElementById('dashboardLeaveLabel');
             if (leaveLabel) leaveLabel.textContent = 'Pending Leave Requests';
-            if (leave) leave.innerHTML = '…<small>requests</small>';
             if (leaveFoot) leaveFoot.textContent = 'Requests awaiting approval';
             fetch(adminLeavesApi, { headers: { Authorization: 'Bearer ' + authToken } })
               .then(function (response) { if (!response.ok) throw new Error(); return response.json(); })
