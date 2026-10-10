@@ -33,7 +33,8 @@
     .message.error { display:block; background:#fde7e9; color:#a52938; }
     .message.success { display:block; background:#e2f7ed; color:#087a47; }
     .name-field { display:none; }
-    body.registering .name-field { display:block; }
+    .register-field { display:none; }
+    body.registering .name-field, body.registering .register-field { display:block; }
     .login-options { display:flex; justify-content:space-between; align-items:center; margin:15px 0 -7px; font-size:12px; }
     .remember { display:flex; align-items:center; gap:6px; margin:0; font-size:12px; font-weight:500; }
     .remember input { width:14px; height:14px; margin:0; accent-color:var(--teal); }
@@ -54,6 +55,11 @@
       <div class="name-field">
         <label for="name">Full name</label>
         <input id="name" autocomplete="name" minlength="2">
+      </div>
+
+      <div class="register-field">
+        <label for="department">Department</label>
+        <input id="department" autocomplete="organization-title" maxlength="80">
       </div>
 
       <label for="email">Email address</label>
@@ -89,6 +95,7 @@
 
     const form = document.getElementById("authForm");
     const nameInput = document.getElementById("name");
+    const departmentInput = document.getElementById("department");
     const emailInput = document.getElementById("email");
     const passwordInput = document.getElementById("password");
     const passwordToggle = document.getElementById("passwordToggle");
@@ -189,6 +196,7 @@
 
         if (mode === "register") {
           payload.name = nameInput.value.trim();
+          payload.department = departmentInput.value.trim();
         }
 
         const endpoint = mode === "register" ? "/auth/register" : "/auth/login";

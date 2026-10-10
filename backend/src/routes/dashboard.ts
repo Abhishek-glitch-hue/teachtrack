@@ -6,7 +6,7 @@ import { requireAuth } from "../middleware/auth.ts";
 const dashboardRouter = Router();
 
 const DEFAULT_CALENDAR_ITEM_HOURS = 1;
-const DUTY_ESTIMATED_HOURS = 4;
+const DUTY_ESTIMATED_HOURS = 2;
 
 function calendarHoursInWeek(
   event: { startsAt: Date; endsAt: Date | null },

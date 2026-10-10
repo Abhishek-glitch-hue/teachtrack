@@ -13,6 +13,7 @@ const registerSchema = z.object({
   name: z.string().trim().min(2).max(80),
   email: z.string().trim().email().max(120),
   password: z.string().min(8).max(72),
+  department: z.string().trim().max(80).optional(),
 });
 
 const loginSchema = z.object({
@@ -86,7 +87,7 @@ authRouter.post("/register", async (request, response) => {
     });
   }
 
-  const { name, password } = parsed.data;
+  const { name, password, department } = parsed.data;
   const email = parsed.data.email.toLowerCase();
 
   const existingUser = await prisma.user.findUnique({
@@ -106,6 +107,7 @@ authRouter.post("/register", async (request, response) => {
       name,
       email,
       passwordHash,
+      department: department || null,
       role: "TEACHER",
     },
   });
