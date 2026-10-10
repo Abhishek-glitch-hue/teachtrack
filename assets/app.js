@@ -353,6 +353,18 @@
       var dashboard = document.getElementById('dashboardPage');
       if (!dashboard) return;
       var api = window.TEACHTRACK_API_ORIGIN + '/api/dashboard';
+      var adminLeavesApi = window.TEACHTRACK_API_ORIGIN + '/api/leaves';
+      var dashboardUser = {};
+      try { dashboardUser = JSON.parse(sessionStorage.getItem('teachtrack_user') || '{}'); } catch (_) {}
+      var isAdminDashboard = String(dashboardUser.role || '').toUpperCase() === 'ADMIN';
+      if (isAdminDashboard) {
+        var leaveLabel = document.getElementById('dashboardLeaveLabel');
+        var leaveValue = document.getElementById('dashboardLeaveBalance');
+        var leaveFoot = document.getElementById('dashboardLeaveFoot');
+        if (leaveLabel) leaveLabel.textContent = 'Pending Leave Requests';
+        if (leaveValue) leaveValue.innerHTML = '—<small>requests</small>';
+        if (leaveFoot) leaveFoot.textContent = 'Requests awaiting approval';
+      }
       function when(value) { return value ? new Date(value).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : 'No due date'; }
       function loadDashboard() {
         fetch(api, { headers: { Authorization: 'Bearer ' + authToken } }).then(function (response) { if (!response.ok) throw new Error(); return response.json(); }).then(function (data) {
@@ -366,9 +378,30 @@
           var lessons = document.getElementById('dashboardLessonCount'); if (lessons) lessons.innerHTML = (Number(stats.weeklyHours) || 0) + '<small>hours</small>';
           var lessonFoot = document.getElementById('dashboardLessonFoot'); if (lessonFoot) lessonFoot.textContent = (stats.scheduledLessons || 0) + ' lessons · ' + (stats.upcomingThisWeek || 0) + ' scheduled items this week';
           var allowance = stats.monthlyLeaveAllowance || 6;
-          var leave = document.getElementById('dashboardLeaveBalance'); if (leave) leave.innerHTML = stats.leaveBalance + '<small>days/month</small>';
-          var leaveUsed = Math.max(0, Number(stats.leaveDaysTaken) || 0);
-          var leaveFoot = document.getElementById('dashboardLeaveFoot'); if (leaveFoot) leaveFoot.textContent = leaveUsed > allowance ? allowance + ' of ' + allowance + ' days used · ' + (leaveUsed - allowance) + ' over allowance' : leaveUsed + ' of ' + allowance + ' days taken this month';
+          var leave = document.getElementById('dashboardLeaveBalance');
+          var leaveFoot = document.getElementById('dashboardLeaveFoot');
+          if (isAdminDashboard) {
+            var leaveLabel = document.getElementById('dashboardLeaveLabel');
+            if (leaveLabel) leaveLabel.textContent = 'Pending Leave Requests';
+            if (leave) leave.innerHTML = '…<small>requests</small>';
+            if (leaveFoot) leaveFoot.textContent = 'Requests awaiting approval';
+            fetch(adminLeavesApi, { headers: { Authorization: 'Bearer ' + authToken } })
+              .then(function (response) { if (!response.ok) throw new Error(); return response.json(); })
+              .then(function (leaveData) {
+                var requests = Array.isArray(leaveData.leaves) ? leaveData.leaves : [];
+                var pendingRequests = requests.filter(function (request) { return String(request.status || '').toUpperCase() === 'PENDING'; }).length;
+                if (leave) leave.innerHTML = pendingRequests + '<small>requests</small>';
+                if (leaveFoot) leaveFoot.textContent = pendingRequests === 1 ? '1 request awaiting approval' : pendingRequests + ' requests awaiting approval';
+              })
+              .catch(function () {
+                if (leave) leave.innerHTML = '—<small>requests</small>';
+                if (leaveFoot) leaveFoot.textContent = 'Pending requests unavailable';
+              });
+          } else {
+            if (leave) leave.innerHTML = stats.leaveBalance + '<small>days/month</small>';
+            var leaveUsed = Math.max(0, Number(stats.leaveDaysTaken) || 0);
+            if (leaveFoot) leaveFoot.textContent = leaveUsed > allowance ? allowance + ' of ' + allowance + ' days used · ' + (leaveUsed - allowance) + ' over allowance' : leaveUsed + ' of ' + allowance + ' days taken this month';
+          }
           var next = data.upcoming && data.upcoming[0];
           var nextItem = document.getElementById('dashboardNextItem'); if (nextItem) nextItem.textContent = next ? next.title : 'None';
           var nextFoot = document.getElementById('dashboardNextItemFoot'); if (nextFoot) nextFoot.textContent = next ? when(next.date) + ' · ' + next.kind : 'No upcoming events';
